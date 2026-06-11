@@ -62,6 +62,7 @@ uv run --python 3.12 python -m meltwater_excel.cli build-marts \
 | `mart_manifest.json` | 输入、taxonomy version、输出表行数 |
 | `source_inventory.json` | 来源文件、sha256、文档数 |
 | `search_precision_report.md` | query precision、噪声行、是否阻断 |
+| `query_rewrite_recommendations.md` | query 修改建议、必含词、排除词、观察词 |
 | `pain_point_cards.md` | 产品痛点卡 Markdown |
 | `pain_point_cards.csv` | 产品痛点卡结构化版本 |
 | `weekly_voc_brief.md` | 周度 VOC brief |
@@ -71,7 +72,10 @@ uv run --python 3.12 python -m meltwater_excel.cli build-marts \
 | `region_language_priority.md` | 区域与语言优先级 |
 | `concept_candidates.md` | 产品共创概念候选 |
 | `executive_monthly_brief.md` | 管理层月度洞察会入口 |
-| `action_register.csv` | 初始动作闭环登记 |
+| `insight_register.csv` | 稳定 insight_id 和 readiness 注册表 |
+| `sample_review_queue.csv` | 洞察证据样本人工复核队列 |
+| `query_sample_review_queue.csv` | query precision 人工复核队列 |
+| `action_register.csv` | 动态动作闭环登记 |
 
 当前核心 mart 表：
 
@@ -84,6 +88,11 @@ uv run --python 3.12 python -m meltwater_excel.cli build-marts \
 - `mart_region_language_priority`
 - `mart_concept_candidates`
 - `mart_executive_monthly`
+- `mart_query_rewrite_recommendation`
+- `fact_insight`
+- `fact_evidence_sample`
+- `fact_sample_review`
+- `fact_query_sample_review`
 - `fact_action_register`
 
 ---
@@ -135,6 +144,14 @@ make quality
 - 概念候选：必须再接入 review、客服、退货等交易型反馈验证。
 - 管理层月报：优先展示质量阻断、可行动洞察和 action closed-loop 状态。
 
+闭环解释：
+
+- 每个可进入复核的发现会生成 `insight_id`。
+- 有证据样本的 insight 会进入 `sample_review_queue.csv`。
+- 被 query gate 阻断或需要人工复核的 search 会进入 `query_sample_review_queue.csv`。
+- 可行动 insight 会自动生成 `action_id`，并填入默认 `due_date` 和 `review_date`。
+- 暖奶器/消毒器的 crisis 输出被降级为 `data_quality_alert`，不作为业务危机结论。
+
 ---
 
 ## 6. 快速检查命令
@@ -161,6 +178,11 @@ with sqlite3.connect("data/marts/20260611/voc_mart.sqlite") as db:
         "mart_region_language_priority",
         "mart_concept_candidates",
         "mart_executive_monthly",
+        "mart_query_rewrite_recommendation",
+        "fact_insight",
+        "fact_evidence_sample",
+        "fact_sample_review",
+        "fact_query_sample_review",
         "fact_action_register",
     ]:
         print(table, db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0])

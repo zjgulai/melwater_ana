@@ -6,6 +6,12 @@
 
 ---
 
+## Execution Log
+
+- 2026-06-11: 第一轮 P0 已执行。本次新增 `fact_insight`、`fact_evidence_sample`、`fact_sample_review`、`fact_query_sample_review`、`mart_query_rewrite_recommendation`，输出 `insight_register.csv`、`sample_review_queue.csv`、`query_sample_review_queue.csv`、`query_rewrite_recommendations.md`，并将 action register 从静态 seed 改为基于 insight 动态生成。crisis watch 已接入 query quality gate：query-blocked 品类输出 `data_quality_alert`，不再输出业务 red/orange/yellow alert。
+
+---
+
 ## Goal
 
 完成 playbook 未闭环部分的工程化落地：
@@ -450,4 +456,3 @@ make quality
 9. commit + push。
 
 原因：这会让所有现有 mart 立刻从“报告”升级为“闭环候选”，并修掉当前最大误报风险。
-

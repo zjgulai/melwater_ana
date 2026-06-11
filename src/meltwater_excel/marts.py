@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import os
 import shutil
@@ -8,7 +9,7 @@ import sqlite3
 import tempfile
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -285,6 +286,76 @@ def _create_mart_schema(db: sqlite3.Connection) -> None:
             PRIMARY KEY(month, category)
         );
 
+        CREATE TABLE mart_query_rewrite_recommendation(
+            category TEXT NOT NULL,
+            search_id TEXT NOT NULL,
+            search_name TEXT NOT NULL,
+            current_precision REAL,
+            top_noise_terms_json TEXT NOT NULL,
+            must_include_terms_json TEXT NOT NULL,
+            exclude_terms_json TEXT NOT NULL,
+            watch_terms_json TEXT NOT NULL,
+            sample_noise_examples_json TEXT NOT NULL,
+            expected_precision_lift REAL NOT NULL,
+            PRIMARY KEY(category, search_id, search_name)
+        );
+
+        CREATE TABLE fact_insight(
+            insight_id TEXT PRIMARY KEY,
+            play_id TEXT NOT NULL,
+            category TEXT NOT NULL,
+            entity_type TEXT NOT NULL,
+            entity_id TEXT NOT NULL,
+            period TEXT NOT NULL,
+            readiness TEXT NOT NULL,
+            priority_score REAL NOT NULL,
+            confidence_score REAL NOT NULL,
+            source_table TEXT NOT NULL,
+            source_key_json TEXT NOT NULL,
+            recommended_action_type TEXT NOT NULL,
+            owner_domain TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        );
+
+        CREATE TABLE fact_evidence_sample(
+            sample_id TEXT PRIMARY KEY,
+            insight_id TEXT NOT NULL,
+            occurrence_id TEXT NOT NULL,
+            document_id TEXT NOT NULL,
+            evidence_text TEXT NOT NULL,
+            url TEXT NOT NULL,
+            sentiment TEXT NOT NULL,
+            sample_rank INTEGER NOT NULL,
+            sample_reason TEXT NOT NULL
+        );
+
+        CREATE TABLE fact_sample_review(
+            sample_id TEXT PRIMARY KEY,
+            review_status TEXT NOT NULL,
+            sample_verdict TEXT,
+            noise_reason TEXT,
+            business_relevance TEXT,
+            reviewer TEXT,
+            reviewed_at TEXT
+        );
+
+        CREATE TABLE fact_query_sample_review(
+            sample_id TEXT PRIMARY KEY,
+            category TEXT NOT NULL,
+            search_id TEXT NOT NULL,
+            search_name TEXT NOT NULL,
+            occurrence_id TEXT NOT NULL,
+            document_id TEXT NOT NULL,
+            evidence_text TEXT NOT NULL,
+            url TEXT NOT NULL,
+            matched_noise TEXT NOT NULL,
+            review_status TEXT NOT NULL,
+            sample_verdict TEXT,
+            noise_reason TEXT,
+            reviewer TEXT,
+            reviewed_at TEXT
+        );
+
         CREATE TABLE fact_action_register(
             action_id TEXT PRIMARY KEY,
             insight_id TEXT,
@@ -341,7 +412,7 @@ def _build_search_quality(
             ),
         )
         group.total_occurrences += 1
-        if len(group.samples) < 10:
+        if len(group.samples) < config.thresholds.search_sample_min:
             group.samples.append(occurrence_key)
 
     keyword_cursor = stage_db.execute(
@@ -373,7 +444,7 @@ def _build_search_quality(
                 continue
             group.noise_keyword_rows += 1
             group.noise_terms[matched_noise] += 1
-            if len(group.noise_samples) < 10:
+            if len(group.noise_samples) < config.thresholds.search_sample_min:
                 group.noise_samples.append(
                     {
                         "occurrence_id": occurrence_key,
@@ -889,6 +960,7 @@ def _build_content_opportunities(
 def _build_crisis_watch_daily(
     mart_db: sqlite3.Connection,
     meta: dict[str, OccurrenceMeta],
+    blocked_categories: set[str],
 ) -> list[dict[str, Any]]:
     groups: dict[tuple[str, str], dict[str, Any]] = {}
     for occurrence in meta.values():
@@ -923,7 +995,9 @@ def _build_crisis_watch_daily(
         occurrences = int(group["occurrences"])
         negative = int(group["negative"])
         negative_rate = negative / occurrences if occurrences else 0.0
-        if negative >= 100 and negative_rate >= 0.2:
+        if str(group["category"]) in blocked_categories:
+            alert_level = "data_quality_alert"
+        elif negative >= 100 and negative_rate >= 0.2:
             alert_level = "red"
         elif negative >= 20 and negative_rate >= 0.1:
             alert_level = "orange"
@@ -1129,153 +1203,616 @@ def _build_executive_monthly(
     return rows
 
 
-ACTION_REGISTER_ROWS = [
-    (
-        "act-query-update-warmer",
-        "",
-        "query_update",
-        "重写暖奶器 query",
-        "Data",
-        "Proposed",
-        "precision >= 80%; noise term share decreases",
-    ),
-    (
-        "act-pain-radar-pump",
-        "",
-        "pain_radar",
-        "建立吸奶器痛点雷达",
-        "Product/Data",
-        "Proposed",
-        "Top 10 pain points refreshed monthly",
-    ),
-    (
-        "act-competitor-matrix-pump",
-        "",
-        "competitor_matrix",
-        "吸奶器品牌/竞品矩阵",
-        "Marketing/Data",
-        "Proposed",
-        "Each core competitor battlecard shows sample count and weak-signal flag",
-    ),
-    (
-        "act-weekly-brief",
-        "",
-        "weekly_brief",
-        "搭建 weekly VOC brief",
-        "Data/Business Leads",
-        "Proposed",
-        "One-page weekly brief with owner and due date",
-    ),
-    (
-        "act-noise-taxonomy",
-        "",
-        "noise_taxonomy",
-        "建立 query 噪声词库",
-        "Data",
-        "Proposed",
-        "False positives are written back into query quality rules",
-    ),
-    (
-        "act-closed-loop",
-        "",
-        "closed_loop",
-        "建立 closed-loop 机制",
-        "Data/PMO",
-        "Proposed",
-        "Every important VOC insight receives an action_id",
-    ),
-    (
-        "act-feedback-integration",
-        "",
-        "feedback_integration",
-        "补充交易型反馈数据",
-        "CX/Data",
-        "Proposed",
-        "VOC issues align with tickets, returns, and reviews",
-    ),
-    (
-        "act-crisis-thresholds",
-        "",
-        "crisis_thresholds",
-        "建立危机预警阈值",
-        "PR/Data",
-        "Proposed",
-        "Every alert has evidence, severity, and review path",
-    ),
-    (
-        "act-content-opportunity",
-        "",
-        "content_opportunity",
-        "建立内容机会库",
-        "Content/Marketing",
-        "Proposed",
-        "Weekly content opportunities include platform, topic, evidence, and suggested brief",
-    ),
-    (
-        "act-region-language",
-        "",
-        "region_language_priority",
-        "建立区域与语言优先级",
-        "Marketing/Data",
-        "Proposed",
-        "Monthly language priority list excludes unknown country conclusions",
-    ),
-    (
-        "act-concept-candidates",
-        "",
-        "concept_candidates",
-        "建立产品共创概念池",
-        "Product/Research",
-        "Proposed",
-        "Each concept candidate has evidence count, risk gate, and validation path",
-    ),
-    (
-        "act-executive-monthly",
-        "",
-        "executive_monthly",
-        "搭建管理层月度洞察会材料",
-        "Data/Business Leads",
-        "Proposed",
-        "Monthly executive brief includes quality gates, top insights, and action review",
-    ),
-]
+def _stable_id(prefix: str, *parts: object) -> str:
+    payload = json.dumps(parts, ensure_ascii=False, sort_keys=True, default=str)
+    return f"{prefix}-{hashlib.sha256(payload.encode('utf-8')).hexdigest()[:16]}"
 
 
-def _write_action_register(mart_db: sqlite3.Connection, output_dir: Path) -> None:
+def _write_dict_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str]) -> None:
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    path.chmod(0o600)
+
+
+def _sample_rows_from_json(
+    insight_id: str,
+    samples_json: str,
+    sample_reason: str,
+    max_samples: int = 20,
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    try:
+        samples = json.loads(samples_json)
+    except json.JSONDecodeError:
+        samples = []
+    if not isinstance(samples, list):
+        return rows
+    for rank, sample in enumerate(samples[:max_samples], start=1):
+        if not isinstance(sample, dict):
+            continue
+        occurrence_id = str(sample.get("occurrence_id") or "")
+        if not occurrence_id:
+            continue
+        rows.append(
+            {
+                "sample_id": _stable_id("sample", insight_id, occurrence_id, rank, sample_reason),
+                "insight_id": insight_id,
+                "occurrence_id": occurrence_id,
+                "document_id": str(sample.get("document_id") or ""),
+                "evidence_text": _shorten(str(sample.get("evidence") or "")),
+                "url": str(sample.get("url") or ""),
+                "sentiment": str(sample.get("sentiment") or "unknown"),
+                "sample_rank": rank,
+                "sample_reason": sample_reason,
+            }
+        )
+    return rows
+
+
+def _default_due_dates() -> tuple[str, str]:
+    today = datetime.now(timezone.utc).date()
+    return (today + timedelta(days=14)).isoformat(), (today + timedelta(days=28)).isoformat()
+
+
+def _action_expected_metric(action_type: str) -> str:
+    return {
+        "query_update": "reviewed precision >= 80%; blocked business conclusions can be re-enabled",
+        "product_backlog": "issue negative share or related CS tickets decrease after shipped action",
+        "competitor_matrix": "battlecard reviewed and converted into claim/objection handling guidance",
+        "content_brief": "content brief shipped and engagement/positive theme lift reviewed",
+        "pr_triage": "alert triaged within 24h and 72h review completed",
+        "concept_test": "concept card reviewed with VOC samples plus external feedback",
+        "executive_decision": "decision owner and next experiment recorded",
+    }.get(action_type, "owner reviews insight and records next measurable action")
+
+
+def _insert_closure_rows(
+    mart_db: sqlite3.Connection,
+    output_dir: Path,
+    insight_rows: list[dict[str, Any]],
+    sample_rows: list[dict[str, Any]],
+    action_rows: list[dict[str, Any]],
+) -> None:
     mart_db.executemany(
         """
-        INSERT INTO fact_action_register(
-            action_id, insight_id, action_type, source_action, owner_domain,
-            status, expected_metric, baseline_value, target_value, due_date,
-            shipped_at, review_date, actual_metric, close_reason
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
-        """,
-        ACTION_REGISTER_ROWS,
-    )
-    csv_path = output_dir / "action_register.csv"
-    with csv_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(
-            [
-                "action_id",
-                "insight_id",
-                "action_type",
-                "source_action",
-                "owner_domain",
-                "status",
-                "expected_metric",
-                "baseline_value",
-                "target_value",
-                "due_date",
-                "shipped_at",
-                "review_date",
-                "actual_metric",
-                "close_reason",
-            ]
+        INSERT INTO fact_insight VALUES (
+            :insight_id, :play_id, :category, :entity_type, :entity_id,
+            :period, :readiness, :priority_score, :confidence_score,
+            :source_table, :source_key_json, :recommended_action_type,
+            :owner_domain, :created_at
         )
-        for row in ACTION_REGISTER_ROWS:
-            writer.writerow([*row, "", "", "", "", "", "", ""])
-    csv_path.chmod(0o600)
+        """,
+        insight_rows,
+    )
+    if sample_rows:
+        mart_db.executemany(
+            """
+            INSERT INTO fact_evidence_sample VALUES (
+                :sample_id, :insight_id, :occurrence_id, :document_id,
+                :evidence_text, :url, :sentiment, :sample_rank, :sample_reason
+            )
+            """,
+            sample_rows,
+        )
+        mart_db.executemany(
+            """
+            INSERT INTO fact_sample_review(
+                sample_id, review_status, sample_verdict, noise_reason,
+                business_relevance, reviewer, reviewed_at
+            ) VALUES (:sample_id, 'pending', NULL, NULL, NULL, NULL, NULL)
+            """,
+            sample_rows,
+        )
+    if action_rows:
+        mart_db.executemany(
+            """
+            INSERT INTO fact_action_register(
+                action_id, insight_id, action_type, source_action, owner_domain,
+                status, expected_metric, baseline_value, target_value, due_date,
+                shipped_at, review_date, actual_metric, close_reason
+            ) VALUES (
+                :action_id, :insight_id, :action_type, :source_action,
+                :owner_domain, :status, :expected_metric, :baseline_value,
+                :target_value, :due_date, NULL, :review_date, NULL, NULL
+            )
+            """,
+            action_rows,
+        )
+
+    _write_dict_csv(
+        output_dir / "insight_register.csv",
+        insight_rows,
+        [
+            "insight_id",
+            "play_id",
+            "category",
+            "entity_type",
+            "entity_id",
+            "period",
+            "readiness",
+            "priority_score",
+            "confidence_score",
+            "source_table",
+            "source_key_json",
+            "recommended_action_type",
+            "owner_domain",
+            "created_at",
+        ],
+    )
+    _write_dict_csv(
+        output_dir / "sample_review_queue.csv",
+        [
+            {
+                **sample,
+                "review_status": "pending",
+                "sample_verdict": "",
+                "noise_reason": "",
+                "business_relevance": "",
+                "reviewer": "",
+                "reviewed_at": "",
+            }
+            for sample in sample_rows
+        ],
+        [
+            "sample_id",
+            "insight_id",
+            "occurrence_id",
+            "document_id",
+            "evidence_text",
+            "url",
+            "sentiment",
+            "sample_rank",
+            "sample_reason",
+            "review_status",
+            "sample_verdict",
+            "noise_reason",
+            "business_relevance",
+            "reviewer",
+            "reviewed_at",
+        ],
+    )
+    _write_dict_csv(
+        output_dir / "action_register.csv",
+        action_rows,
+        [
+            "action_id",
+            "insight_id",
+            "action_type",
+            "source_action",
+            "owner_domain",
+            "status",
+            "expected_metric",
+            "baseline_value",
+            "target_value",
+            "due_date",
+            "review_date",
+        ],
+    )
+
+
+def _add_insight(
+    insight_rows: list[dict[str, Any]],
+    sample_rows: list[dict[str, Any]],
+    action_rows: list[dict[str, Any]],
+    *,
+    play_id: str,
+    category: str,
+    entity_type: str,
+    entity_id: str,
+    period: str,
+    readiness: str,
+    priority_score: float,
+    confidence_score: float,
+    source_table: str,
+    source_key: dict[str, Any],
+    recommended_action_type: str,
+    owner_domain: str,
+    samples_json: str = "[]",
+    sample_reason: str = "evidence",
+    create_action: bool = False,
+) -> str:
+    insight_id = _stable_id("insight", play_id, category, entity_type, entity_id, period, source_table)
+    created_at = datetime.now(timezone.utc).isoformat()
+    insight_rows.append(
+        {
+            "insight_id": insight_id,
+            "play_id": play_id,
+            "category": category,
+            "entity_type": entity_type,
+            "entity_id": entity_id,
+            "period": period,
+            "readiness": readiness,
+            "priority_score": priority_score,
+            "confidence_score": confidence_score,
+            "source_table": source_table,
+            "source_key_json": _json_text(source_key),
+            "recommended_action_type": recommended_action_type,
+            "owner_domain": owner_domain,
+            "created_at": created_at,
+        }
+    )
+    sample_rows.extend(_sample_rows_from_json(insight_id, samples_json, sample_reason))
+    if create_action:
+        due_date, review_date = _default_due_dates()
+        action_id = _stable_id("action", insight_id, recommended_action_type)
+        action_rows.append(
+            {
+                "action_id": action_id,
+                "insight_id": insight_id,
+                "action_type": recommended_action_type,
+                "source_action": f"{play_id} {category} {entity_type}:{entity_id}",
+                "owner_domain": owner_domain,
+                "status": "Proposed",
+                "expected_metric": _action_expected_metric(recommended_action_type),
+                "baseline_value": "",
+                "target_value": "",
+                "due_date": due_date,
+                "review_date": review_date,
+            }
+        )
+    return insight_id
+
+
+def _build_query_rewrite_recommendations(
+    mart_db: sqlite3.Connection,
+    search_rows: list[dict[str, Any]],
+    config: InsightConfig,
+) -> list[dict[str, Any]]:
+    must_include_by_category = {
+        "暖奶器": ["bottle", "baby", "milk", "warmer"],
+        "消毒器": ["bottle", "baby", "sterilizer", "dryer", "sanitizer"],
+        "吸奶器": ["breast", "pump", "pumping"],
+    }
+    rows: list[dict[str, Any]] = []
+    for row in search_rows:
+        if row["quality_status"] not in {"blocked_by_query_noise", "review"}:
+            continue
+        category = str(row["category"])
+        top_noise = [str(term) for term, _count in json.loads(str(row["top_noise_terms_json"]))]
+        configured_noise = list(config.query_noise.category_noise_terms.get(category, ()))
+        exclude_terms = sorted(set(top_noise + configured_noise))
+        watch_terms = list(config.query_noise.watch_terms.get(category, ()))
+        current_precision = row["estimated_precision"]
+        precision_value = float(current_precision) if current_precision is not None else 0.0
+        rows.append(
+            {
+                "category": category,
+                "search_id": str(row["search_id"]),
+                "search_name": str(row["search_name"]),
+                "current_precision": current_precision,
+                "top_noise_terms_json": row["top_noise_terms_json"],
+                "must_include_terms_json": _json_text(must_include_by_category.get(category, [])),
+                "exclude_terms_json": _json_text(exclude_terms),
+                "watch_terms_json": _json_text(watch_terms),
+                "sample_noise_examples_json": row["noise_samples_json"],
+                "expected_precision_lift": max(0.0, min(1.0 - precision_value, float(row["noise_rate"]) * 0.75)),
+            }
+        )
+    if rows:
+        mart_db.executemany(
+            """
+            INSERT INTO mart_query_rewrite_recommendation VALUES (
+                :category, :search_id, :search_name, :current_precision,
+                :top_noise_terms_json, :must_include_terms_json,
+                :exclude_terms_json, :watch_terms_json,
+                :sample_noise_examples_json, :expected_precision_lift
+            )
+            """,
+            rows,
+        )
+    return rows
+
+
+def _build_query_sample_review_queue(
+    mart_db: sqlite3.Connection,
+    output_dir: Path,
+    search_rows: list[dict[str, Any]],
+    meta: dict[str, OccurrenceMeta],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for row in search_rows:
+        if row["quality_status"] not in {"blocked_by_query_noise", "review"}:
+            continue
+        seen: set[str] = set()
+        try:
+            noise_samples = json.loads(str(row["noise_samples_json"]))
+        except json.JSONDecodeError:
+            noise_samples = []
+        for sample in noise_samples:
+            if not isinstance(sample, dict):
+                continue
+            occurrence_id = str(sample.get("occurrence_id") or "")
+            if not occurrence_id or occurrence_id in seen:
+                continue
+            seen.add(occurrence_id)
+            occurrence = meta.get(occurrence_id)
+            rows.append(
+                {
+                    "sample_id": _stable_id("query-sample", row["category"], row["search_id"], occurrence_id),
+                    "category": row["category"],
+                    "search_id": row["search_id"],
+                    "search_name": row["search_name"],
+                    "occurrence_id": occurrence_id,
+                    "document_id": str(sample.get("document_id") or (occurrence.document_id if occurrence else "")),
+                    "evidence_text": _shorten(str(sample.get("evidence") or (occurrence.evidence_text if occurrence else ""))),
+                    "url": str(sample.get("url") or (occurrence.url if occurrence else "")),
+                    "matched_noise": str(sample.get("matched_noise") or ""),
+                    "review_status": "pending",
+                    "sample_verdict": "",
+                    "noise_reason": "",
+                    "reviewer": "",
+                    "reviewed_at": "",
+                }
+            )
+        try:
+            occurrence_ids = json.loads(str(row["sample_occurrence_ids_json"]))
+        except json.JSONDecodeError:
+            occurrence_ids = []
+        for occurrence_id_raw in occurrence_ids:
+            occurrence_id = str(occurrence_id_raw)
+            if occurrence_id in seen:
+                continue
+            seen.add(occurrence_id)
+            occurrence = meta.get(occurrence_id)
+            if occurrence is None:
+                continue
+            rows.append(
+                {
+                    "sample_id": _stable_id("query-sample", row["category"], row["search_id"], occurrence_id),
+                    "category": row["category"],
+                    "search_id": row["search_id"],
+                    "search_name": row["search_name"],
+                    "occurrence_id": occurrence_id,
+                    "document_id": occurrence.document_id,
+                    "evidence_text": occurrence.evidence_text,
+                    "url": occurrence.url,
+                    "matched_noise": "",
+                    "review_status": "pending",
+                    "sample_verdict": "",
+                    "noise_reason": "",
+                    "reviewer": "",
+                    "reviewed_at": "",
+                }
+            )
+    if rows:
+        mart_db.executemany(
+            """
+            INSERT INTO fact_query_sample_review VALUES (
+                :sample_id, :category, :search_id, :search_name, :occurrence_id,
+                :document_id, :evidence_text, :url, :matched_noise,
+                :review_status, :sample_verdict, :noise_reason, :reviewer, :reviewed_at
+            )
+            """,
+            rows,
+        )
+    _write_dict_csv(
+        output_dir / "query_sample_review_queue.csv",
+        rows,
+        [
+            "sample_id",
+            "category",
+            "search_id",
+            "search_name",
+            "occurrence_id",
+            "document_id",
+            "evidence_text",
+            "url",
+            "matched_noise",
+            "review_status",
+            "sample_verdict",
+            "noise_reason",
+            "reviewer",
+            "reviewed_at",
+        ],
+    )
+    return rows
+
+
+def _build_insight_closure(
+    mart_db: sqlite3.Connection,
+    output_dir: Path,
+    *,
+    search_rows: list[dict[str, Any]],
+    pain_rows: list[dict[str, Any]],
+    competitor_rows: list[dict[str, Any]],
+    content_rows: list[dict[str, Any]],
+    crisis_rows: list[dict[str, Any]],
+    region_rows: list[dict[str, Any]],
+    concept_rows: list[dict[str, Any]],
+    executive_rows: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    insight_rows: list[dict[str, Any]] = []
+    sample_rows: list[dict[str, Any]] = []
+    action_rows: list[dict[str, Any]] = []
+
+    for row in search_rows:
+        status = str(row["quality_status"])
+        _add_insight(
+            insight_rows,
+            sample_rows,
+            action_rows,
+            play_id="play_1_search_quality",
+            category=str(row["category"]),
+            entity_type="search",
+            entity_id=str(row["search_id"] or row["search_name"]),
+            period="all",
+            readiness=status,
+            priority_score=float(row["noise_rate"]),
+            confidence_score=min(1.0, int(row["total_occurrences"]) / 50),
+            source_table="mart_search_quality",
+            source_key={"search_id": row["search_id"], "search_name": row["search_name"]},
+            recommended_action_type="query_update" if status != "pass" else "monitor",
+            owner_domain="Data",
+            samples_json=str(row["noise_samples_json"]),
+            sample_reason="query_noise",
+            create_action=status in {"blocked_by_query_noise", "review"},
+        )
+
+    for row in pain_rows:
+        readiness = str(row["readiness"])
+        _add_insight(
+            insight_rows,
+            sample_rows,
+            action_rows,
+            play_id="play_3_product_pain_radar",
+            category=str(row["category"]),
+            entity_type="topic",
+            entity_id=str(row["topic_id"]),
+            period="all",
+            readiness=readiness,
+            priority_score=float(row["priority_score"]),
+            confidence_score=min(1.0, int(row["evidence_count"]) / 20),
+            source_table="mart_product_pain_radar",
+            source_key={"topic_id": row["topic_id"]},
+            recommended_action_type="product_backlog",
+            owner_domain=str(row["owner_domain"]),
+            samples_json=str(row["evidence_samples_json"]),
+            sample_reason="product_pain",
+            create_action=readiness == "ready_for_action",
+        )
+
+    for row in competitor_rows:
+        readiness = str(row["readiness"])
+        _add_insight(
+            insight_rows,
+            sample_rows,
+            action_rows,
+            play_id="play_4_competitor_battlecard",
+            category=str(row["category"]),
+            entity_type="brand",
+            entity_id=str(row["brand_id"]),
+            period="all",
+            readiness=readiness,
+            priority_score=float(row["valid_mentions"]),
+            confidence_score=min(1.0, int(row["valid_mentions"]) / 20),
+            source_table="mart_competitor_battlecard",
+            source_key={"brand_id": row["brand_id"]},
+            recommended_action_type="competitor_matrix",
+            owner_domain="Marketing/Data",
+            samples_json=str(row["evidence_samples_json"]),
+            sample_reason="competitor_evidence",
+            create_action=readiness == "ready_for_review",
+        )
+
+    for row in content_rows:
+        readiness = str(row["readiness"])
+        _add_insight(
+            insight_rows,
+            sample_rows,
+            action_rows,
+            play_id="play_5_content_opportunity",
+            category=str(row["category"]),
+            entity_type="source_topic",
+            entity_id=f"{row['source_type']}:{row['topic_id']}",
+            period="all",
+            readiness=readiness,
+            priority_score=float(row["positive_mentions"]),
+            confidence_score=min(1.0, int(row["positive_mentions"]) / 20),
+            source_table="mart_content_opportunity",
+            source_key={"source_type": row["source_type"], "topic_id": row["topic_id"]},
+            recommended_action_type="content_brief",
+            owner_domain="Content/Marketing",
+            samples_json=str(row["evidence_samples_json"]),
+            sample_reason="positive_content",
+            create_action=readiness == "ready_for_review",
+        )
+
+    for row in crisis_rows:
+        alert_level = str(row["alert_level"])
+        if alert_level == "green":
+            continue
+        readiness = "blocked_by_query_noise" if alert_level == "data_quality_alert" else "ready_for_review"
+        _add_insight(
+            insight_rows,
+            sample_rows,
+            action_rows,
+            play_id="play_6_crisis_watch",
+            category=str(row["category"]),
+            entity_type="daily_alert",
+            entity_id=str(row["day"]),
+            period=str(row["day"]),
+            readiness=readiness,
+            priority_score=float(row["negative_rate"]),
+            confidence_score=min(1.0, int(row["negative_mentions"]) / 20),
+            source_table="mart_crisis_watch_daily",
+            source_key={"day": row["day"], "alert_level": alert_level},
+            recommended_action_type="data_quality_triage" if alert_level == "data_quality_alert" else "pr_triage",
+            owner_domain="Data" if alert_level == "data_quality_alert" else "PR/CX",
+            samples_json=str(row["negative_samples_json"]),
+            sample_reason="crisis_negative",
+            create_action=alert_level in {"yellow", "orange", "red"},
+        )
+
+    for row in region_rows:
+        if int(row["mentions"]) < 30:
+            continue
+        _add_insight(
+            insight_rows,
+            sample_rows,
+            action_rows,
+            play_id="play_7_region_language",
+            category=str(row["category"]),
+            entity_type="language_country",
+            entity_id=f"{row['language_code']}:{row['country_code']}",
+            period="all",
+            readiness=str(row["readiness"]),
+            priority_score=float(row["mentions"]),
+            confidence_score=1.0 if row["country_known"] else 0.5,
+            source_table="mart_region_language_priority",
+            source_key={"language_code": row["language_code"], "country_code": row["country_code"]},
+            recommended_action_type="localization_review",
+            owner_domain="Marketing/Data",
+        )
+
+    for row in concept_rows:
+        readiness = str(row["readiness"])
+        _add_insight(
+            insight_rows,
+            sample_rows,
+            action_rows,
+            play_id="play_8_concept_candidates",
+            category=str(row["category"]),
+            entity_type="topic",
+            entity_id=str(row["topic_id"]),
+            period="all",
+            readiness=readiness,
+            priority_score=float(row["concept_score"]),
+            confidence_score=min(1.0, int(row["evidence_mentions"]) / 30),
+            source_table="mart_concept_candidates",
+            source_key={"topic_id": row["topic_id"]},
+            recommended_action_type="concept_test",
+            owner_domain="Product/Research",
+            samples_json=str(row["evidence_samples_json"]),
+            sample_reason="concept_candidate",
+            create_action=readiness == "ready_for_review",
+        )
+
+    latest_month = max((str(row["month"]) for row in executive_rows), default="")
+    for row in executive_rows:
+        month = str(row["month"])
+        _add_insight(
+            insight_rows,
+            sample_rows,
+            action_rows,
+            play_id="play_10_executive_monthly",
+            category=str(row["category"]),
+            entity_type="month",
+            entity_id=month,
+            period=month,
+            readiness="ready_for_review",
+            priority_score=float(row["negative_rate"]),
+            confidence_score=1.0,
+            source_table="mart_executive_monthly",
+            source_key={"month": month},
+            recommended_action_type="executive_decision",
+            owner_domain="Data/Business Leads",
+            create_action=month == latest_month,
+        )
+
+    _insert_closure_rows(mart_db, output_dir, insight_rows, sample_rows, action_rows)
+    return insight_rows, sample_rows, action_rows
 
 
 def _markdown_table(headers: list[str], rows: list[list[str]]) -> str:
@@ -1322,6 +1859,41 @@ def _write_search_quality_report(output_dir: Path, rows: list[dict[str, Any]]) -
         "",
     ]
     path = output_dir / "search_precision_report.md"
+    path.write_text("\n".join(report), encoding="utf-8")
+    path.chmod(0o600)
+
+
+def _write_query_rewrite_recommendations(output_dir: Path, rows: list[dict[str, Any]]) -> None:
+    table_rows = [
+        [
+            str(row["category"]),
+            str(row["search_name"]),
+            "n/a" if row["current_precision"] is None else f"{float(row['current_precision']):.2%}",
+            ", ".join(json.loads(str(row["must_include_terms_json"]))),
+            ", ".join(json.loads(str(row["exclude_terms_json"]))[:8]),
+            f"{float(row['expected_precision_lift']):.2%}",
+        ]
+        for row in rows
+    ]
+    report = [
+        "# Query Rewrite Recommendations",
+        "",
+        "本报告只针对 `blocked_by_query_noise` 或 `review` search 输出，供 Meltwater query 配置和复测使用。",
+        "",
+        _markdown_table(
+            [
+                "Category",
+                "Search",
+                "Current Precision",
+                "Must Include",
+                "Suggested Excludes",
+                "Expected Lift",
+            ],
+            table_rows,
+        ),
+        "",
+    ]
+    path = output_dir / "query_rewrite_recommendations.md"
     path.write_text("\n".join(report), encoding="utf-8")
     path.chmod(0o600)
 
@@ -1431,7 +2003,7 @@ def _write_weekly_brief(
         "",
         "## Action Loop",
         "",
-        "初始 action register 已生成到 `action_register.csv`，后续洞察应写回 owner、due date 和复盘指标。",
+        "动态 action register 已生成到 `action_register.csv`，后续应写回 owner、due date 和复盘指标。",
         "",
     ]
     path = output_dir / "weekly_voc_brief.md"
@@ -1653,6 +2225,7 @@ def _write_manifest(
         "outputs": [
             "voc_mart.sqlite",
             "search_precision_report.md",
+            "query_rewrite_recommendations.md",
             "pain_point_cards.md",
             "pain_point_cards.csv",
             "weekly_voc_brief.md",
@@ -1662,6 +2235,9 @@ def _write_manifest(
             "region_language_priority.md",
             "concept_candidates.md",
             "executive_monthly_brief.md",
+            "insight_register.csv",
+            "sample_review_queue.csv",
+            "query_sample_review_queue.csv",
             "action_register.csv",
         ],
     }
@@ -1708,14 +2284,28 @@ def _build_mart_outputs(
             insight_config,
             blocked_categories,
         )
-        crisis_rows = _build_crisis_watch_daily(mart_db, meta)
+        crisis_rows = _build_crisis_watch_daily(mart_db, meta, blocked_categories)
         region_rows = _build_region_language_priority(mart_db, meta, blocked_categories)
         concept_rows = _build_concept_candidates(mart_db, pain_rows, insight_config)
         executive_rows = _build_executive_monthly(mart_db, meta, search_rows, pain_rows)
-        _write_action_register(mart_db, output_dir)
+        query_rewrite_rows = _build_query_rewrite_recommendations(mart_db, search_rows, insight_config)
+        query_sample_rows = _build_query_sample_review_queue(mart_db, output_dir, search_rows, meta)
+        insight_rows, sample_rows, action_rows = _build_insight_closure(
+            mart_db,
+            output_dir,
+            search_rows=search_rows,
+            pain_rows=pain_rows,
+            competitor_rows=competitor_rows,
+            content_rows=content_rows,
+            crisis_rows=crisis_rows,
+            region_rows=region_rows,
+            concept_rows=concept_rows,
+            executive_rows=executive_rows,
+        )
         mart_db.commit()
 
     _write_search_quality_report(output_dir, search_rows)
+    _write_query_rewrite_recommendations(output_dir, query_rewrite_rows)
     _write_pain_cards(output_dir, pain_rows)
     _write_weekly_brief(output_dir, health_rows, pain_rows, search_rows)
     _write_competitor_battlecards(output_dir, competitor_rows)
@@ -1738,7 +2328,12 @@ def _build_mart_outputs(
             "mart_region_language_priority": len(region_rows),
             "mart_concept_candidates": len(concept_rows),
             "mart_executive_monthly": len(executive_rows),
-            "fact_action_register": len(ACTION_REGISTER_ROWS),
+            "mart_query_rewrite_recommendation": len(query_rewrite_rows),
+            "fact_query_sample_review": len(query_sample_rows),
+            "fact_insight": len(insight_rows),
+            "fact_evidence_sample": len(sample_rows),
+            "fact_sample_review": len(sample_rows),
+            "fact_action_register": len(action_rows),
         },
     )
     mart_path.chmod(0o600)

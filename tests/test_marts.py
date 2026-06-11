@@ -78,6 +78,7 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert (output_dir / "voc_mart.sqlite").is_file()
     assert (output_dir / "mart_manifest.json").is_file()
     assert (output_dir / "search_precision_report.md").is_file()
+    assert (output_dir / "query_rewrite_recommendations.md").is_file()
     assert (output_dir / "pain_point_cards.md").is_file()
     assert (output_dir / "pain_point_cards.csv").is_file()
     assert (output_dir / "weekly_voc_brief.md").is_file()
@@ -87,6 +88,9 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert (output_dir / "region_language_priority.md").is_file()
     assert (output_dir / "concept_candidates.md").is_file()
     assert (output_dir / "executive_monthly_brief.md").is_file()
+    assert (output_dir / "insight_register.csv").is_file()
+    assert (output_dir / "sample_review_queue.csv").is_file()
+    assert (output_dir / "query_sample_review_queue.csv").is_file()
     assert (output_dir / "action_register.csv").is_file()
 
     manifest = json.loads((output_dir / "mart_manifest.json").read_text(encoding="utf-8"))
@@ -98,7 +102,12 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert manifest["counts"]["mart_region_language_priority"] == 1
     assert manifest["counts"]["mart_concept_candidates"] == 1
     assert manifest["counts"]["mart_executive_monthly"] == 1
-    assert manifest["counts"]["fact_action_register"] == 12
+    assert manifest["counts"]["mart_query_rewrite_recommendation"] == 1
+    assert manifest["counts"]["fact_query_sample_review"] == 2
+    assert manifest["counts"]["fact_insight"] == 9
+    assert manifest["counts"]["fact_evidence_sample"] >= 8
+    assert manifest["counts"]["fact_sample_review"] == manifest["counts"]["fact_evidence_sample"]
+    assert manifest["counts"]["fact_action_register"] >= 1
 
     with sqlite3.connect(output_dir / "voc_mart.sqlite") as db:
         search = db.execute(
@@ -137,6 +146,13 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
             """
         ).fetchone()
         crisis_count = db.execute("SELECT COUNT(*) FROM mart_crisis_watch_daily").fetchone()
+        crisis_alerts = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM mart_crisis_watch_daily
+            WHERE alert_level = 'data_quality_alert'
+            """
+        ).fetchone()
         region = db.execute(
             """
             SELECT mentions, positive_mentions, country_known, readiness
@@ -158,6 +174,19 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
             WHERE category = 'A' AND month = '2026-01'
             """
         ).fetchone()
+        query_rewrite = db.execute(
+            """
+            SELECT search_name, exclude_terms_json
+            FROM mart_query_rewrite_recommendation
+            WHERE category = 'A'
+            """
+        ).fetchone()
+        action = db.execute(
+            """
+            SELECT COUNT(*), SUM(CASE WHEN insight_id <> '' THEN 1 ELSE 0 END)
+            FROM fact_action_register
+            """
+        ).fetchone()
 
     assert search == (2, 3, 2, "blocked_by_query_noise")
     assert pain == (2, 0, "blocked_by_query_noise")
@@ -165,6 +194,11 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert competitor == (2, 2, "blocked_by_query_noise")
     assert content == (2, 2, "blocked_by_query_noise")
     assert crisis_count == (3,)
+    assert crisis_alerts == (3,)
     assert region == (4, 2, 1, "blocked_by_query_noise")
     assert concept == (2, 0, "blocked_by_query_noise")
     assert executive == (4, 3, 1)
+    assert query_rewrite[0] == "Fixture Search"
+    assert "changed" in query_rewrite[1]
+    assert action[0] >= 1
+    assert action[0] == action[1]
