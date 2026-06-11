@@ -65,6 +65,12 @@ uv run --python 3.12 python -m meltwater_excel.cli build-marts \
 | `pain_point_cards.md` | 产品痛点卡 Markdown |
 | `pain_point_cards.csv` | 产品痛点卡结构化版本 |
 | `weekly_voc_brief.md` | 周度 VOC brief |
+| `competitor_battlecards.md` | 竞品 Battlecard |
+| `content_opportunities.md` | 内容与种草机会 |
+| `crisis_watch_daily.md` | 危机与异常日预警 |
+| `region_language_priority.md` | 区域与语言优先级 |
+| `concept_candidates.md` | 产品共创概念候选 |
+| `executive_monthly_brief.md` | 管理层月度洞察会入口 |
 | `action_register.csv` | 初始动作闭环登记 |
 
 当前核心 mart 表：
@@ -72,6 +78,12 @@ uv run --python 3.12 python -m meltwater_excel.cli build-marts \
 - `mart_search_quality`
 - `mart_product_pain_radar`
 - `mart_category_health_weekly`
+- `mart_competitor_battlecard`
+- `mart_content_opportunity`
+- `mart_crisis_watch_daily`
+- `mart_region_language_priority`
+- `mart_concept_candidates`
+- `mart_executive_monthly`
 - `fact_action_register`
 
 ---
@@ -114,6 +126,15 @@ make quality
 
 当前 2026-06-11 全量结果中，暖奶器和消毒器被 query quality gate 阻断；吸奶器痛点雷达可作为 P0 可行动用例。
 
+其他 playbook 分支同样继承 query quality gate：
+
+- 竞品 Battlecard：样本不足或 query 阻断时不可解释为市场份额。
+- 内容机会：只把 `ready_for_review` 或更高状态进入内容 brief。
+- 危机预警：非 green 事件应进入 PR/CX triage。
+- 区域语言：`country_known=no` 只能做语言线索，不能直接做地域市场结论。
+- 概念候选：必须再接入 review、客服、退货等交易型反馈验证。
+- 管理层月报：优先展示质量阻断、可行动洞察和 action closed-loop 状态。
+
 ---
 
 ## 6. 快速检查命令
@@ -134,6 +155,12 @@ with sqlite3.connect("data/marts/20260611/voc_mart.sqlite") as db:
         "mart_search_quality",
         "mart_product_pain_radar",
         "mart_category_health_weekly",
+        "mart_competitor_battlecard",
+        "mart_content_opportunity",
+        "mart_crisis_watch_daily",
+        "mart_region_language_priority",
+        "mart_concept_candidates",
+        "mart_executive_monthly",
         "fact_action_register",
     ]:
         print(table, db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0])
@@ -156,4 +183,3 @@ with sqlite3.connect("data/marts/20260611/voc_mart.sqlite") as db:
         print(row)
 PY
 ```
-

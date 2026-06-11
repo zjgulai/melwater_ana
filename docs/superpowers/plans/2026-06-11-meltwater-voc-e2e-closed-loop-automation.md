@@ -10,6 +10,7 @@
 ## Execution Log
 
 - 2026-06-11: P0 已执行。本次新增 `config/insights/` 业务语义配置、`src/meltwater_excel/taxonomy.py`、`src/meltwater_excel/marts.py`、CLI `build-marts`、Makefile `insights` 目标、`scripts/run_ruff_stdin.py`、P0 自动化测试和 `docs/runbooks/voc-insight-automation.md`。已生成全量产物 `data/marts/20260611/`：`voc_mart.sqlite`、`search_precision_report.md`、`pain_point_cards.md/csv`、`weekly_voc_brief.md`、`action_register.csv`。验证结果：`make quality` 通过；`mart_manifest.json` PASS，包含 `mart_search_quality=9`、`mart_product_pain_radar=21`、`mart_category_health_weekly=56`、`fact_action_register=8`。业务门禁：暖奶器和消毒器被 query quality gate 标记为 `blocked_by_query_noise`，吸奶器痛点雷达可进入行动复核。
+- 2026-06-11: Playbook 其他分支闭环已继续执行。本次在 `build-marts` 中新增 `mart_competitor_battlecard`、`mart_content_opportunity`、`mart_crisis_watch_daily`、`mart_region_language_priority`、`mart_concept_candidates`、`mart_executive_monthly`，并生成 `competitor_battlecards.md`、`content_opportunities.md`、`crisis_watch_daily.md`、`region_language_priority.md`、`concept_candidates.md`、`executive_monthly_brief.md`。这些分支继承 search quality gate，避免暖奶器/消毒器在 query 未治理前进入确定性业务结论。
 
 ---
 
