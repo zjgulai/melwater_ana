@@ -20,6 +20,7 @@
 - `query_noise_rules.json`：噪声词、排除语境和观察词
 - `insight_thresholds.json`：precision、样本量和弱信号阈值
 - `action_owners.example.json`：业务 owner 域模板
+- `action_feedback.example.csv`：action 状态回写模板
 
 ---
 
@@ -46,6 +47,23 @@ uv run --python 3.12 python -m meltwater_excel.cli build-marts \
   --config config/excel_export_sources.json \
   --output-dir data/marts/YYYYMMDD_custom \
   --insights-config-dir config/insights
+```
+
+带 action 回写重跑：
+
+```bash
+uv run --python 3.12 python -m meltwater_excel.cli build-marts \
+  --config config/excel_export_sources.json \
+  --output-dir data/marts/YYYYMMDD_with_feedback \
+  --insights-config-dir config/insights \
+  --action-feedback path/to/action_feedback.csv
+```
+
+或：
+
+```bash
+make insights INSIGHTS_OUTPUT_DIR=data/marts/YYYYMMDD_with_feedback \
+  INSIGHTS_ACTION_FEEDBACK=path/to/action_feedback.csv
 ```
 
 注意：`build-marts` 不覆盖已存在目录；如果需要重跑，请先换一个输出目录或备份旧目录。
@@ -75,7 +93,10 @@ uv run --python 3.12 python -m meltwater_excel.cli build-marts \
 | `insight_register.csv` | 稳定 insight_id 和 readiness 注册表 |
 | `sample_review_queue.csv` | 洞察证据样本人工复核队列 |
 | `query_sample_review_queue.csv` | query precision 人工复核队列 |
-| `action_register.csv` | 动态动作闭环登记 |
+| `action_register.csv` | 动态动作闭环登记，支持 action feedback 覆盖 |
+| `action_status_summary.csv` | owner/status 维度闭环状态汇总 |
+| `action_feedback_unmatched.csv` | 回写文件中未匹配到自动 action 的审计行 |
+| `action_closed_loop_summary.md` | action 闭环率、逾期、状态分布摘要 |
 
 当前核心 mart 表：
 
@@ -94,6 +115,8 @@ uv run --python 3.12 python -m meltwater_excel.cli build-marts \
 - `fact_sample_review`
 - `fact_query_sample_review`
 - `fact_action_register`
+- `mart_action_status_summary`
+- `fact_action_feedback_unmatched`
 
 ---
 
@@ -150,6 +173,8 @@ make quality
 - 有证据样本的 insight 会进入 `sample_review_queue.csv`。
 - 被 query gate 阻断或需要人工复核的 search 会进入 `query_sample_review_queue.csv`。
 - 可行动 insight 会自动生成 `action_id`，并填入默认 `due_date` 和 `review_date`。
+- 业务可通过 `--action-feedback` 回写 `owner_name`、`status`、`shipped_at`、`actual_metric`、`close_reason` 等生命周期字段。
+- 回写状态只允许：`Proposed`、`Accepted`、`In Progress`、`Shipped`、`Measured`、`Closed`、`Rejected`。
 - 暖奶器/消毒器的 crisis 输出被降级为 `data_quality_alert`，不作为业务危机结论。
 
 ---
@@ -184,6 +209,8 @@ with sqlite3.connect("data/marts/20260611/voc_mart.sqlite") as db:
         "fact_sample_review",
         "fact_query_sample_review",
         "fact_action_register",
+        "mart_action_status_summary",
+        "fact_action_feedback_unmatched",
     ]:
         print(table, db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0])
 PY

@@ -1,3 +1,4 @@
+import csv
 import json
 import sqlite3
 from pathlib import Path
@@ -92,6 +93,9 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert (output_dir / "sample_review_queue.csv").is_file()
     assert (output_dir / "query_sample_review_queue.csv").is_file()
     assert (output_dir / "action_register.csv").is_file()
+    assert (output_dir / "action_status_summary.csv").is_file()
+    assert (output_dir / "action_feedback_unmatched.csv").is_file()
+    assert (output_dir / "action_closed_loop_summary.md").is_file()
 
     manifest = json.loads((output_dir / "mart_manifest.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "PASS"
@@ -108,6 +112,9 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert manifest["counts"]["fact_evidence_sample"] >= 8
     assert manifest["counts"]["fact_sample_review"] == manifest["counts"]["fact_evidence_sample"]
     assert manifest["counts"]["fact_action_register"] >= 1
+    assert manifest["counts"]["mart_action_status_summary"] >= 1
+    assert manifest["counts"]["fact_action_feedback_unmatched"] == 0
+    assert manifest["counts"]["action_feedback_applied"] == 0
 
     with sqlite3.connect(output_dir / "voc_mart.sqlite") as db:
         search = db.execute(
@@ -187,6 +194,7 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
             FROM fact_action_register
             """
         ).fetchone()
+        action_summary = db.execute("SELECT SUM(action_count) FROM mart_action_status_summary").fetchone()
 
     assert search == (2, 3, 2, "blocked_by_query_noise")
     assert pain == (2, 0, "blocked_by_query_noise")
@@ -202,3 +210,103 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert "changed" in query_rewrite[1]
     assert action[0] >= 1
     assert action[0] == action[1]
+    assert action_summary == (action[0],)
+
+
+def test_build_marts_applies_action_feedback_overlay(fixture_config: Path, tmp_path: Path):
+    insight_config_dir = _write_test_insight_config(tmp_path)
+    base_output = tmp_path / "base_marts"
+    build_marts(fixture_config, base_output, insight_config_dir)
+
+    with sqlite3.connect(base_output / "voc_mart.sqlite") as db:
+        action_id, insight_id = db.execute(
+            """
+            SELECT action_id, insight_id
+            FROM fact_action_register
+            ORDER BY action_id
+            LIMIT 1
+            """
+        ).fetchone()
+
+    feedback_path = tmp_path / "action_feedback.csv"
+    fieldnames = [
+        "action_id",
+        "insight_id",
+        "owner_domain",
+        "owner_name",
+        "status",
+        "baseline_value",
+        "target_value",
+        "due_date",
+        "shipped_at",
+        "review_date",
+        "actual_metric",
+        "close_reason",
+    ]
+    with feedback_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "action_id": action_id,
+                "insight_id": insight_id,
+                "owner_domain": "Data",
+                "owner_name": "Owner A",
+                "status": "Closed",
+                "baseline_value": "precision=0.40",
+                "target_value": "precision>=0.80",
+                "due_date": "2026-01-10",
+                "shipped_at": "2026-01-08",
+                "review_date": "2026-01-20",
+                "actual_metric": "precision=0.86",
+                "close_reason": "query updated and remeasured",
+            }
+        )
+        writer.writerow(
+            {
+                "action_id": "missing-action",
+                "status": "Accepted",
+                "owner_name": "Owner B",
+            }
+        )
+
+    output_dir = tmp_path / "feedback_marts"
+    build_marts(fixture_config, output_dir, insight_config_dir, feedback_path)
+    manifest = json.loads((output_dir / "mart_manifest.json").read_text(encoding="utf-8"))
+
+    with sqlite3.connect(output_dir / "voc_mart.sqlite") as db:
+        action = db.execute(
+            """
+            SELECT owner_name, status, baseline_value, target_value, shipped_at, actual_metric, close_reason
+            FROM fact_action_register
+            WHERE action_id = ?
+            """,
+            (action_id,),
+        ).fetchone()
+        summary = db.execute(
+            """
+            SELECT action_count, measured_count, closed_count, overdue_count
+            FROM mart_action_status_summary
+            WHERE owner_name = 'Owner A' AND status = 'Closed'
+            """
+        ).fetchone()
+        unmatched = db.execute(
+            """
+            SELECT action_id, reason
+            FROM fact_action_feedback_unmatched
+            """
+        ).fetchone()
+
+    assert manifest["counts"]["action_feedback_applied"] == 1
+    assert manifest["counts"]["fact_action_feedback_unmatched"] == 1
+    assert action == (
+        "Owner A",
+        "Closed",
+        "precision=0.40",
+        "precision>=0.80",
+        "2026-01-08",
+        "precision=0.86",
+        "query updated and remeasured",
+    )
+    assert summary == (1, 1, 1, 0)
+    assert unmatched == ("missing-action", "action_id_not_generated")

@@ -60,6 +60,7 @@ def build_parser() -> argparse.ArgumentParser:
     marts.add_argument("--config", required=True)
     marts.add_argument("--output-dir", required=True)
     marts.add_argument("--insights-config-dir", default="config/insights")
+    marts.add_argument("--action-feedback")
 
     sample = subparsers.add_parser("sample-audit")
     sample.add_argument("--config", required=True)
@@ -111,7 +112,7 @@ def main(argv: list[str] | None = None) -> int:
     elif args.command == "build-all":
         print(build_all(args.config, args.output_dir))
     elif args.command == "build-marts":
-        print(build_marts(args.config, args.output_dir, args.insights_config_dir))
+        print(build_marts(args.config, args.output_dir, args.insights_config_dir, args.action_feedback))
     elif args.command == "sample-audit":
         result = audit_random_samples(
             args.config,

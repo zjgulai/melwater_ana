@@ -1,0 +1,2 @@
+action_id,insight_id,owner_domain,owner_name,status,expected_metric,baseline_value,target_value,due_date,shipped_at,review_date,actual_metric,close_reason
+replace-with-action-id,replace-with-insight-id,Data,,Accepted,,precision=0.40,precision>=0.80,2026-06-25,,2026-07-09,,

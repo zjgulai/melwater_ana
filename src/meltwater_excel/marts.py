@@ -9,7 +9,7 @@ import sqlite3
 import tempfile
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -68,6 +68,51 @@ class PainGroup:
     valid_mentions: int = 0
     negative_mentions: int = 0
     samples: list[dict[str, str]] = field(default_factory=list)
+
+
+ACTION_STATUSES = ("Proposed", "Accepted", "In Progress", "Shipped", "Measured", "Closed", "Rejected")
+ACTION_TERMINAL_STATUSES = {"Closed", "Rejected"}
+ACTION_ACTIVE_STATUSES = {"Proposed", "Accepted", "In Progress"}
+ACTION_STATUS_ALIASES = {
+    "proposed": "Proposed",
+    "accepted": "Accepted",
+    "in progress": "In Progress",
+    "in_progress": "In Progress",
+    "shipped": "Shipped",
+    "measured": "Measured",
+    "closed": "Closed",
+    "rejected": "Rejected",
+}
+ACTION_FEEDBACK_EDITABLE_FIELDS = {
+    "owner_domain",
+    "owner_name",
+    "status",
+    "expected_metric",
+    "baseline_value",
+    "target_value",
+    "due_date",
+    "shipped_at",
+    "review_date",
+    "actual_metric",
+    "close_reason",
+}
+ACTION_REGISTER_FIELDS = [
+    "action_id",
+    "insight_id",
+    "action_type",
+    "source_action",
+    "owner_domain",
+    "owner_name",
+    "status",
+    "expected_metric",
+    "baseline_value",
+    "target_value",
+    "due_date",
+    "shipped_at",
+    "review_date",
+    "actual_metric",
+    "close_reason",
+]
 
 
 def _json_text(value: Any) -> str:
@@ -362,6 +407,7 @@ def _create_mart_schema(db: sqlite3.Connection) -> None:
             action_type TEXT NOT NULL,
             source_action TEXT NOT NULL,
             owner_domain TEXT NOT NULL,
+            owner_name TEXT,
             status TEXT NOT NULL,
             expected_metric TEXT NOT NULL,
             baseline_value TEXT,
@@ -371,6 +417,25 @@ def _create_mart_schema(db: sqlite3.Connection) -> None:
             review_date TEXT,
             actual_metric TEXT,
             close_reason TEXT
+        );
+
+        CREATE TABLE mart_action_status_summary(
+            owner_domain TEXT NOT NULL,
+            owner_name TEXT NOT NULL,
+            status TEXT NOT NULL,
+            action_count INTEGER NOT NULL,
+            overdue_count INTEGER NOT NULL,
+            due_next_7d_count INTEGER NOT NULL,
+            measured_count INTEGER NOT NULL,
+            closed_count INTEGER NOT NULL,
+            rejected_count INTEGER NOT NULL,
+            PRIMARY KEY(owner_domain, owner_name, status)
+        );
+
+        CREATE TABLE fact_action_feedback_unmatched(
+            action_id TEXT PRIMARY KEY,
+            reason TEXT NOT NULL,
+            payload_json TEXT NOT NULL
         );
         """
     )
@@ -1256,6 +1321,143 @@ def _default_due_dates() -> tuple[str, str]:
     return (today + timedelta(days=14)).isoformat(), (today + timedelta(days=28)).isoformat()
 
 
+def _normalize_action_status(value: str) -> str:
+    normalized = " ".join(value.strip().split())
+    if not normalized:
+        return ""
+    status = ACTION_STATUS_ALIASES.get(normalized.lower(), normalized)
+    if status not in ACTION_STATUSES:
+        allowed = ", ".join(ACTION_STATUSES)
+        raise ValueError(f"unsupported action status {value!r}; allowed values: {allowed}")
+    return status
+
+
+def _load_action_feedback(action_feedback_path: Path | str | None) -> dict[str, dict[str, str]]:
+    if action_feedback_path is None:
+        return {}
+    path = Path(action_feedback_path)
+    if not path.exists():
+        raise FileNotFoundError(f"action feedback file does not exist: {path}")
+
+    if path.suffix.lower() == ".json":
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict) and isinstance(payload.get("actions"), list):
+            raw_rows = payload["actions"]
+        elif isinstance(payload, list):
+            raw_rows = payload
+        elif isinstance(payload, dict):
+            raw_rows = [{**value, "action_id": action_id} for action_id, value in payload.items() if isinstance(value, dict)]
+        else:
+            raise ValueError("action feedback JSON must be a list, an object with actions, or an action_id mapping")
+    else:
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            raw_rows = list(csv.DictReader(handle))
+
+    feedback: dict[str, dict[str, str]] = {}
+    for index, raw_row in enumerate(raw_rows, start=2):
+        if not isinstance(raw_row, dict):
+            raise ValueError(f"action feedback row {index} must be an object")
+        row = {str(key): "" if value is None else str(value).strip() for key, value in raw_row.items()}
+        action_id = row.get("action_id", "")
+        if not action_id:
+            raise ValueError(f"action feedback row {index} is missing action_id")
+        if action_id in feedback:
+            raise ValueError(f"duplicate action feedback for action_id={action_id}")
+        if row.get("status"):
+            row["status"] = _normalize_action_status(row["status"])
+        feedback[action_id] = row
+    return feedback
+
+
+def _merge_action_feedback(
+    action_rows: list[dict[str, Any]],
+    feedback_by_action_id: dict[str, dict[str, str]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
+    if not feedback_by_action_id:
+        return action_rows, [], 0
+
+    rows_by_action_id = {str(row["action_id"]): row for row in action_rows}
+    applied_count = 0
+    unmatched_rows: list[dict[str, Any]] = []
+
+    for action_id, feedback in feedback_by_action_id.items():
+        action = rows_by_action_id.get(action_id)
+        if action is None:
+            unmatched_rows.append(
+                {
+                    "action_id": action_id,
+                    "reason": "action_id_not_generated",
+                    "payload_json": _json_text(feedback),
+                }
+            )
+            continue
+        feedback_insight_id = feedback.get("insight_id", "")
+        if feedback_insight_id and feedback_insight_id != action.get("insight_id"):
+            raise ValueError(
+                "action feedback insight_id mismatch for "
+                f"action_id={action_id}: {feedback_insight_id} != {action.get('insight_id')}"
+            )
+        for field_name in ACTION_FEEDBACK_EDITABLE_FIELDS:
+            value = feedback.get(field_name)
+            if value is not None and value != "":
+                action[field_name] = value
+        applied_count += 1
+
+    return action_rows, unmatched_rows, applied_count
+
+
+def _parse_iso_date(value: Any) -> date | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00")).date()
+    except ValueError:
+        try:
+            return datetime.strptime(text, "%Y-%m-%d").date()
+        except ValueError as exc:
+            raise ValueError(f"invalid ISO date value: {text}") from exc
+
+
+def _build_action_status_summary(action_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    today = datetime.now(timezone.utc).date()
+    next_week = today + timedelta(days=7)
+    grouped: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for row in action_rows:
+        owner_domain = str(row.get("owner_domain") or "")
+        owner_name = str(row.get("owner_name") or "")
+        status = str(row.get("status") or "Proposed")
+        key = (owner_domain, owner_name, status)
+        summary = grouped.setdefault(
+            key,
+            {
+                "owner_domain": owner_domain,
+                "owner_name": owner_name,
+                "status": status,
+                "action_count": 0,
+                "overdue_count": 0,
+                "due_next_7d_count": 0,
+                "measured_count": 0,
+                "closed_count": 0,
+                "rejected_count": 0,
+            },
+        )
+        due_date = _parse_iso_date(row.get("due_date"))
+        active = status in ACTION_ACTIVE_STATUSES
+        measured = status in {"Measured", "Closed"} or bool(str(row.get("actual_metric") or "").strip())
+        summary["action_count"] += 1
+        summary["overdue_count"] += int(bool(active and due_date and due_date < today))
+        summary["due_next_7d_count"] += int(bool(active and due_date and today <= due_date <= next_week))
+        summary["measured_count"] += int(measured)
+        summary["closed_count"] += int(status == "Closed")
+        summary["rejected_count"] += int(status == "Rejected")
+
+    return sorted(
+        grouped.values(),
+        key=lambda item: (str(item["owner_domain"]), str(item["owner_name"]), str(item["status"])),
+    )
+
+
 def _action_expected_metric(action_type: str) -> str:
     return {
         "query_update": "reviewed precision >= 80%; blocked business conclusions can be re-enabled",
@@ -1274,6 +1476,7 @@ def _insert_closure_rows(
     insight_rows: list[dict[str, Any]],
     sample_rows: list[dict[str, Any]],
     action_rows: list[dict[str, Any]],
+    unmatched_feedback_rows: list[dict[str, Any]],
 ) -> None:
     mart_db.executemany(
         """
@@ -1310,15 +1513,36 @@ def _insert_closure_rows(
             """
             INSERT INTO fact_action_register(
                 action_id, insight_id, action_type, source_action, owner_domain,
-                status, expected_metric, baseline_value, target_value, due_date,
+                owner_name, status, expected_metric, baseline_value, target_value, due_date,
                 shipped_at, review_date, actual_metric, close_reason
             ) VALUES (
                 :action_id, :insight_id, :action_type, :source_action,
-                :owner_domain, :status, :expected_metric, :baseline_value,
-                :target_value, :due_date, NULL, :review_date, NULL, NULL
+                :owner_domain, :owner_name, :status, :expected_metric, :baseline_value,
+                :target_value, :due_date, :shipped_at, :review_date, :actual_metric, :close_reason
             )
             """,
             action_rows,
+        )
+    summary_rows = _build_action_status_summary(action_rows)
+    if summary_rows:
+        mart_db.executemany(
+            """
+            INSERT INTO mart_action_status_summary VALUES (
+                :owner_domain, :owner_name, :status, :action_count,
+                :overdue_count, :due_next_7d_count, :measured_count,
+                :closed_count, :rejected_count
+            )
+            """,
+            summary_rows,
+        )
+    if unmatched_feedback_rows:
+        mart_db.executemany(
+            """
+            INSERT INTO fact_action_feedback_unmatched VALUES (
+                :action_id, :reason, :payload_json
+            )
+            """,
+            unmatched_feedback_rows,
         )
 
     _write_dict_csv(
@@ -1376,18 +1600,30 @@ def _insert_closure_rows(
     _write_dict_csv(
         output_dir / "action_register.csv",
         action_rows,
+        ACTION_REGISTER_FIELDS,
+    )
+    _write_dict_csv(
+        output_dir / "action_status_summary.csv",
+        summary_rows,
+        [
+            "owner_domain",
+            "owner_name",
+            "status",
+            "action_count",
+            "overdue_count",
+            "due_next_7d_count",
+            "measured_count",
+            "closed_count",
+            "rejected_count",
+        ],
+    )
+    _write_dict_csv(
+        output_dir / "action_feedback_unmatched.csv",
+        unmatched_feedback_rows,
         [
             "action_id",
-            "insight_id",
-            "action_type",
-            "source_action",
-            "owner_domain",
-            "status",
-            "expected_metric",
-            "baseline_value",
-            "target_value",
-            "due_date",
-            "review_date",
+            "reason",
+            "payload_json",
         ],
     )
 
@@ -1444,12 +1680,16 @@ def _add_insight(
                 "action_type": recommended_action_type,
                 "source_action": f"{play_id} {category} {entity_type}:{entity_id}",
                 "owner_domain": owner_domain,
+                "owner_name": "",
                 "status": "Proposed",
                 "expected_metric": _action_expected_metric(recommended_action_type),
                 "baseline_value": "",
                 "target_value": "",
                 "due_date": due_date,
+                "shipped_at": "",
                 "review_date": review_date,
+                "actual_metric": "",
+                "close_reason": "",
             }
         )
     return insight_id
@@ -1614,6 +1854,7 @@ def _build_insight_closure(
     mart_db: sqlite3.Connection,
     output_dir: Path,
     *,
+    action_feedback: dict[str, dict[str, str]],
     search_rows: list[dict[str, Any]],
     pain_rows: list[dict[str, Any]],
     competitor_rows: list[dict[str, Any]],
@@ -1622,7 +1863,7 @@ def _build_insight_closure(
     region_rows: list[dict[str, Any]],
     concept_rows: list[dict[str, Any]],
     executive_rows: list[dict[str, Any]],
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], int]:
     insight_rows: list[dict[str, Any]] = []
     sample_rows: list[dict[str, Any]] = []
     action_rows: list[dict[str, Any]] = []
@@ -1811,8 +2052,9 @@ def _build_insight_closure(
             create_action=month == latest_month,
         )
 
-    _insert_closure_rows(mart_db, output_dir, insight_rows, sample_rows, action_rows)
-    return insight_rows, sample_rows, action_rows
+    action_rows, unmatched_feedback_rows, action_feedback_applied = _merge_action_feedback(action_rows, action_feedback)
+    _insert_closure_rows(mart_db, output_dir, insight_rows, sample_rows, action_rows, unmatched_feedback_rows)
+    return insight_rows, sample_rows, action_rows, unmatched_feedback_rows, action_feedback_applied
 
 
 def _markdown_table(headers: list[str], rows: list[list[str]]) -> str:
@@ -2204,6 +2446,103 @@ def _write_executive_monthly(output_dir: Path, rows: list[dict[str, Any]]) -> No
     path.chmod(0o600)
 
 
+def _write_action_closed_loop_summary(
+    output_dir: Path,
+    action_rows: list[dict[str, Any]],
+    summary_rows: list[dict[str, Any]],
+    unmatched_feedback_rows: list[dict[str, Any]],
+    action_feedback_applied: int,
+) -> None:
+    status_counts = Counter(str(row.get("status") or "Proposed") for row in action_rows)
+    total_actions = len(action_rows)
+    measured_actions = sum(
+        1
+        for row in action_rows
+        if str(row.get("status") or "") in {"Measured", "Closed"} or bool(str(row.get("actual_metric") or "").strip())
+    )
+    terminal_actions = sum(1 for row in action_rows if str(row.get("status") or "") in ACTION_TERMINAL_STATUSES)
+    overdue_actions = sum(int(row["overdue_count"]) for row in summary_rows)
+    summary_table = [
+        [
+            str(row["owner_domain"]),
+            str(row["owner_name"] or "-"),
+            str(row["status"]),
+            str(row["action_count"]),
+            str(row["overdue_count"]),
+            str(row["due_next_7d_count"]),
+            str(row["measured_count"]),
+            str(row["closed_count"]),
+            str(row["rejected_count"]),
+        ]
+        for row in summary_rows
+    ]
+    overdue_table = []
+    today = datetime.now(timezone.utc).date()
+    for row in action_rows:
+        due_date = _parse_iso_date(row.get("due_date"))
+        status = str(row.get("status") or "Proposed")
+        if status in ACTION_ACTIVE_STATUSES and due_date and due_date < today:
+            overdue_table.append(
+                [
+                    str(row["action_id"]),
+                    str(row["owner_domain"]),
+                    str(row.get("owner_name") or "-"),
+                    status,
+                    str(row.get("due_date") or ""),
+                    str(row["source_action"]),
+                ]
+            )
+    overdue_table = overdue_table[:20]
+    status_line = ", ".join(f"{status}: {status_counts[status]}" for status in ACTION_STATUSES if status_counts[status])
+    path = output_dir / "action_closed_loop_summary.md"
+    path.write_text(
+        "\n".join(
+            [
+                "# Action Closed-Loop Summary",
+                "",
+                f"Total actions: {total_actions}",
+                f"Feedback rows applied: {action_feedback_applied}",
+                f"Unmatched feedback rows: {len(unmatched_feedback_rows)}",
+                f"Measured rate: {(measured_actions / total_actions):.2%}" if total_actions else "Measured rate: n/a",
+                f"Terminal close/reject rate: {(terminal_actions / total_actions):.2%}"
+                if total_actions
+                else "Terminal close/reject rate: n/a",
+                f"Overdue active actions: {overdue_actions}",
+                f"Status mix: {status_line or 'none'}",
+                "",
+                "## Owner / Status Summary",
+                "",
+                _markdown_table(
+                    [
+                        "Owner Domain",
+                        "Owner",
+                        "Status",
+                        "Actions",
+                        "Overdue",
+                        "Due Next 7d",
+                        "Measured",
+                        "Closed",
+                        "Rejected",
+                    ],
+                    summary_table,
+                ),
+                "",
+                "## Overdue Active Actions",
+                "",
+                _markdown_table(
+                    ["Action ID", "Owner Domain", "Owner", "Status", "Due Date", "Source Action"],
+                    overdue_table,
+                )
+                if overdue_table
+                else "No overdue active actions.",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    path.chmod(0o600)
+
+
 def _write_manifest(
     output_dir: Path,
     inventory: dict[str, Any],
@@ -2239,6 +2578,9 @@ def _write_manifest(
             "sample_review_queue.csv",
             "query_sample_review_queue.csv",
             "action_register.csv",
+            "action_status_summary.csv",
+            "action_feedback_unmatched.csv",
+            "action_closed_loop_summary.md",
         ],
     }
     path = output_dir / "mart_manifest.json"
@@ -2251,6 +2593,7 @@ def _build_mart_outputs(
     output_dir: Path,
     inventory: dict[str, Any],
     insight_config: InsightConfig,
+    action_feedback: dict[str, dict[str, str]],
 ) -> None:
     mart_path = output_dir / "voc_mart.sqlite"
     with sqlite3.connect(stage_db_path) as stage_db, sqlite3.connect(mart_path) as mart_db:
@@ -2290,9 +2633,10 @@ def _build_mart_outputs(
         executive_rows = _build_executive_monthly(mart_db, meta, search_rows, pain_rows)
         query_rewrite_rows = _build_query_rewrite_recommendations(mart_db, search_rows, insight_config)
         query_sample_rows = _build_query_sample_review_queue(mart_db, output_dir, search_rows, meta)
-        insight_rows, sample_rows, action_rows = _build_insight_closure(
+        insight_rows, sample_rows, action_rows, unmatched_feedback_rows, action_feedback_applied = _build_insight_closure(
             mart_db,
             output_dir,
+            action_feedback=action_feedback,
             search_rows=search_rows,
             pain_rows=pain_rows,
             competitor_rows=competitor_rows,
@@ -2302,6 +2646,7 @@ def _build_mart_outputs(
             concept_rows=concept_rows,
             executive_rows=executive_rows,
         )
+        action_summary_rows = _build_action_status_summary(action_rows)
         mart_db.commit()
 
     _write_search_quality_report(output_dir, search_rows)
@@ -2314,6 +2659,13 @@ def _build_mart_outputs(
     _write_region_language_priority(output_dir, region_rows)
     _write_concept_candidates(output_dir, concept_rows)
     _write_executive_monthly(output_dir, executive_rows)
+    _write_action_closed_loop_summary(
+        output_dir,
+        action_rows,
+        action_summary_rows,
+        unmatched_feedback_rows,
+        action_feedback_applied,
+    )
     _write_manifest(
         output_dir,
         inventory,
@@ -2334,6 +2686,9 @@ def _build_mart_outputs(
             "fact_evidence_sample": len(sample_rows),
             "fact_sample_review": len(sample_rows),
             "fact_action_register": len(action_rows),
+            "mart_action_status_summary": len(action_summary_rows),
+            "fact_action_feedback_unmatched": len(unmatched_feedback_rows),
+            "action_feedback_applied": action_feedback_applied,
         },
     )
     mart_path.chmod(0o600)
@@ -2343,6 +2698,7 @@ def build_marts(
     config_path: Path | str,
     output_dir: Path | str,
     insights_config_dir: Path | str = "config/insights",
+    action_feedback_path: Path | str | None = None,
 ) -> Path:
     source_config = load_source_config(config_path)
     final = Path(output_dir).resolve()
@@ -2358,7 +2714,8 @@ def build_marts(
         stage_sources(source_config, stage_db_path)
         build_canonical(stage_db_path)
         insight_config = load_insight_config(insights_config_dir)
-        _build_mart_outputs(stage_db_path, build_dir, inventory, insight_config)
+        action_feedback = _load_action_feedback(action_feedback_path)
+        _build_mart_outputs(stage_db_path, build_dir, inventory, insight_config, action_feedback)
         stage_db_path.unlink()
         os.replace(build_dir, final)
         os.chmod(final, 0o700)
