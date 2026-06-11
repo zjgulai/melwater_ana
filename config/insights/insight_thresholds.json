@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "search_precision_min": 0.8,
+  "search_sample_min": 50,
+  "formal_insight_min_samples": 20,
+  "product_pain_min_representative_samples": 5,
+  "competitor_min_samples": 20,
+  "concept_min_samples": 30,
+  "weak_signal_min_mentions": 5
+}

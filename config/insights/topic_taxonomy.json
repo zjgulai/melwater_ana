@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "topics": [
+    {
+      "id": "pain_comfort",
+      "label": "Pain / comfort",
+      "terms": ["pain", "painful", "hurt", "hurts", "sore", "discomfort", "uncomfortable", "nipple pain"],
+      "exclude_terms": [],
+      "strategic_relevance": 1.0,
+      "owner_domain": "Product/CX"
+    },
+    {
+      "id": "suction_performance",
+      "label": "Suction performance",
+      "terms": ["suction", "weak suction", "strong suction", "sucking", "letdown"],
+      "exclude_terms": [],
+      "strategic_relevance": 1.0,
+      "owner_domain": "Product"
+    },
+    {
+      "id": "leak_spill",
+      "label": "Leak / spill",
+      "terms": ["leak", "leaks", "leaking", "spill", "spilled", "spilling"],
+      "exclude_terms": [],
+      "strategic_relevance": 1.0,
+      "owner_domain": "Product/CX"
+    },
+    {
+      "id": "noise",
+      "label": "Noise",
+      "terms": ["noise", "noisy", "loud", "quiet"],
+      "exclude_terms": [],
+      "strategic_relevance": 0.9,
+      "owner_domain": "Product/Content"
+    },
+    {
+      "id": "battery_power",
+      "label": "Battery / power",
+      "terms": ["battery", "charge", "charging", "charger", "power", "plug"],
+      "exclude_terms": [],
+      "strategic_relevance": 0.9,
+      "owner_domain": "Product/CX"
+    },
+    {
+      "id": "quality_broken",
+      "label": "Broken / defective",
+      "terms": ["broken", "break", "broke", "defective", "stopped working", "not working"],
+      "exclude_terms": [],
+      "strategic_relevance": 1.0,
+      "owner_domain": "Product/CX"
+    },
+    {
+      "id": "return_refund",
+      "label": "Return / refund",
+      "terms": ["return", "returns", "refund", "replacement", "warranty"],
+      "exclude_terms": [],
+      "strategic_relevance": 0.95,
+      "owner_domain": "CX"
+    }
+  ]
+}

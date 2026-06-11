@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "run_name": "backfill_20260101_20260220_pump_secondary",
+  "category": "吸奶器",
+  "search_ids": [28546470, 28546475],
+  "start": "2026-01-01T00:00:00Z",
+  "end_exclusive": "2026-02-20T00:00:00Z",
+  "expected_reason": "Known gap from 2026-06-04 quota exhaustion",
+  "forbidden_search_ids": [18922074, 18922087, 18913527, 28546460, 28546462],
+  "forbidden_existing_exports": [17774723],
+  "estimated_search_matches": 255
+}

@@ -1,0 +1,85 @@
+{
+  "request": {
+    "count": 4,
+    "period": {
+      "start": "2026-01-01T00:00:00.000Z",
+      "end": "2026-02-22T00:00:00.000Z"
+    },
+    "inputs": [{"type": "search", "name": "Fixture Search", "id": 1}],
+    "export_id": 999
+  },
+  "documents": [
+    {
+      "id": "doc-1",
+      "external_id": "000123",
+      "published_date": "2026-01-01T00:00:00.000Z",
+      "indexed_date": "2026-01-01T00:01:00.000Z",
+      "url": "https://example.com/1",
+      "content_type": "social post",
+      "author": {"external_id": null, "handle": "@fixture", "name": "=Alice", "profile_url": null},
+      "content": {"body": "body", "byline": null, "emojis": ["x", "x"], "hashtags": [], "image": null, "links": null, "mentions": ["@fixture"], "opening_text": null, "title": "__LONG_TITLE__"},
+      "custom": {"custom_categories": null, "custom_fields": null, "hidden": false, "tags": null, "visible": "public"},
+      "enrichments": {"keyphrases": ["one"], "language_code": "en", "named_entities": [{"name": "Brand", "sentiment": "positive", "type": "organization"}], "sentiment": "positive"},
+      "location": {"city": null, "country_code": "us", "geo": {"latitude": 39.123456789012345678, "longitude": -98.5}, "region": null, "state": null},
+      "matched": {"hit_sentence": null, "inputs": [{"id": 1, "name": "Fixture Search", "type": "search"}], "keywords": ["brand"]},
+      "metrics": {"earned_media_value": 0.123456789012345678, "editorial_echo": null, "engagement": {"comments": 1, "likes": null, "quotes": null, "reactions": null, "replies": null, "reposts": null, "shares": null, "total": 1}, "episode_reach": null, "estimated_views": 2, "social_echo": {"facebook": null, "reddit": null, "total": null, "x": null}, "views": null},
+      "parent": {"url": null},
+      "source": {"domain": "example.com", "id": "source:fixture", "information_type": "social", "metrics": {"ave": 1.23456789012345678, "national_viewership": null, "reach": null, "reach_desktop": null, "reach_mobile": null}, "name": "Fixture", "outlet_types": ["blog"], "type": "site", "url": "https://example.com"},
+      "thread": {"title": null, "url": null}
+    },
+    {
+      "id": "doc-1",
+      "external_id": "000123",
+      "published_date": "2026-01-01T00:00:00.000Z",
+      "indexed_date": "2026-01-02T00:01:00.000Z",
+      "url": "https://example.com/1",
+      "content_type": "social post",
+      "author": {"external_id": null, "handle": "@fixture", "name": "=Alice", "profile_url": null},
+      "content": {"body": "changed body", "byline": null, "emojis": ["x", "x"], "hashtags": [], "image": null, "links": null, "mentions": ["@fixture"], "opening_text": null, "title": "__LONG_TITLE__"},
+      "custom": {"custom_categories": null, "custom_fields": null, "hidden": false, "tags": null, "visible": "public"},
+      "enrichments": {"keyphrases": ["one"], "language_code": "en", "named_entities": [{"name": "Brand", "sentiment": "positive", "type": "organization"}], "sentiment": "positive"},
+      "location": {"city": null, "country_code": "us", "geo": {"latitude": 39.123456789012345678, "longitude": -98.5}, "region": null, "state": null},
+      "matched": {"hit_sentence": null, "inputs": [{"id": 1, "name": "Fixture Search", "type": "search"}], "keywords": ["brand", "changed"]},
+      "metrics": {"earned_media_value": 0.123456789012345678, "editorial_echo": null, "engagement": {"comments": 1, "likes": null, "quotes": null, "reactions": null, "replies": null, "reposts": null, "shares": null, "total": 1}, "episode_reach": null, "estimated_views": 2, "social_echo": {"facebook": null, "reddit": null, "total": null, "x": null}, "views": null},
+      "parent": {"url": null},
+      "source": {"domain": "example.com", "id": "source:fixture", "information_type": "social", "metrics": {"ave": 1.23456789012345678, "national_viewership": null, "reach": null, "reach_desktop": null, "reach_mobile": null}, "name": "Fixture", "outlet_types": ["blog"], "type": "site", "url": "https://example.com"},
+      "thread": {"title": null, "url": null}
+    },
+    {
+      "id": "-doc-2",
+      "external_id": null,
+      "published_date": "2026-01-03T00:00:00Z",
+      "indexed_date": "2026-01-03T00:01:00Z",
+      "url": "-danger",
+      "content_type": "news",
+      "author": {"external_id": null, "handle": null, "name": null, "profile_url": null},
+      "content": {"body": null, "byline": null, "emojis": null, "hashtags": null, "image": null, "links": null, "mentions": null, "opening_text": null, "title": null},
+      "custom": {"custom_categories": null, "custom_fields": null, "hidden": false, "tags": null, "visible": "public"},
+      "enrichments": {"keyphrases": null, "language_code": "en", "named_entities": null, "sentiment": "neutral"},
+      "location": {"city": null, "country_code": "us", "geo": null, "region": null, "state": null},
+      "matched": {"hit_sentence": null, "inputs": [], "keywords": []},
+      "metrics": {"earned_media_value": 0, "editorial_echo": null, "engagement": {"comments": null, "likes": null, "quotes": null, "reactions": null, "replies": null, "reposts": null, "shares": null, "total": null}, "episode_reach": null, "estimated_views": null, "social_echo": {"facebook": null, "reddit": null, "total": null, "x": null}, "views": null},
+      "parent": {"url": null},
+      "source": {"domain": "example.com", "id": "source:fixture", "information_type": "news", "metrics": {"ave": 0, "national_viewership": null, "reach": null, "reach_desktop": null, "reach_mobile": null}, "type": "site", "url": "https://example.com"},
+      "thread": {"title": null, "url": null}
+    },
+    {
+      "id": "doc-3",
+      "external_id": null,
+      "published_date": "2026-01-04T00:00:00Z",
+      "indexed_date": "2026-01-04T00:01:00Z",
+      "url": "https://example.com/3",
+      "content_type": "news",
+      "author": {"external_id": null, "handle": null, "name": null, "profile_url": null},
+      "content": {"body": null, "byline": null, "emojis": [], "hashtags": [], "image": null, "links": [], "mentions": [], "opening_text": null, "title": "normal"},
+      "custom": {"custom_categories": null, "custom_fields": null, "hidden": false, "tags": null, "visible": "public"},
+      "enrichments": {"keyphrases": [], "language_code": "en", "named_entities": [], "sentiment": "neutral"},
+      "location": {"city": null, "country_code": "us", "geo": null, "region": null, "state": null},
+      "matched": {"hit_sentence": null, "inputs": [], "keywords": []},
+      "metrics": {"earned_media_value": 0, "editorial_echo": null, "engagement": {"comments": null, "likes": null, "quotes": null, "reactions": null, "replies": null, "reposts": null, "shares": null, "total": null}, "episode_reach": null, "estimated_views": null, "social_echo": {"facebook": null, "reddit": null, "total": null, "x": null}, "views": null},
+      "parent": {"url": null},
+      "source": {"domain": "example.com", "id": "source:fixture", "information_type": "news", "metrics": {"ave": 0, "national_viewership": null, "reach": null, "reach_desktop": null, "reach_mobile": null}, "name": "Fixture", "outlet_types": [], "type": "site", "url": "https://example.com"},
+      "thread": {"title": null, "url": null}
+    }
+  ]
+}

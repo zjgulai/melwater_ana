@@ -1,0 +1,31 @@
+[project]
+name = "meltwater-complete-excel"
+version = "0.1.0"
+description = "Lossless Meltwater JSON to relational Excel export pipeline"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "defusedxml>=0.7.1",
+  "ijson>=3.4.0",
+  "openpyxl>=3.1.5",
+]
+
+[dependency-groups]
+dev = [
+  "bandit>=1.9.4",
+  "mypy>=1.18.0",
+  "pytest>=8.4.0",
+  "ruff>=0.14.0",
+  "types-openpyxl",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.uv]
+package = false
+
+[[tool.mypy.overrides]]
+module = ["defusedxml", "defusedxml.*", "ijson"]
+ignore_missing_imports = true

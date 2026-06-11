@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "owner_domains": {
+    "Data": {
+      "description": "Search quality, taxonomy, mart validation, reporting automation",
+      "default_owner": ""
+    },
+    "Product": {
+      "description": "Product pain points, roadmap candidates, concept validation",
+      "default_owner": ""
+    },
+    "CX": {
+      "description": "Support scripts, FAQ, refund and return issue triage",
+      "default_owner": ""
+    },
+    "Content": {
+      "description": "PDP copy, social content briefs, FAQ content assets",
+      "default_owner": ""
+    },
+    "Marketing": {
+      "description": "Competitor battlecards, positioning, campaign claims",
+      "default_owner": ""
+    },
+    "PR": {
+      "description": "Crisis triage, high-impact negative alerts, public response",
+      "default_owner": ""
+    }
+  }
+}

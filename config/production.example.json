@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "environment": "production",
+  "owner": {
+    "team": "TODO",
+    "primary_contact": "TODO",
+    "backup_contact": "TODO"
+  },
+  "tencent_cloud": {
+    "account_alias": "TODO",
+    "regions": [],
+    "resources": {
+      "compute": [],
+      "cos_buckets": [],
+      "load_balancers": [],
+      "cdn_domains": [],
+      "databases": [],
+      "cls_topics": [],
+      "monitor_policies": []
+    }
+  },
+  "application": {
+    "public_domains": [],
+    "healthcheck_urls": [],
+    "release_version": "TODO",
+    "release_notes_url": "TODO"
+  },
+  "data_products": {
+    "local_manifest": "data/SHA256SUMS",
+    "cloud_bucket": "TODO",
+    "cloud_prefix": "TODO"
+  },
+  "slo": {
+    "availability_target": "TODO",
+    "freshness_target": "TODO",
+    "incident_response_target": "TODO"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "global_noise_terms": [
+    "bear market",
+    "teddy bear",
+    "polar bear",
+    "bear cub",
+    "warm home",
+    "bitter cold",
+    "cold weather",
+    "heating in front",
+    "climate change",
+    "global warming"
+  ],
+  "category_noise_terms": {
+    "暖奶器": ["bear", "warm home", "bitter cold", "cold weather", "heating in front"],
+    "消毒器": ["bear"],
+    "吸奶器": []
+  },
+  "watch_terms": {
+    "暖奶器": ["warm", "warmer"],
+    "消毒器": ["sterilizer", "sanitize", "sanitizer"],
+    "吸奶器": ["pump", "breast pump", "pumping"]
+  }
+}

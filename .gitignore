@@ -1,0 +1,32 @@
+# Local secrets and machine state
+.env
+.env.*
+.DS_Store
+coscli.log
+
+# Python and tool caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Large or generated data artifacts
+data/
+exports_*/
+*.xlsx
+*.sqlite
+*.sqlite-*
+
+# JSON is ignored by default because raw Meltwater exports are JSON.
+# Explicitly re-include lightweight source/config fixtures needed for tests.
+*.json
+!config/*.json
+!config/**/*.json
+!tests/fixtures/*.json
+
+# Keep project documentation and repo metadata visible.
+!docs/**/*.md
+!*.md
+!.gitignore

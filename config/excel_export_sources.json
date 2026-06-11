@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "alias": "warmer_old",
+      "category": "暖奶器",
+      "path": "exports_20260520/warmer_3months.json",
+      "export_id": 17599472,
+      "request_start": "2026-02-20T00:00:00.000Z",
+      "request_end": "2026-05-20T00:00:00.000Z",
+      "expected_documents": 119112
+    },
+    {
+      "alias": "warmer_new",
+      "category": "暖奶器",
+      "path": "data/exports/round_20260604_backfill_20260101_20260221/暖奶器_batch1_17774638_20260101_20260221.json",
+      "export_id": 17774638,
+      "request_start": "2026-01-01T00:00:00.000Z",
+      "request_end": "2026-02-22T00:00:00.000Z",
+      "expected_documents": 79768
+    },
+    {
+      "alias": "pump_core_old",
+      "category": "吸奶器",
+      "path": "exports_20260520/pump_core_3months.json",
+      "export_id": 17599479,
+      "request_start": "2026-02-20T00:00:00.000Z",
+      "request_end": "2026-05-20T00:00:00.000Z",
+      "expected_documents": 86911
+    },
+    {
+      "alias": "pump_secondary_old",
+      "category": "吸奶器",
+      "path": "exports_20260520/pump_secondary_3months.json",
+      "export_id": 17599482,
+      "request_start": "2026-02-20T00:00:00.000Z",
+      "request_end": "2026-05-20T00:00:00.000Z",
+      "expected_documents": 603
+    },
+    {
+      "alias": "pump_core_new",
+      "category": "吸奶器",
+      "path": "data/exports/round_20260604_backfill_20260101_20260221/吸奶器_batch1_17774723_20260101_20260221.json",
+      "export_id": 17774723,
+      "request_start": "2026-01-01T00:00:00.000Z",
+      "request_end": "2026-02-22T00:00:00.000Z",
+      "expected_documents": 43708
+    },
+    {
+      "alias": "pump_secondary_new",
+      "category": "吸奶器",
+      "path": "data/exports/backfill_20260101_20260220_pump_secondary/吸奶器_batch1_17860010_20260101_20260220.json",
+      "export_id": 17860010,
+      "request_start": "2026-01-01T00:00:00.000Z",
+      "request_end": "2026-02-20T00:00:00.000Z",
+      "expected_documents": 247
+    },
+    {
+      "alias": "sterilizer_old",
+      "category": "消毒器",
+      "path": "exports_20260520/sterilizer_3months.json",
+      "export_id": 17599469,
+      "request_start": "2026-02-20T00:00:00.000Z",
+      "request_end": "2026-05-20T00:00:00.000Z",
+      "expected_documents": 16789
+    }
+  ],
+  "known_gaps": []
+}

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "brands": [
+    {
+      "id": "momcozy",
+      "label": "Momcozy",
+      "aliases": ["momcozy", "momcozy life", "momcozylife"],
+      "search_ids": ["18922074"],
+      "role": "owned"
+    },
+    {
+      "id": "elvie",
+      "label": "Elvie",
+      "aliases": ["elvie"],
+      "search_ids": [],
+      "role": "competitor"
+    },
+    {
+      "id": "willow",
+      "label": "Willow",
+      "aliases": ["willow"],
+      "search_ids": [],
+      "role": "competitor"
+    },
+    {
+      "id": "medela",
+      "label": "Medela",
+      "aliases": ["medela"],
+      "search_ids": ["28546470"],
+      "role": "competitor"
+    },
+    {
+      "id": "spectra",
+      "label": "Spectra",
+      "aliases": ["spectra"],
+      "search_ids": ["28546475"],
+      "role": "competitor"
+    },
+    {
+      "id": "eufy",
+      "label": "Eufy",
+      "aliases": ["eufy"],
+      "search_ids": [],
+      "role": "competitor"
+    }
+  ]
+}

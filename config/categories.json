@@ -1,0 +1,51 @@
+{
+  "_note": "品类到Meltwater搜索的映射配置。修改此文件即可新增/调整品类。",
+  "categories": {
+    "消毒器": {
+      "label": "消毒器",
+      "search_ids": [28678966],
+      "description": "Bottle Sterilizer & Dryer - 奶瓶消毒器/紫外线消毒/蒸汽消毒/烘干器"
+    },
+    "暖奶器": {
+      "label": "暖奶器",
+      "search_ids": [22869413],
+      "description": "Bottle Warmer - 暖奶器/温奶器/热奶器"
+    },
+    "吸奶器": {
+      "label": "吸奶器",
+      "search_ids": [18922074, 18922087, 18913527, 28546460, 28546462, 28546470, 28546475],
+      "description": "Breast Pump - Momcozy/Elvie/Eufy/Willow/Medela/Spectra"
+    },
+    "奶瓶清洗器": {
+      "label": "奶瓶清洗器",
+      "search_ids": [28549685],
+      "description": "Bottle Washer"
+    },
+    "通用母婴": {
+      "label": "通用母婴",
+      "search_ids": [22869339],
+      "description": "通用母婴产品信息 - 综合品类监听"
+    },
+    "Elvie": {
+      "label": "Elvie",
+      "search_ids": [18913527],
+      "description": "Elvie 竞品监听"
+    },
+    "Momcozy": {
+      "label": "Momcozy",
+      "search_ids": [18922074, 18922087],
+      "description": "Momcozy 品牌监听（含负面信息）"
+    },
+    "Eufy": {
+      "label": "Eufy",
+      "search_ids": [28546460],
+      "description": "Eufy Breast Pump 竞品监听"
+    },
+    "Willow": {
+      "label": "Willow",
+      "search_ids": [28546462, 22869399],
+      "description": "Willow Breast Pump 竞品监听"
+    }
+  },
+  "all_search_ids": [18913527, 18922074, 18922087, 22869339, 22869399, 22869413, 28546460, 28546462, 28546470, 28546475, 28549685, 28678966]
+}
