@@ -1,0 +1,21 @@
+[Unit]
+Description=Melwater Review State API
+After=network.target
+
+[Service]
+Type=simple
+User=melwater
+Group=melwater
+WorkingDirectory=/opt/melwater/playbook-pain-radar-lab
+EnvironmentFile=/etc/melwater/review-state.env
+ExecStart=/usr/bin/node /opt/melwater/playbook-pain-radar-lab/server/reviewStateServer.mjs
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/melwater/review-state
+
+[Install]
+WantedBy=multi-user.target

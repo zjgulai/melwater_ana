@@ -30,3 +30,23 @@ exports_*/
 !docs/**/*.md
 !*.md
 !.gitignore
+
+# Frontend prototype source is commit-worthy, but its generated/runtime artifacts are not.
+outputs/prototypes/**/node_modules/
+outputs/prototypes/**/.npm-cache/
+outputs/prototypes/**/dist/
+outputs/prototypes/**/qa/
+outputs/prototypes/**/releases/
+outputs/prototypes/**/state/
+
+# Creative-production execution logs and generated thumbnails are review cache, not source.
+outputs/moodboards/**/.codex-exec/
+outputs/moodboards/**/generated/.codex-exec/
+outputs/moodboards/**/generated/mcp-thumbs/
+
+# Re-include lightweight prototype files blocked by the broad JSON/data ignores above.
+!outputs/prototypes/**/package.json
+!outputs/prototypes/**/package-lock.json
+!outputs/prototypes/**/.env.example
+!outputs/prototypes/**/src/data/
+!outputs/prototypes/**/src/data/*.json

@@ -1,0 +1,4 @@
+# Run as the melwater service user.
+# Keep command paths aligned with the actual CVM deployment path.
+15 2 * * * cd /opt/melwater/playbook-pain-radar-lab && /usr/bin/npm run review:backup -- --label=daily >> /var/log/melwater-review-backup.log 2>&1
+35 2 * * * cd /opt/melwater/playbook-pain-radar-lab && REVIEW_STATE_BACKUP_KEEP=14 /usr/bin/npm run review:prune-backups -- --keep=14 --apply >> /var/log/melwater-review-backup.log 2>&1

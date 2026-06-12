@@ -1,0 +1,27 @@
+{
+  "name": "playbook-pain-radar-lab",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "api": "node server/reviewStateServer.mjs",
+    "review:migrate": "node server/migrateReviewState.mjs",
+    "review:replay": "node server/replayReviewEvents.mjs",
+    "review:backup": "node server/backupReviewState.mjs",
+    "review:prune-backups": "node server/pruneReviewBackups.mjs",
+    "review:verify-deploy": "node server/verifyDeployment.mjs",
+    "release:package": "node server/createReleasePackage.mjs",
+    "release:verify": "node server/verifyReleasePackage.mjs",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@tabler/icons-react": "^3.44.0",
+    "@vitejs/plugin-react": "5.0.4",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "recharts": "^3.8.1",
+    "vite": "6.4.2"
+  }
+}
