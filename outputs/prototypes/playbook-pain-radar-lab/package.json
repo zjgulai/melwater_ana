@@ -13,6 +13,10 @@
     "review:verify-deploy": "node server/verifyDeployment.mjs",
     "release:package": "node server/createReleasePackage.mjs",
     "release:verify": "node server/verifyReleasePackage.mjs",
+    "deploy:preflight": "node server/remoteRelease.mjs --mode=preflight",
+    "deploy:remote": "node server/remoteRelease.mjs --mode=deploy",
+    "deploy:rollback": "node server/remoteRelease.mjs --mode=rollback",
+    "deploy:verify-public": "node server/verifyPublicSite.mjs",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1"
   },
