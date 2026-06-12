@@ -10,6 +10,7 @@
 
 - 2026-06-11: 第一轮 P0 已执行。本次新增 `fact_insight`、`fact_evidence_sample`、`fact_sample_review`、`fact_query_sample_review`、`mart_query_rewrite_recommendation`，输出 `insight_register.csv`、`sample_review_queue.csv`、`query_sample_review_queue.csv`、`query_rewrite_recommendations.md`，并将 action register 从静态 seed 改为基于 insight 动态生成。crisis watch 已接入 query quality gate：query-blocked 品类输出 `data_quality_alert`，不再输出业务 red/orange/yellow alert。
 - 2026-06-11: 第二轮 P0 已执行。本次新增 action feedback overlay：`--action-feedback` 支持 CSV/JSON 回写 `owner_name`、`status`、`shipped_at`、`actual_metric`、`close_reason` 等字段；新增 `mart_action_status_summary`、`fact_action_feedback_unmatched`，输出 `action_status_summary.csv`、`action_feedback_unmatched.csv`、`action_closed_loop_summary.md`，并补充 `docs/runbooks/action-feedback-loop.md`。
+- 2026-06-11: 第三轮 P1 已执行。本次新增 `mart_category_health_weekly_delta`、`mart_issue_channel_competitor_matrix`、`mart_platform_content_opportunity`、`mart_user_voice_quote_library`，输出 `weekly_change_points.md`、`product_pain_deep_dive.md`、`content_brief_queue.md`、`user_voice_quote_library.csv`，把品类健康、痛点和内容机会升级为可决策卡片；同时新增 `build-marts-from-stage` / `make insights-from-stage`，用于只重建 mart/report，降低后续 playbook 迭代成本。
 
 ---
 

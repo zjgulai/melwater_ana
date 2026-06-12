@@ -4,6 +4,7 @@ import csv
 import hashlib
 import json
 import os
+import re
 import shutil
 import sqlite3
 import tempfile
@@ -20,7 +21,6 @@ from .taxonomy import (
     BrandRule,
     InsightConfig,
     contains_term,
-    is_noise_match,
     load_insight_config,
     normalize_text,
     topic_matches,
@@ -36,6 +36,7 @@ class OccurrenceMeta:
     week_start: str
     sentiment: str
     source_type: str
+    source_domain: str
     content_type: str
     language_code: str
     country_code: str
@@ -189,6 +190,7 @@ def _load_occurrence_meta(stage_db: sqlite3.Connection) -> dict[str, OccurrenceM
             week_start=_parse_week_start(str(published_date or "")),
             sentiment=normalize_text(scalars.get("enrichments.sentiment") or "unknown"),
             source_type=_safe_scalar(scalars, "source.type") or "unknown",
+            source_domain=_safe_scalar(scalars, "source.domain") or "unknown",
             content_type=_safe_scalar(scalars, "content_type") or "unknown",
             language_code=_safe_scalar(scalars, "enrichments.language_code") or "unknown",
             country_code=_safe_scalar(scalars, "location.country_code") or "unknown",
@@ -250,6 +252,23 @@ def _create_mart_schema(db: sqlite3.Connection) -> None:
             PRIMARY KEY(category, week_start)
         );
 
+        CREATE TABLE mart_category_health_weekly_delta(
+            category TEXT NOT NULL,
+            week_start TEXT NOT NULL,
+            occurrences INTEGER NOT NULL,
+            previous_occurrences INTEGER NOT NULL,
+            wow_occurrence_change REAL NOT NULL,
+            negative_rate REAL NOT NULL,
+            previous_negative_rate REAL NOT NULL,
+            wow_negative_rate_change REAL NOT NULL,
+            baseline_4w_negative_rate REAL NOT NULL,
+            top_source_domains_json TEXT NOT NULL,
+            top_negative_domains_json TEXT NOT NULL,
+            change_point_level TEXT NOT NULL,
+            change_reason TEXT NOT NULL,
+            PRIMARY KEY(category, week_start)
+        );
+
         CREATE TABLE mart_competitor_battlecard(
             category TEXT NOT NULL,
             brand_id TEXT NOT NULL,
@@ -278,6 +297,55 @@ def _create_mart_schema(db: sqlite3.Connection) -> None:
             evidence_samples_json TEXT NOT NULL,
             readiness TEXT NOT NULL,
             PRIMARY KEY(category, source_type, topic_id)
+        );
+
+        CREATE TABLE mart_issue_channel_competitor_matrix(
+            category TEXT NOT NULL,
+            topic_id TEXT NOT NULL,
+            topic_label TEXT NOT NULL,
+            source_type TEXT NOT NULL,
+            brand_id TEXT NOT NULL,
+            brand_label TEXT NOT NULL,
+            valid_mentions INTEGER NOT NULL,
+            positive_mentions INTEGER NOT NULL,
+            neutral_mentions INTEGER NOT NULL,
+            negative_mentions INTEGER NOT NULL,
+            negative_rate REAL NOT NULL,
+            sample_verdict_mix_json TEXT NOT NULL,
+            evidence_samples_json TEXT NOT NULL,
+            readiness TEXT NOT NULL,
+            recommended_action TEXT NOT NULL,
+            PRIMARY KEY(category, topic_id, source_type, brand_id)
+        );
+
+        CREATE TABLE mart_platform_content_opportunity(
+            brief_id TEXT PRIMARY KEY,
+            category TEXT NOT NULL,
+            source_type TEXT NOT NULL,
+            topic_id TEXT NOT NULL,
+            topic_label TEXT NOT NULL,
+            positive_mentions INTEGER NOT NULL,
+            total_mentions INTEGER NOT NULL,
+            positive_rate REAL NOT NULL,
+            quote_count INTEGER NOT NULL,
+            suggested_angle TEXT NOT NULL,
+            readiness TEXT NOT NULL,
+            evidence_samples_json TEXT NOT NULL
+        );
+
+        CREATE TABLE mart_user_voice_quote_library(
+            quote_id TEXT PRIMARY KEY,
+            brief_id TEXT NOT NULL,
+            category TEXT NOT NULL,
+            source_type TEXT NOT NULL,
+            topic_id TEXT NOT NULL,
+            topic_label TEXT NOT NULL,
+            sentiment TEXT NOT NULL,
+            occurrence_id TEXT NOT NULL,
+            document_id TEXT NOT NULL,
+            quote_text TEXT NOT NULL,
+            url TEXT NOT NULL,
+            usage_type TEXT NOT NULL
         );
 
         CREATE TABLE mart_crisis_watch_daily(
@@ -441,85 +509,152 @@ def _create_mart_schema(db: sqlite3.Connection) -> None:
     )
 
 
+def _ensure_stage_mart_indexes(stage_db: sqlite3.Connection) -> None:
+    stage_db.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_array_items_field_occurrence
+        ON array_items(field_path, occurrence_id, ordinal)
+        """
+    )
+    stage_db.commit()
+
+
+def _compiled_noise_patterns(config: InsightConfig) -> dict[str, list[tuple[str, re.Pattern[str]]]]:
+    categories = set(config.query_noise.category_noise_terms) | set(config.query_noise.watch_terms)
+    patterns: dict[str, list[tuple[str, re.Pattern[str]]]] = {}
+    global_terms = list(config.query_noise.global_noise_terms)
+    for category in categories | {"*"}:
+        terms = global_terms if category == "*" else global_terms + list(config.query_noise.category_noise_terms.get(category, ()))
+        compiled: list[tuple[str, re.Pattern[str]]] = []
+        for term in terms:
+            normalized = normalize_text(term)
+            if not normalized:
+                continue
+            if re.fullmatch(r"[a-z0-9][a-z0-9 _/-]*", normalized):
+                pattern = re.compile(rf"(?<![a-z0-9]){re.escape(normalized)}(?![a-z0-9])")
+            else:
+                pattern = re.compile(re.escape(normalized))
+            compiled.append((term, pattern))
+        patterns[category] = compiled
+    return patterns
+
+
+def _fast_noise_match(
+    category: str,
+    keyword: str,
+    match_text: str,
+    noise_patterns: dict[str, list[tuple[str, re.Pattern[str]]]],
+) -> str | None:
+    normalized = normalize_text(f"{keyword} {match_text}")
+    for term, pattern in noise_patterns.get(category, noise_patterns.get("*", ())):
+        if pattern.search(normalized):
+            return term
+    return None
+
+
+def _compiled_term_gate(terms: list[str]) -> re.Pattern[str] | None:
+    normalized_terms = sorted({normalize_text(term) for term in terms if normalize_text(term)}, key=len, reverse=True)
+    if not normalized_terms:
+        return None
+    return re.compile("|".join(re.escape(term) for term in normalized_terms))
+
+
+def _gate_allows(pattern: re.Pattern[str] | None, text: str) -> bool:
+    if pattern is None:
+        return True
+    return pattern.search(normalize_text(text)) is not None
+
+
 def _build_search_quality(
     stage_db: sqlite3.Connection,
     mart_db: sqlite3.Connection,
     meta: dict[str, OccurrenceMeta],
     config: InsightConfig,
 ) -> list[dict[str, Any]]:
-    occurrence_inputs: dict[str, list[tuple[str, str, str]]] = defaultdict(list)
     groups: dict[tuple[str, str, str], SearchGroup] = {}
+    noise_patterns = _compiled_noise_patterns(config)
+
+    def process_occurrence(
+        occurrence_key: str,
+        inputs: list[tuple[str, str, str]],
+        keywords: list[str],
+    ) -> None:
+        if not occurrence_key or not inputs:
+            return
+        occurrence = meta.get(occurrence_key)
+        if occurrence is None:
+            return
+        for search_id, search_name, input_type in inputs:
+            key = (occurrence.category, search_id, search_name)
+            group = groups.setdefault(
+                key,
+                SearchGroup(
+                    category=occurrence.category,
+                    search_id=search_id,
+                    search_name=search_name,
+                    input_type=input_type,
+                ),
+            )
+            group.total_occurrences += 1
+            if len(group.samples) < config.thresholds.search_sample_min:
+                group.samples.append(occurrence_key)
+        if not keywords:
+            return
+        for keyword in keywords:
+            matched_noise = _fast_noise_match(
+                occurrence.category,
+                keyword,
+                occurrence.match_text,
+                noise_patterns,
+            )
+            for search_id, search_name, _input_type in inputs:
+                group = groups[(occurrence.category, search_id, search_name)]
+                group.matched_keyword_rows += 1
+                if matched_noise is None:
+                    continue
+                group.noise_keyword_rows += 1
+                group.noise_terms[matched_noise] += 1
+                if len(group.noise_samples) < config.thresholds.search_sample_min:
+                    group.noise_samples.append(
+                        {
+                            "occurrence_id": occurrence_key,
+                            "document_id": occurrence.document_id,
+                            "keyword": keyword,
+                            "matched_noise": matched_noise,
+                            "evidence": occurrence.evidence_text,
+                            "url": occurrence.url,
+                        }
+                    )
+
+    current_occurrence = ""
+    current_inputs: list[tuple[str, str, str]] = []
+    current_keywords: list[str] = []
     cursor = stage_db.execute(
         """
-        SELECT occurrence_id, item_id, item_name, item_type
+        SELECT occurrence_id, field_path, item_id, item_name, item_type, item_text
         FROM array_items
-        WHERE field_path = 'matched.inputs'
-        ORDER BY occurrence_id, ordinal
+        WHERE field_path IN ('matched.inputs', 'matched.keywords')
+        ORDER BY occurrence_id, field_path, ordinal
         """
     )
-    for occurrence_id, item_id, item_name, item_type in cursor:
+    for occurrence_id, field_path, item_id, item_name, item_type, item_text in cursor:
         occurrence_key = str(occurrence_id)
-        occurrence = meta.get(occurrence_key)
-        if occurrence is None:
-            continue
-        search_id = str(item_id or "")
-        search_name = str(item_name or "")
-        input_type = str(item_type or "")
-        occurrence_inputs[occurrence_key].append((search_id, search_name, input_type))
-        key = (occurrence.category, search_id, search_name)
-        group = groups.setdefault(
-            key,
-            SearchGroup(
-                category=occurrence.category,
-                search_id=search_id,
-                search_name=search_name,
-                input_type=input_type,
-            ),
-        )
-        group.total_occurrences += 1
-        if len(group.samples) < config.thresholds.search_sample_min:
-            group.samples.append(occurrence_key)
-
-    keyword_cursor = stage_db.execute(
-        """
-        SELECT occurrence_id, item_text
-        FROM array_items
-        WHERE field_path = 'matched.keywords'
-        ORDER BY occurrence_id, ordinal
-        """
-    )
-    for occurrence_id, item_text in keyword_cursor:
-        occurrence_key = str(occurrence_id)
-        occurrence = meta.get(occurrence_key)
-        if occurrence is None:
-            continue
-        inputs = occurrence_inputs.get(occurrence_key, [])
-        if not inputs:
-            continue
-        keyword = str(item_text or "")
-        for search_id, search_name, _input_type in inputs:
-            group = groups[(occurrence.category, search_id, search_name)]
-            group.matched_keyword_rows += 1
-            matched_noise = is_noise_match(
-                occurrence.category,
-                [keyword, occurrence.match_text],
-                config.query_noise,
-            )
-            if matched_noise is None:
-                continue
-            group.noise_keyword_rows += 1
-            group.noise_terms[matched_noise] += 1
-            if len(group.noise_samples) < config.thresholds.search_sample_min:
-                group.noise_samples.append(
-                    {
-                        "occurrence_id": occurrence_key,
-                        "document_id": occurrence.document_id,
-                        "keyword": keyword,
-                        "matched_noise": matched_noise,
-                        "evidence": occurrence.evidence_text,
-                        "url": occurrence.url,
-                    }
+        if current_occurrence and occurrence_key != current_occurrence:
+            process_occurrence(current_occurrence, current_inputs, current_keywords)
+            current_inputs = []
+            current_keywords = []
+        current_occurrence = occurrence_key
+        if field_path == "matched.inputs":
+            current_inputs.append(
+                (
+                    str(item_id or ""),
+                    str(item_name or ""),
+                    str(item_type or ""),
                 )
+            )
+        elif field_path == "matched.keywords":
+            current_keywords.append(str(item_text or ""))
+    process_occurrence(current_occurrence, current_inputs, current_keywords)
 
     rows: list[dict[str, Any]] = []
     for group in groups.values():
@@ -593,7 +728,10 @@ def _build_product_pain_radar(
 ) -> list[dict[str, Any]]:
     occurrence_topics: dict[str, set[str]] = defaultdict(set)
     matched_terms: dict[tuple[str, str], str] = {}
+    topic_gate = _compiled_term_gate([term for topic in config.topics for term in topic.terms])
     for occurrence_id, occurrence in meta.items():
+        if not _gate_allows(topic_gate, occurrence.match_text):
+            continue
         for topic_id, term in _topic_ids_for_texts([occurrence.match_text], config).items():
             occurrence_topics[occurrence_id].add(topic_id)
             matched_terms[(occurrence_id, topic_id)] = term
@@ -609,6 +747,8 @@ def _build_product_pain_radar(
     for occurrence_id, _field_path, item_text, item_name in relation_cursor:
         occurrence_key = str(occurrence_id)
         text = str(item_text or item_name or "")
+        if not _gate_allows(topic_gate, text):
+            continue
         for topic_id, term in _topic_ids_for_texts([text], config).items():
             occurrence_topics[occurrence_key].add(topic_id)
             matched_terms.setdefault((occurrence_key, topic_id), term)
@@ -780,6 +920,106 @@ def _build_category_health_weekly(
     return rows
 
 
+def _build_category_health_weekly_delta(
+    mart_db: sqlite3.Connection,
+    health_rows: list[dict[str, Any]],
+    meta: dict[str, OccurrenceMeta],
+) -> list[dict[str, Any]]:
+    domain_mix: dict[tuple[str, str], Counter[str]] = defaultdict(Counter)
+    negative_domain_mix: dict[tuple[str, str], Counter[str]] = defaultdict(Counter)
+    for occurrence in meta.values():
+        key = (occurrence.category, occurrence.week_start)
+        domain = occurrence.source_domain or "unknown"
+        domain_mix[key][domain] += 1
+        if occurrence.sentiment == "negative":
+            negative_domain_mix[key][domain] += 1
+
+    rows_by_category: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in health_rows:
+        rows_by_category[str(row["category"])].append(row)
+
+    delta_rows: list[dict[str, Any]] = []
+    for category, category_rows in rows_by_category.items():
+        category_rows.sort(key=lambda row: str(row["week_start"]))
+        for index, row in enumerate(category_rows):
+            previous = category_rows[index - 1] if index > 0 else None
+            previous_occurrences = int(previous["occurrences"]) if previous else 0
+            previous_negative_rate = float(previous["negative_rate"]) if previous else 0.0
+            occurrences = int(row["occurrences"])
+            negative_rate = float(row["negative_rate"])
+            wow_occurrence_change = (
+                (occurrences - previous_occurrences) / previous_occurrences
+                if previous_occurrences
+                else 0.0
+            )
+            wow_negative_rate_change = negative_rate - previous_negative_rate if previous else 0.0
+            baseline_rows = category_rows[max(0, index - 4) : index]
+            baseline_4w_negative_rate = (
+                sum(float(item["negative_rate"]) for item in baseline_rows) / len(baseline_rows)
+                if baseline_rows
+                else negative_rate
+            )
+            if previous is None:
+                level = "baseline"
+                reason = "first observed week for category"
+            elif wow_occurrence_change >= 0.5 or wow_negative_rate_change >= 0.05:
+                level = "spike"
+                reason = "volume or negative-rate spike versus previous week"
+            elif wow_occurrence_change <= -0.5:
+                level = "drop"
+                reason = "volume dropped versus previous week"
+            elif abs(wow_occurrence_change) >= 0.2 or abs(wow_negative_rate_change) >= 0.02:
+                level = "watch"
+                reason = "moderate week-over-week movement"
+            else:
+                level = "stable"
+                reason = "no material week-over-week movement"
+
+            key = (category, str(row["week_start"]))
+            delta_rows.append(
+                {
+                    "category": category,
+                    "week_start": row["week_start"],
+                    "occurrences": occurrences,
+                    "previous_occurrences": previous_occurrences,
+                    "wow_occurrence_change": wow_occurrence_change,
+                    "negative_rate": negative_rate,
+                    "previous_negative_rate": previous_negative_rate,
+                    "wow_negative_rate_change": wow_negative_rate_change,
+                    "baseline_4w_negative_rate": baseline_4w_negative_rate,
+                    "top_source_domains_json": _json_text(domain_mix[key].most_common(10)),
+                    "top_negative_domains_json": _json_text(negative_domain_mix[key].most_common(10)),
+                    "change_point_level": level,
+                    "change_reason": reason,
+                }
+            )
+
+    delta_rows.sort(
+        key=lambda row: (
+            {"spike": 0, "drop": 1, "watch": 2, "baseline": 3, "stable": 4}.get(
+                str(row["change_point_level"]),
+                9,
+            ),
+            -abs(float(row["wow_occurrence_change"])),
+            row["category"],
+            row["week_start"],
+        )
+    )
+    mart_db.executemany(
+        """
+        INSERT INTO mart_category_health_weekly_delta VALUES (
+            :category, :week_start, :occurrences, :previous_occurrences,
+            :wow_occurrence_change, :negative_rate, :previous_negative_rate,
+            :wow_negative_rate_change, :baseline_4w_negative_rate,
+            :top_source_domains_json, :top_negative_domains_json,
+            :change_point_level, :change_reason
+        )
+        """,
+        delta_rows,
+    )
+    return delta_rows
+
+
 def _brand_match(brand: BrandRule, texts: list[str]) -> str | None:
     for text in texts:
         for alias in brand.aliases:
@@ -798,6 +1038,7 @@ def _build_competitor_battlecards(
     occurrence_brands: dict[str, set[str]] = defaultdict(set)
     brand_terms: dict[tuple[str, str], str] = {}
     brands_by_id = {brand.id: brand for brand in config.brands}
+    brand_gate = _compiled_term_gate([alias for brand in config.brands for alias in brand.aliases])
     brands_by_search_id: dict[str, list[BrandRule]] = defaultdict(list)
     for brand in config.brands:
         for search_id in brand.search_ids:
@@ -816,6 +1057,8 @@ def _build_competitor_battlecards(
         for brand in brands_by_search_id.get(str(item_id or ""), []):
             occurrence_brands[occurrence_key].add(brand.id)
             brand_terms[(occurrence_key, brand.id)] = str(item_id or "")
+        if not _gate_allows(brand_gate, str(item_name or "")):
+            continue
         for brand in config.brands:
             matched = _brand_match(brand, [str(item_name or "")])
             if matched is not None:
@@ -833,6 +1076,8 @@ def _build_competitor_battlecards(
     for occurrence_id, _field_path, item_text, item_name in text_cursor:
         occurrence_key = str(occurrence_id)
         text = str(item_text or item_name or "")
+        if not _gate_allows(brand_gate, text):
+            continue
         for brand in config.brands:
             matched = _brand_match(brand, [text])
             if matched is not None:
@@ -840,6 +1085,8 @@ def _build_competitor_battlecards(
                 brand_terms.setdefault((occurrence_key, brand.id), matched)
 
     for occurrence_id, occurrence in meta.items():
+        if not _gate_allows(brand_gate, occurrence.match_text):
+            continue
         for brand in config.brands:
             matched = _brand_match(brand, [occurrence.match_text])
             if matched is not None:
@@ -936,6 +1183,7 @@ def _build_content_opportunities(
     blocked_categories: set[str],
 ) -> list[dict[str, Any]]:
     occurrence_topics: dict[str, dict[str, Counter[str]]] = defaultdict(lambda: defaultdict(Counter))
+    topic_gate = _compiled_term_gate([term for topic in config.topics for term in topic.terms])
     text_cursor = stage_db.execute(
         """
         SELECT occurrence_id, field_path, item_text, item_name
@@ -947,6 +1195,8 @@ def _build_content_opportunities(
     for occurrence_id, _field_path, item_text, item_name in text_cursor:
         occurrence_key = str(occurrence_id)
         text = str(item_text or item_name or "")
+        if not _gate_allows(topic_gate, text):
+            continue
         for topic in config.topics:
             if topic_matches(topic, [text]):
                 occurrence_topics[occurrence_key][topic.id][text] += 1
@@ -1020,6 +1270,225 @@ def _build_content_opportunities(
         rows,
     )
     return rows
+
+
+def _recommended_issue_action(readiness: str, negative_rate: float, positive_mentions: int) -> str:
+    if readiness == "blocked_by_query_noise":
+        return "fix query gate before drawing issue conclusions"
+    if negative_rate >= 0.5:
+        return "route to Product/CX triage with evidence samples"
+    if positive_mentions > 0:
+        return "convert positive language into PDP, FAQ, or content proof"
+    return "business review required before action"
+
+
+def _build_issue_channel_competitor_matrix(
+    mart_db: sqlite3.Connection,
+    pain_rows: list[dict[str, Any]],
+    meta: dict[str, OccurrenceMeta],
+    config: InsightConfig,
+    blocked_categories: set[str],
+) -> list[dict[str, Any]]:
+    groups: dict[tuple[str, str, str, str], dict[str, Any]] = {}
+    for pain in pain_rows:
+        try:
+            samples = json.loads(str(pain["evidence_samples_json"]))
+        except json.JSONDecodeError:
+            samples = []
+        if not isinstance(samples, list):
+            continue
+        for sample in samples:
+            if not isinstance(sample, dict):
+                continue
+            occurrence_id = str(sample.get("occurrence_id") or "")
+            occurrence = meta.get(occurrence_id)
+            if occurrence is None:
+                continue
+            matched_brands = []
+            evidence = str(sample.get("evidence") or occurrence.evidence_text)
+            matched_topic_term = str(sample.get("matched_term") or "")
+            for brand in config.brands:
+                matched = _brand_match(brand, [occurrence.match_text, evidence, matched_topic_term])
+                if matched is not None:
+                    matched_brands.append((brand.id, brand.label, matched))
+            if not matched_brands:
+                matched_brands.append(("unattributed", "Unattributed", ""))
+            for brand_id, brand_label, matched_brand_term in matched_brands:
+                key = (str(pain["category"]), str(pain["topic_id"]), occurrence.source_type, brand_id)
+                group = groups.setdefault(
+                    key,
+                    {
+                        "category": pain["category"],
+                        "topic_id": pain["topic_id"],
+                        "topic_label": pain["topic_label"],
+                        "source_type": occurrence.source_type,
+                        "brand_id": brand_id,
+                        "brand_label": brand_label,
+                        "valid_mentions": 0,
+                        "positive_mentions": 0,
+                        "neutral_mentions": 0,
+                        "negative_mentions": 0,
+                        "samples": [],
+                    },
+                )
+                group["valid_mentions"] += 1
+                if occurrence.sentiment == "positive":
+                    group["positive_mentions"] += 1
+                elif occurrence.sentiment == "negative":
+                    group["negative_mentions"] += 1
+                else:
+                    group["neutral_mentions"] += 1
+                if len(group["samples"]) < 10:
+                    group["samples"].append(
+                        {
+                            "occurrence_id": occurrence_id,
+                            "document_id": occurrence.document_id,
+                            "sentiment": occurrence.sentiment,
+                            "matched_topic_term": matched_topic_term,
+                            "matched_brand_term": matched_brand_term,
+                            "evidence": evidence,
+                            "url": str(sample.get("url") or occurrence.url),
+                        }
+                    )
+
+    rows: list[dict[str, Any]] = []
+    for group in groups.values():
+        valid_mentions = int(group["valid_mentions"])
+        negative_mentions = int(group["negative_mentions"])
+        positive_mentions = int(group["positive_mentions"])
+        negative_rate = negative_mentions / valid_mentions if valid_mentions else 0.0
+        readiness = _readiness(
+            valid_mentions,
+            config.thresholds.formal_insight_min_samples,
+            str(group["category"]) in blocked_categories,
+        )
+        rows.append(
+            {
+                "category": group["category"],
+                "topic_id": group["topic_id"],
+                "topic_label": group["topic_label"],
+                "source_type": group["source_type"],
+                "brand_id": group["brand_id"],
+                "brand_label": group["brand_label"],
+                "valid_mentions": valid_mentions,
+                "positive_mentions": positive_mentions,
+                "neutral_mentions": group["neutral_mentions"],
+                "negative_mentions": negative_mentions,
+                "negative_rate": negative_rate,
+                "sample_verdict_mix_json": _json_text({"pending": valid_mentions}),
+                "evidence_samples_json": _json_text(group["samples"]),
+                "readiness": readiness,
+                "recommended_action": _recommended_issue_action(readiness, negative_rate, positive_mentions),
+            }
+        )
+    rows.sort(
+        key=lambda row: (
+            row["readiness"] == "blocked_by_query_noise",
+            -int(row["valid_mentions"]),
+            -float(row["negative_rate"]),
+            row["category"],
+            row["topic_id"],
+            row["source_type"],
+            row["brand_id"],
+        )
+    )
+    mart_db.executemany(
+        """
+        INSERT INTO mart_issue_channel_competitor_matrix VALUES (
+            :category, :topic_id, :topic_label, :source_type, :brand_id,
+            :brand_label, :valid_mentions, :positive_mentions, :neutral_mentions,
+            :negative_mentions, :negative_rate, :sample_verdict_mix_json,
+            :evidence_samples_json, :readiness, :recommended_action
+        )
+        """,
+        rows,
+    )
+    return rows
+
+
+def _build_platform_content_opportunities(
+    mart_db: sqlite3.Connection,
+    content_rows: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    brief_rows: list[dict[str, Any]] = []
+    quote_rows: list[dict[str, Any]] = []
+    for row in content_rows:
+        samples = json.loads(str(row["evidence_samples_json"]))
+        if not isinstance(samples, list):
+            samples = []
+        brief_id = _stable_id("brief", row["category"], row["source_type"], row["topic_id"])
+        suggested_angle = (
+            f"Use {row['topic_label']} user language from {row['source_type']} "
+            "as PDP proof, FAQ copy, or short-form content."
+        )
+        brief_rows.append(
+            {
+                "brief_id": brief_id,
+                "category": row["category"],
+                "source_type": row["source_type"],
+                "topic_id": row["topic_id"],
+                "topic_label": row["topic_label"],
+                "positive_mentions": row["positive_mentions"],
+                "total_mentions": row["total_mentions"],
+                "positive_rate": row["positive_rate"],
+                "quote_count": len(samples),
+                "suggested_angle": suggested_angle,
+                "readiness": row["readiness"],
+                "evidence_samples_json": row["evidence_samples_json"],
+            }
+        )
+        for rank, sample in enumerate(samples[:10], start=1):
+            if not isinstance(sample, dict):
+                continue
+            occurrence_id = str(sample.get("occurrence_id") or "")
+            quote_rows.append(
+                {
+                    "quote_id": _stable_id("quote", brief_id, occurrence_id, rank),
+                    "brief_id": brief_id,
+                    "category": row["category"],
+                    "source_type": row["source_type"],
+                    "topic_id": row["topic_id"],
+                    "topic_label": row["topic_label"],
+                    "sentiment": "positive",
+                    "occurrence_id": occurrence_id,
+                    "document_id": str(sample.get("document_id") or ""),
+                    "quote_text": _shorten(str(sample.get("evidence") or "")),
+                    "url": str(sample.get("url") or ""),
+                    "usage_type": "content_brief_quote",
+                }
+            )
+
+    brief_rows.sort(
+        key=lambda row: (
+            row["readiness"] != "ready_for_review",
+            -int(row["positive_mentions"]),
+            -float(row["positive_rate"]),
+            row["category"],
+            row["source_type"],
+            row["topic_id"],
+        )
+    )
+    quote_rows.sort(key=lambda row: (row["category"], row["topic_id"], row["quote_id"]))
+    mart_db.executemany(
+        """
+        INSERT INTO mart_platform_content_opportunity VALUES (
+            :brief_id, :category, :source_type, :topic_id, :topic_label,
+            :positive_mentions, :total_mentions, :positive_rate, :quote_count,
+            :suggested_angle, :readiness, :evidence_samples_json
+        )
+        """,
+        brief_rows,
+    )
+    mart_db.executemany(
+        """
+        INSERT INTO mart_user_voice_quote_library VALUES (
+            :quote_id, :brief_id, :category, :source_type, :topic_id, :topic_label,
+            :sentiment, :occurrence_id, :document_id, :quote_text, :url, :usage_type
+        )
+        """,
+        quote_rows,
+    )
+    return brief_rows, quote_rows
 
 
 def _build_crisis_watch_daily(
@@ -2253,6 +2722,49 @@ def _write_weekly_brief(
     path.chmod(0o600)
 
 
+def _write_weekly_change_points(output_dir: Path, rows: list[dict[str, Any]]) -> None:
+    table_rows = [
+        [
+            str(row["category"]),
+            str(row["week_start"]),
+            str(row["occurrences"]),
+            f"{float(row['wow_occurrence_change']):.2%}",
+            f"{float(row['negative_rate']):.2%}",
+            f"{float(row['wow_negative_rate_change']):+.2%}",
+            str(row["change_point_level"]),
+            str(row["change_reason"]),
+        ]
+        for row in rows[:30]
+    ]
+    path = output_dir / "weekly_change_points.md"
+    path.write_text(
+        "\n".join(
+            [
+                "# Weekly Change Points",
+                "",
+                "按品类识别周度声量和负面率变化点；`baseline` 表示该品类首个可比周。",
+                "",
+                _markdown_table(
+                    [
+                        "Category",
+                        "Week",
+                        "Mentions",
+                        "WoW Volume",
+                        "Negative Rate",
+                        "WoW Negative",
+                        "Level",
+                        "Reason",
+                    ],
+                    table_rows,
+                ),
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    path.chmod(0o600)
+
+
 def _write_competitor_battlecards(output_dir: Path, rows: list[dict[str, Any]]) -> None:
     table_rows = [
         [
@@ -2275,6 +2787,51 @@ def _write_competitor_battlecards(output_dir: Path, rows: list[dict[str, Any]]) 
                 "",
                 _markdown_table(
                     ["Category", "Brand", "Role", "Mentions", "Negative Rate", "Readiness"],
+                    table_rows,
+                ),
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    path.chmod(0o600)
+
+
+def _write_product_pain_deep_dive(output_dir: Path, rows: list[dict[str, Any]]) -> None:
+    table_rows = [
+        [
+            str(row["category"]),
+            str(row["topic_label"]),
+            str(row["source_type"]),
+            str(row["brand_label"]),
+            str(row["valid_mentions"]),
+            str(row["negative_mentions"]),
+            f"{float(row['negative_rate']):.2%}",
+            str(row["readiness"]),
+            str(row["recommended_action"]),
+        ]
+        for row in rows[:40]
+    ]
+    path = output_dir / "product_pain_deep_dive.md"
+    path.write_text(
+        "\n".join(
+            [
+                "# Product Pain Deep Dive",
+                "",
+                "把痛点主题拆到渠道和品牌/竞品维度，作为 Product、CX、Content 的业务复核入口。",
+                "",
+                _markdown_table(
+                    [
+                        "Category",
+                        "Issue",
+                        "Channel",
+                        "Brand",
+                        "Mentions",
+                        "Negative",
+                        "Negative Rate",
+                        "Readiness",
+                        "Recommended Action",
+                    ],
                     table_rows,
                 ),
                 "",
@@ -2315,6 +2872,73 @@ def _write_content_opportunities(output_dir: Path, rows: list[dict[str, Any]]) -
         encoding="utf-8",
     )
     path.chmod(0o600)
+
+
+def _write_content_brief_queue(
+    output_dir: Path,
+    brief_rows: list[dict[str, Any]],
+    quote_rows: list[dict[str, Any]],
+) -> None:
+    table_rows = [
+        [
+            str(row["brief_id"]),
+            str(row["category"]),
+            str(row["source_type"]),
+            str(row["topic_label"]),
+            str(row["positive_mentions"]),
+            f"{float(row['positive_rate']):.2%}",
+            str(row["quote_count"]),
+            str(row["readiness"]),
+            str(row["suggested_angle"]),
+        ]
+        for row in brief_rows[:30]
+    ]
+    path = output_dir / "content_brief_queue.md"
+    path.write_text(
+        "\n".join(
+            [
+                "# Content Brief Queue",
+                "",
+                "将正向用户语言转成 PDP、FAQ、短视频或社媒内容 brief 候选。",
+                "",
+                _markdown_table(
+                    [
+                        "Brief ID",
+                        "Category",
+                        "Platform",
+                        "Topic",
+                        "Positive",
+                        "Positive Rate",
+                        "Quotes",
+                        "Readiness",
+                        "Suggested Angle",
+                    ],
+                    table_rows,
+                ),
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    path.chmod(0o600)
+    _write_dict_csv(
+        output_dir / "user_voice_quote_library.csv",
+        quote_rows,
+        [
+            "quote_id",
+            "brief_id",
+            "category",
+            "source_type",
+            "topic_id",
+            "topic_label",
+            "sentiment",
+            "occurrence_id",
+            "document_id",
+            "quote_text",
+            "url",
+            "usage_type",
+        ],
+    )
 
 
 def _write_crisis_watch(output_dir: Path, rows: list[dict[str, Any]]) -> None:
@@ -2568,8 +3192,12 @@ def _write_manifest(
             "pain_point_cards.md",
             "pain_point_cards.csv",
             "weekly_voc_brief.md",
+            "weekly_change_points.md",
             "competitor_battlecards.md",
+            "product_pain_deep_dive.md",
             "content_opportunities.md",
+            "content_brief_queue.md",
+            "user_voice_quote_library.csv",
             "crisis_watch_daily.md",
             "region_language_priority.md",
             "concept_candidates.md",
@@ -2597,6 +3225,7 @@ def _build_mart_outputs(
 ) -> None:
     mart_path = output_dir / "voc_mart.sqlite"
     with sqlite3.connect(stage_db_path) as stage_db, sqlite3.connect(mart_path) as mart_db:
+        _ensure_stage_mart_indexes(stage_db)
         _create_mart_schema(mart_db)
         meta = _load_occurrence_meta(stage_db)
         search_rows = _build_search_quality(stage_db, mart_db, meta, insight_config)
@@ -2613,6 +3242,7 @@ def _build_mart_outputs(
             blocked_categories,
         )
         health_rows = _build_category_health_weekly(mart_db, meta)
+        health_delta_rows = _build_category_health_weekly_delta(mart_db, health_rows, meta)
         competitor_rows = _build_competitor_battlecards(
             stage_db,
             mart_db,
@@ -2627,10 +3257,18 @@ def _build_mart_outputs(
             insight_config,
             blocked_categories,
         )
+        issue_matrix_rows = _build_issue_channel_competitor_matrix(
+            mart_db,
+            pain_rows,
+            meta,
+            insight_config,
+            blocked_categories,
+        )
         crisis_rows = _build_crisis_watch_daily(mart_db, meta, blocked_categories)
         region_rows = _build_region_language_priority(mart_db, meta, blocked_categories)
         concept_rows = _build_concept_candidates(mart_db, pain_rows, insight_config)
         executive_rows = _build_executive_monthly(mart_db, meta, search_rows, pain_rows)
+        platform_content_rows, quote_rows = _build_platform_content_opportunities(mart_db, content_rows)
         query_rewrite_rows = _build_query_rewrite_recommendations(mart_db, search_rows, insight_config)
         query_sample_rows = _build_query_sample_review_queue(mart_db, output_dir, search_rows, meta)
         insight_rows, sample_rows, action_rows, unmatched_feedback_rows, action_feedback_applied = _build_insight_closure(
@@ -2653,8 +3291,11 @@ def _build_mart_outputs(
     _write_query_rewrite_recommendations(output_dir, query_rewrite_rows)
     _write_pain_cards(output_dir, pain_rows)
     _write_weekly_brief(output_dir, health_rows, pain_rows, search_rows)
+    _write_weekly_change_points(output_dir, health_delta_rows)
     _write_competitor_battlecards(output_dir, competitor_rows)
+    _write_product_pain_deep_dive(output_dir, issue_matrix_rows)
     _write_content_opportunities(output_dir, content_rows)
+    _write_content_brief_queue(output_dir, platform_content_rows, quote_rows)
     _write_crisis_watch(output_dir, crisis_rows)
     _write_region_language_priority(output_dir, region_rows)
     _write_concept_candidates(output_dir, concept_rows)
@@ -2674,8 +3315,12 @@ def _build_mart_outputs(
             "mart_search_quality": len(search_rows),
             "mart_product_pain_radar": len(pain_rows),
             "mart_category_health_weekly": len(health_rows),
+            "mart_category_health_weekly_delta": len(health_delta_rows),
             "mart_competitor_battlecard": len(competitor_rows),
             "mart_content_opportunity": len(content_rows),
+            "mart_issue_channel_competitor_matrix": len(issue_matrix_rows),
+            "mart_platform_content_opportunity": len(platform_content_rows),
+            "mart_user_voice_quote_library": len(quote_rows),
             "mart_crisis_watch_daily": len(crisis_rows),
             "mart_region_language_priority": len(region_rows),
             "mart_concept_candidates": len(concept_rows),
@@ -2717,6 +3362,39 @@ def build_marts(
         action_feedback = _load_action_feedback(action_feedback_path)
         _build_mart_outputs(stage_db_path, build_dir, inventory, insight_config, action_feedback)
         stage_db_path.unlink()
+        os.replace(build_dir, final)
+        os.chmod(final, 0o700)
+        return final
+    except Exception:
+        failed = build_dir.with_name(build_dir.name.replace(".building-", ".failed-"))
+        if build_dir.exists():
+            shutil.move(str(build_dir), str(failed))
+        raise
+
+
+def build_marts_from_stage(
+    config_path: Path | str,
+    stage_db_path: Path | str,
+    output_dir: Path | str,
+    insights_config_dir: Path | str = "config/insights",
+    action_feedback_path: Path | str | None = None,
+) -> Path:
+    source_config = load_source_config(config_path)
+    stage_path = Path(stage_db_path).resolve()
+    if not stage_path.is_file():
+        raise FileNotFoundError(f"stage database does not exist: {stage_path}")
+    final = Path(output_dir).resolve()
+    final.parent.mkdir(parents=True, exist_ok=True)
+    if final.exists():
+        raise FileExistsError(f"output directory already exists: {final}")
+    build_dir = Path(tempfile.mkdtemp(prefix=f".{final.name}.building-", dir=final.parent))
+    os.chmod(build_dir, 0o700)
+    try:
+        inventory = build_inventory(source_config)
+        write_inventory(inventory, build_dir / "source_inventory.json")
+        insight_config = load_insight_config(insights_config_dir)
+        action_feedback = _load_action_feedback(action_feedback_path)
+        _build_mart_outputs(stage_path, build_dir, inventory, insight_config, action_feedback)
         os.replace(build_dir, final)
         os.chmod(final, 0o700)
         return final

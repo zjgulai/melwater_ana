@@ -12,7 +12,7 @@ from .checks import validate_existing_package, validate_package
 from .export_manifest import can_publish
 from .inventory import build_inventory, load_source_config, write_inventory
 from .live_api import LiveApiBlocked, run_targeted_backfill
-from .marts import build_marts
+from .marts import build_marts, build_marts_from_stage
 from .pipeline import build_all
 from .sample_audit import audit_random_samples
 from .staging import stage_sources
@@ -61,6 +61,13 @@ def build_parser() -> argparse.ArgumentParser:
     marts.add_argument("--output-dir", required=True)
     marts.add_argument("--insights-config-dir", default="config/insights")
     marts.add_argument("--action-feedback")
+
+    marts_from_stage = subparsers.add_parser("build-marts-from-stage")
+    marts_from_stage.add_argument("--config", required=True)
+    marts_from_stage.add_argument("--stage-db", required=True)
+    marts_from_stage.add_argument("--output-dir", required=True)
+    marts_from_stage.add_argument("--insights-config-dir", default="config/insights")
+    marts_from_stage.add_argument("--action-feedback")
 
     sample = subparsers.add_parser("sample-audit")
     sample.add_argument("--config", required=True)
@@ -113,6 +120,16 @@ def main(argv: list[str] | None = None) -> int:
         print(build_all(args.config, args.output_dir))
     elif args.command == "build-marts":
         print(build_marts(args.config, args.output_dir, args.insights_config_dir, args.action_feedback))
+    elif args.command == "build-marts-from-stage":
+        print(
+            build_marts_from_stage(
+                args.config,
+                args.stage_db,
+                args.output_dir,
+                args.insights_config_dir,
+                args.action_feedback,
+            )
+        )
     elif args.command == "sample-audit":
         result = audit_random_samples(
             args.config,

@@ -68,6 +68,28 @@ make insights INSIGHTS_OUTPUT_DIR=data/marts/YYYYMMDD_with_feedback \
 
 注意：`build-marts` 不覆盖已存在目录；如果需要重跑，请先换一个输出目录或备份旧目录。
 
+复用已构建 stage DB 只重建 mart/report：
+
+```bash
+uv run --python 3.12 python -m meltwater_excel.cli build-marts-from-stage \
+  --config config/excel_export_sources.json \
+  --stage-db path/to/stage.sqlite \
+  --output-dir data/marts/YYYYMMDD_mart_only \
+  --insights-config-dir config/insights
+```
+
+或：
+
+```bash
+make insights-from-stage STAGE_DB=path/to/stage.sqlite \
+  INSIGHTS_OUTPUT_DIR=data/marts/YYYYMMDD_mart_only
+```
+
+使用规则：
+
+- 原始 JSON、source 配置、canonical 逻辑变化时，用 `build-marts` full rebuild。
+- 只调整 topic/brand/query/action/report 逻辑时，可用 `build-marts-from-stage` mart-only rebuild。
+
 ---
 
 ## 3. 输出
@@ -84,8 +106,12 @@ make insights INSIGHTS_OUTPUT_DIR=data/marts/YYYYMMDD_with_feedback \
 | `pain_point_cards.md` | 产品痛点卡 Markdown |
 | `pain_point_cards.csv` | 产品痛点卡结构化版本 |
 | `weekly_voc_brief.md` | 周度 VOC brief |
+| `weekly_change_points.md` | 品类周度声量/负面率变化点 |
 | `competitor_battlecards.md` | 竞品 Battlecard |
+| `product_pain_deep_dive.md` | 痛点 × 渠道 × 品牌/竞品深挖矩阵 |
 | `content_opportunities.md` | 内容与种草机会 |
+| `content_brief_queue.md` | 可转化为 PDP/FAQ/短视频/社媒的内容 brief 队列 |
+| `user_voice_quote_library.csv` | 用户原话候选库 |
 | `crisis_watch_daily.md` | 危机与异常日预警 |
 | `region_language_priority.md` | 区域与语言优先级 |
 | `concept_candidates.md` | 产品共创概念候选 |
@@ -103,8 +129,12 @@ make insights INSIGHTS_OUTPUT_DIR=data/marts/YYYYMMDD_with_feedback \
 - `mart_search_quality`
 - `mart_product_pain_radar`
 - `mart_category_health_weekly`
+- `mart_category_health_weekly_delta`
 - `mart_competitor_battlecard`
 - `mart_content_opportunity`
+- `mart_issue_channel_competitor_matrix`
+- `mart_platform_content_opportunity`
+- `mart_user_voice_quote_library`
 - `mart_crisis_watch_daily`
 - `mart_region_language_priority`
 - `mart_concept_candidates`
@@ -161,7 +191,9 @@ make quality
 其他 playbook 分支同样继承 query quality gate：
 
 - 竞品 Battlecard：样本不足或 query 阻断时不可解释为市场份额。
-- 内容机会：只把 `ready_for_review` 或更高状态进入内容 brief。
+- 周度变化点：只表示 Meltwater 声量/负面率变化，不代表销量变化。
+- 痛点深挖矩阵：把 issue 拆到 source_type 和 brand/competitor，用作复核入口，不直接等同产品缺陷率。
+- 内容机会：只把 `ready_for_review` 或更高状态进入内容 brief；用户原话需人工复核后再用于外部素材。
 - 危机预警：非 green 事件应进入 PR/CX triage。
 - 区域语言：`country_known=no` 只能做语言线索，不能直接做地域市场结论。
 - 概念候选：必须再接入 review、客服、退货等交易型反馈验证。
@@ -197,8 +229,12 @@ with sqlite3.connect("data/marts/20260611/voc_mart.sqlite") as db:
         "mart_search_quality",
         "mart_product_pain_radar",
         "mart_category_health_weekly",
+        "mart_category_health_weekly_delta",
         "mart_competitor_battlecard",
         "mart_content_opportunity",
+        "mart_issue_channel_competitor_matrix",
+        "mart_platform_content_opportunity",
+        "mart_user_voice_quote_library",
         "mart_crisis_watch_daily",
         "mart_region_language_priority",
         "mart_concept_candidates",

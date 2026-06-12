@@ -4,8 +4,9 @@ OUTPUT_DIR ?= data/excel_complete_20260611
 INSIGHTS_OUTPUT_DIR ?= data/marts/20260611
 INSIGHTS_ACTION_FEEDBACK ?=
 INSIGHTS_ACTION_FEEDBACK_ARG := $(if $(INSIGHTS_ACTION_FEEDBACK),--action-feedback $(INSIGHTS_ACTION_FEEDBACK),)
+STAGE_DB ?= data/stage.sqlite
 
-.PHONY: test validate checksum lint type security insights quality
+.PHONY: test validate checksum lint type security insights insights-from-stage quality
 
 test:
 	uv run --python $(PYTHON) --group dev pytest -q
@@ -27,5 +28,8 @@ security:
 
 insights:
 	uv run --python $(PYTHON) python -m meltwater_excel.cli build-marts --config $(CONFIG) --output-dir $(INSIGHTS_OUTPUT_DIR) $(INSIGHTS_ACTION_FEEDBACK_ARG)
+
+insights-from-stage:
+	uv run --python $(PYTHON) python -m meltwater_excel.cli build-marts-from-stage --config $(CONFIG) --stage-db $(STAGE_DB) --output-dir $(INSIGHTS_OUTPUT_DIR) $(INSIGHTS_ACTION_FEEDBACK_ARG)
 
 quality: test validate checksum lint type security

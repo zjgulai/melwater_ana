@@ -3,7 +3,10 @@ import json
 import sqlite3
 from pathlib import Path
 
-from meltwater_excel.marts import build_marts
+from meltwater_excel.canonical import build_canonical
+from meltwater_excel.inventory import load_source_config
+from meltwater_excel.marts import build_marts, build_marts_from_stage
+from meltwater_excel.staging import stage_sources
 
 
 def _write_json(path: Path, payload: dict) -> None:
@@ -83,8 +86,12 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert (output_dir / "pain_point_cards.md").is_file()
     assert (output_dir / "pain_point_cards.csv").is_file()
     assert (output_dir / "weekly_voc_brief.md").is_file()
+    assert (output_dir / "weekly_change_points.md").is_file()
     assert (output_dir / "competitor_battlecards.md").is_file()
+    assert (output_dir / "product_pain_deep_dive.md").is_file()
     assert (output_dir / "content_opportunities.md").is_file()
+    assert (output_dir / "content_brief_queue.md").is_file()
+    assert (output_dir / "user_voice_quote_library.csv").is_file()
     assert (output_dir / "crisis_watch_daily.md").is_file()
     assert (output_dir / "region_language_priority.md").is_file()
     assert (output_dir / "concept_candidates.md").is_file()
@@ -102,6 +109,10 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert manifest["taxonomy_versions"]["topics"] == 99
     assert manifest["counts"]["mart_competitor_battlecard"] == 1
     assert manifest["counts"]["mart_content_opportunity"] == 1
+    assert manifest["counts"]["mart_category_health_weekly_delta"] == 1
+    assert manifest["counts"]["mart_issue_channel_competitor_matrix"] == 2
+    assert manifest["counts"]["mart_platform_content_opportunity"] == 1
+    assert manifest["counts"]["mart_user_voice_quote_library"] == 2
     assert manifest["counts"]["mart_crisis_watch_daily"] == 3
     assert manifest["counts"]["mart_region_language_priority"] == 1
     assert manifest["counts"]["mart_concept_candidates"] == 1
@@ -138,6 +149,13 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
             WHERE category = 'A'
             """
         ).fetchone()
+        health_delta = db.execute(
+            """
+            SELECT occurrences, previous_occurrences, change_point_level
+            FROM mart_category_health_weekly_delta
+            WHERE category = 'A'
+            """
+        ).fetchone()
         competitor = db.execute(
             """
             SELECT valid_mentions, positive_mentions, readiness
@@ -149,6 +167,27 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
             """
             SELECT positive_mentions, total_mentions, readiness
             FROM mart_content_opportunity
+            WHERE category = 'A' AND topic_id = 'fixture_brand'
+            """
+        ).fetchone()
+        issue_matrix = db.execute(
+            """
+            SELECT valid_mentions, positive_mentions, negative_mentions, readiness
+            FROM mart_issue_channel_competitor_matrix
+            WHERE category = 'A' AND topic_id = 'fixture_brand' AND brand_id = 'fixture_brand'
+            """
+        ).fetchone()
+        platform_content = db.execute(
+            """
+            SELECT positive_mentions, total_mentions, quote_count, readiness
+            FROM mart_platform_content_opportunity
+            WHERE category = 'A' AND topic_id = 'fixture_brand'
+            """
+        ).fetchone()
+        quote_library = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM mart_user_voice_quote_library
             WHERE category = 'A' AND topic_id = 'fixture_brand'
             """
         ).fetchone()
@@ -199,8 +238,12 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert search == (2, 3, 2, "blocked_by_query_noise")
     assert pain == (2, 0, "blocked_by_query_noise")
     assert health == (4, 3, 2, 2)
+    assert health_delta == (4, 0, "baseline")
     assert competitor == (2, 2, "blocked_by_query_noise")
     assert content == (2, 2, "blocked_by_query_noise")
+    assert issue_matrix == (1, 1, 0, "blocked_by_query_noise")
+    assert platform_content == (2, 2, 2, "blocked_by_query_noise")
+    assert quote_library == (2,)
     assert crisis_count == (3,)
     assert crisis_alerts == (3,)
     assert region == (4, 2, 1, "blocked_by_query_noise")
@@ -310,3 +353,20 @@ def test_build_marts_applies_action_feedback_overlay(fixture_config: Path, tmp_p
     )
     assert summary == (1, 1, 1, 0)
     assert unmatched == ("missing-action", "action_id_not_generated")
+
+
+def test_build_marts_from_stage_reuses_stage_db(fixture_config: Path, tmp_path: Path):
+    insight_config_dir = _write_test_insight_config(tmp_path)
+    stage_db = tmp_path / "stage.sqlite"
+    stage_sources(load_source_config(fixture_config), stage_db)
+    build_canonical(stage_db)
+
+    output_dir = tmp_path / "stage_marts"
+    result = build_marts_from_stage(fixture_config, stage_db, output_dir, insight_config_dir)
+    manifest = json.loads((output_dir / "mart_manifest.json").read_text(encoding="utf-8"))
+
+    assert result == output_dir.resolve()
+    assert manifest["status"] == "PASS"
+    assert manifest["counts"]["mart_category_health_weekly_delta"] == 1
+    assert manifest["counts"]["mart_issue_channel_competitor_matrix"] == 2
+    assert manifest["counts"]["mart_platform_content_opportunity"] == 1
