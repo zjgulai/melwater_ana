@@ -288,3 +288,100 @@ Browser token setup for shared writeback sync:
 ```js
 localStorage.setItem("melwater:apiToken", "<editor-or-admin-token>")
 ```
+
+## 2026-06-13 Additional Production Sync Round (Follow-up)
+
+### Scope
+
+执行一次紧接当前仓库 `main` 头部提交（`96dbaa53`）的生产同步与验证，保持发布链路“构建 -> 同步 -> 重建 -> 上线验证”闭环。
+
+### Execution
+
+- 本地构建：`npm run build`
+- 同步文件：`rsync` 至 `/opt/melwater-ana/app`
+- 写入版本号：`/opt/melwater-ana/app/REVISION`
+- 更新环境变量：`MELWATER_RELEASE_REF=96dbaa53`
+- 容器重建：
+  
+  ```bash
+  docker compose --env-file /opt/melwater-ana/secrets/melwater.env \
+    -f /opt/melwater-ana/app/deploy/docker/docker-compose.yml up -d --build
+  ```
+- 刷新共享 edge：`docker restart ai_video_nginx`
+
+### 验证
+
+执行命令：
+
+- `node server/verifyPublicSite.mjs`
+  - 目标：`https://melwater.lute-tlz-dddd.top`
+  - `ok: true`
+  - 页面标题：`Melwater Analyst Lab - Pain Radar`
+- `node server/verifyDeployment.mjs --require-auth`
+  - `apiBase`: `https://melwater.lute-tlz-dddd.top/api/review-state`
+  - `health`, `replay`, `metrics` 全量通过
+  - `melwater_review_state_replay_ok 1`
+
+### Current Deployment Snapshot
+
+- 发布引用：`96dbaa53`
+- 容器状态：`melwater_api`、`melwater_web` 均为健康运行
+- 边缘容器：`ai_video_nginx` 运行且在重建后已完成重启
+
+### 当前实施状态（下一步）
+
+- 已完成：`remoteRelease.mjs` 增加 `MELWATER_DEPLOY_MODE=docker` 分支，`deploy/rollback/preflight` 已支持 Docker Compose 运行链路。
+- 建议配置（Docker 生产）：
+  - `MELWATER_DEPLOY_MODE=docker`
+  - `MELWATER_DOCKER_COMPOSE_FILE=/opt/melwater-ana/app/deploy/docker/docker-compose.yml`（可选，默认自动推断）
+  - `MELWATER_DOCKER_COMPOSE_ENV_FILE=/opt/melwater-ana/secrets/melwater.env`（可选）
+  - `MELWATER_DOCKER_COMPOSE_PROJECT=melwater_ana`
+- 建议在 `deploy/env/remote-deploy.env.example` 里同步新增配置项（`MELWATER_DEPLOY_MODE` / Compose 相关变量）后按既有流程执行：
+  - `--mode=preflight --check-ssh`
+  - `--mode=deploy --execute`
+
+### 2026-06-13 后续部署执行（修复回归）
+
+使用以下参数对 `/opt/melwater-ana/app` 执行完整 `deploy --execute`（关键：`REVIEW_STATE_API_BASE` 使用 API 完整路径）：
+
+- `MELWATER_DEPLOY_MODE=docker`
+- `MELWATER_DEPLOY_HOST=101.34.52.232`
+- `MELWATER_DEPLOY_USER=ubuntu`
+- `MELWATER_DEPLOY_PATH=/opt/melwater-ana/app`
+- `MELWATER_REMOTE_APP_USER=ubuntu`
+- `MELWATER_REMOTE_OWNER=ubuntu:ubuntu`
+- `MELWATER_SSH_KEY_PATH=/absolute/path/to/ai_video.pem`
+- `REVIEW_STATE_API_BASE=https://melwater.lute-tlz-dddd.top/api/review-state`
+- `REVIEW_STATE_VERIFY_TOKEN=<melwater.env 中 admin token>`
+
+执行命令：
+
+```bash
+node outputs/prototypes/playbook-pain-radar-lab/server/remoteRelease.mjs --mode=deploy --execute --release-dir=<release-path>
+```
+
+验收结果：
+
+- 预检（`preflight`）通过
+- 镜像构建与 `docker compose up -d --build` 执行成功，`melwater_api` / `melwater_web` 就绪
+- `verify` 阶段返回 `ok: true`
+- 验证指标确认 `melwater_review_state_replay_ok 1`
+
+已确认：`sudo -n -u <user> sh -lc ...` 修复有效，`verify` 命令不再触发 `sudo: cd: command not found`。下一步需将此经验沉淀到部署 runbook 与操作手册中的标准参数说明（尤其是 API Base 需带 `/api/review-state`）。
+
+### 2026-06-13 回滚链路验收
+
+回滚链路验证命令（同一套环境变量）:
+
+```bash
+node outputs/prototypes/playbook-pain-radar-lab/server/remoteRelease.mjs --mode=rollback --execute --release-dir=<release-path>
+```
+
+预期结果：
+
+- 执行完成，无 `failures`
+- 触发 `restore rollback snapshot and restart service` / `verify restored application`
+- `verify` 回归结果 `ok: true`
+- 指标仍满足 `melwater_review_state_replay_ok 1`
+
+补充：新增配置校验会在 `REVIEW_STATE_API_BASE` 未以 `/api/review-state` 结尾时给出 warning，提示可能回到前端 HTML 页面而非 API JSON 的风险。

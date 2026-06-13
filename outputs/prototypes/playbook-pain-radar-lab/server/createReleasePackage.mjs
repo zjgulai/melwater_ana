@@ -20,6 +20,8 @@ const releaseIncludes = [
   "dist",
   "server",
   "deploy",
+  "index.html",
+  "src",
   "package.json",
   "package-lock.json",
   ".env.example",

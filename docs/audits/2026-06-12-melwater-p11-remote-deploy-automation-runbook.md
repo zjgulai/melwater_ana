@@ -82,7 +82,8 @@ npm run deploy:preflight -- --execute
 
 The SSH check confirms:
 
-- `node`, `npm`, `tar`, `rsync`, `sha256sum`, and `systemctl` exist on the server
+- `node`, `npm`, `tar`, `rsync`, `sha256sum` exist on the server
+- For `MELWATER_DEPLOY_MODE=docker`, `docker` and `docker compose` also exist
 - Passwordless sudo is available when `MELWATER_REMOTE_USE_SUDO=1`
 - The remote stage parent directory can be created
 - `docker` exists when edge refresh is enabled with the default docker command
@@ -106,13 +107,12 @@ The deploy flow:
 1. Creates a remote stage directory.
 2. Uploads app tarball, rollback tarball, and `release-index.json`.
 3. Verifies remote SHA256 checksums.
-4. Creates a pre-deploy state backup when an existing app is present.
+4. Creates a pre-deploy state backup when an existing app is present (systemd mode only).
 5. Extracts and syncs app files to `MELWATER_DEPLOY_PATH`.
-6. Runs `npm ci --omit=dev`.
-7. Runs review-state migration against `MELWATER_REMOTE_STATE_DIR`.
-8. Restarts the systemd service.
-9. Refreshes shared edge proxy (optional, non-blocking).
-10. Runs authenticated deployment verification.
+6. In docker mode: runs `docker compose up -d --build` for `MELWATER_DOCKER_COMPOSE_PROJECT`.
+7. In systemd mode: runs `npm ci --omit=dev`, review-state migration against `MELWATER_REMOTE_STATE_DIR`, and restarts the service.
+8. Refreshes shared edge proxy (optional, non-blocking).
+9. Runs authenticated deployment verification.
 
 ## Rollback
 
@@ -133,7 +133,7 @@ The rollback flow restores:
 - `rollback/dist/` to the app `dist/`
 - `rollback/state/` to the persistent state directory
 
-Then it replays state, refreshes the shared edge proxy (optional, non-blocking), and runs authenticated deployment verification.
+Then it restores `rollback/dist/` and `rollback/state/`, replays state in systemd mode, rebuilds and restarts docker mode containers, refreshes shared edge proxy (optional, non-blocking), and runs authenticated deployment verification.
 
 ## Public Site Smoke Check
 
@@ -146,7 +146,7 @@ npm run deploy:verify-public
 Override URL or expected text:
 
 ```bash
-PUBLIC_SITE_URL=https://mkt.lute-tlz-dddd.top \
+PUBLIC_SITE_URL=https://melwater.lute-tlz-dddd.top \
 PUBLIC_SITE_EXPECT_TEXT=Melwater \
 npm run deploy:verify-public
 ```

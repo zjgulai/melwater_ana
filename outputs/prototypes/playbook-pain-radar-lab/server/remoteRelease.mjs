@@ -22,9 +22,13 @@ const config = {
   port: process.env.MELWATER_DEPLOY_PORT || "22",
   sshKeyPath: process.env.MELWATER_SSH_KEY_PATH || "",
   deployPath: process.env.MELWATER_DEPLOY_PATH || "/opt/melwater/playbook-pain-radar-lab",
+  deployMode: (process.env.MELWATER_DEPLOY_MODE || "systemd").toLowerCase(),
   remoteStateDir: process.env.MELWATER_REMOTE_STATE_DIR || "/var/lib/melwater/review-state",
   remoteStageRoot: process.env.MELWATER_REMOTE_STAGE_ROOT || "/tmp/melwater-deploy/releases",
   serviceName: process.env.MELWATER_SERVICE_NAME || "melwater-review-state-api",
+  dockerComposeFile: process.env.MELWATER_DOCKER_COMPOSE_FILE || "",
+  dockerComposeProject: process.env.MELWATER_DOCKER_COMPOSE_PROJECT || "melwater_ana",
+  dockerComposeEnvFile: process.env.MELWATER_DOCKER_COMPOSE_ENV_FILE || "",
   appUser: process.env.MELWATER_REMOTE_APP_USER || "melwater",
   remoteOwner: process.env.MELWATER_REMOTE_OWNER || "",
   useSudo: process.env.MELWATER_REMOTE_USE_SUDO !== "0",
@@ -47,6 +51,14 @@ for (const name of requiredEnv) {
 }
 if (config.sshKeyPath && !fs.existsSync(config.sshKeyPath)) {
   failures.push({ scope: "env", name: "MELWATER_SSH_KEY_PATH", path: config.sshKeyPath, error: "file-not-found" });
+}
+if (!["systemd", "docker"].includes(config.deployMode)) {
+  failures.push({ scope: "env", name: "MELWATER_DEPLOY_MODE", error: "invalid-deploy-mode" });
+}
+if (config.apiBase && !/\/api\/review-state(?:\/)?$/.test(config.apiBase)) {
+  warnings.push(
+    "REVIEW_STATE_API_BASE should end with '/api/review-state' for review-state verification; otherwise health/replay/metrics checks may return frontend HTML.",
+  );
 }
 if (!release.ok) failures.push(...release.failures);
 
@@ -90,12 +102,16 @@ const result = {
       }
     : null,
   target: {
+    deployMode: config.deployMode,
     host: config.host || null,
     user: config.user || null,
     port: config.port,
     deployPath: config.deployPath,
     remoteStateDir: config.remoteStateDir,
     remoteStageRoot: config.remoteStageRoot,
+    dockerComposeFile: resolveComposeFilePath(),
+    dockerComposeEnvFile: resolveComposeEnvFile() || null,
+    dockerComposeProject: config.dockerComposeProject,
     serviceName: config.serviceName,
     appUser: config.appUser || null,
     remoteOwner: config.remoteOwner || null,
@@ -271,15 +287,21 @@ function rsyncStep(label, files, target, remoteDir) {
 }
 
 function remotePreflightScript() {
+  const composeFile = resolveComposeFilePath();
+  const composeEnvFile = resolveComposeEnvFile();
   const lines = [
     "set -e",
-    "command -v node >/dev/null",
-    "command -v npm >/dev/null",
+    isDockerMode() ? "command -v docker >/dev/null" : "command -v node >/dev/null",
+    isDockerMode() ? "docker compose version >/dev/null" : "command -v npm >/dev/null",
     "command -v tar >/dev/null",
     "command -v rsync >/dev/null",
     "command -v sha256sum >/dev/null",
-    "command -v systemctl >/dev/null",
+    ...(isDockerMode() ? [] : ["command -v systemctl >/dev/null"]),
   ];
+  if (isDockerMode()) {
+    lines.push(`test -f ${q(composeFile)}`);
+    if (composeEnvFile) lines.push(`test -f ${q(composeEnvFile)}`);
+  }
   if (shouldRefreshEdge() && edgeRefreshUsesDocker()) lines.push("command -v docker >/dev/null");
   if (config.useSudo) lines.push("sudo -n true");
   lines.push(`test -d ${q(path.posix.dirname(config.remoteStageRoot))} || mkdir -p ${q(path.posix.dirname(config.remoteStageRoot))}`);
@@ -290,7 +312,6 @@ function remotePreflightScript() {
 function remoteDeployScript(releaseStageDir, appName) {
   const deployPath = q(config.deployPath);
   const stateDir = q(config.remoteStateDir);
-  const serviceName = q(config.serviceName);
   const backupLabel = q(`pre-remote-deploy-${release.index.releaseId}`);
   const lines = [
     "set -e",
@@ -300,13 +321,19 @@ function remoteDeployScript(releaseStageDir, appName) {
     "rm -rf app",
     `tar -xzf ${q(appName)}`,
     "test -d app",
-    `if [ -f ${deployPath}/package.json ]; then cd ${deployPath} && ${asApp(`env REVIEW_STATE_DIR=${stateDir} npm run review:backup -- --label=${backupLabel}`)} || true; fi`,
+    ...(isDockerMode()
+      ? []
+      : [`if [ -f ${deployPath}/package.json ]; then cd ${deployPath} && ${asApp(`env REVIEW_STATE_DIR=${stateDir} npm run review:backup -- --label=${backupLabel}`)} || true; fi`]),
     sudo(`rsync -a --delete ${q(`${releaseStageDir}/app/`)} ${deployPath}/`),
     maybeChown(),
-    `cd ${deployPath}`,
-    asApp("npm ci --omit=dev"),
-    asApp(`env REVIEW_STATE_DIR=${stateDir} npm run review:migrate`),
-    sudo(`systemctl restart ${serviceName}`),
+    ...(isDockerMode()
+      ? [composeCommand("up -d --build")]
+      : [
+          `cd ${deployPath}`,
+          asApp("npm ci --omit=dev"),
+          asApp(`env REVIEW_STATE_DIR=${stateDir} npm run review:migrate`),
+          sudo(`systemctl restart ${config.serviceName}`),
+        ]),
   ].filter(Boolean);
   return lines.join("\n");
 }
@@ -314,7 +341,6 @@ function remoteDeployScript(releaseStageDir, appName) {
 function remoteRollbackScript(releaseStageDir, rollbackName) {
   const deployPath = q(config.deployPath);
   const stateDir = q(config.remoteStateDir);
-  const serviceName = q(config.serviceName);
   const lines = [
     "set -e",
     "umask 022",
@@ -323,21 +349,21 @@ function remoteRollbackScript(releaseStageDir, rollbackName) {
     "rm -rf rollback",
     `tar -xzf ${q(rollbackName)}`,
     "test -d rollback",
-    sudo(`systemctl stop ${serviceName} || true`),
+    ...(isDockerMode() ? [] : [sudo(`systemctl stop ${config.serviceName} || true`)]),
     sudo(`rsync -a --delete ${q(`${releaseStageDir}/rollback/dist/`)} ${deployPath}/dist/`),
     `if [ -d ${q(`${releaseStageDir}/rollback/state`)} ]; then ${sudo(`rsync -a ${q(`${releaseStageDir}/rollback/state/`)} ${stateDir}/`)}; fi`,
     maybeChown(),
     `cd ${deployPath}`,
-    asApp(`env REVIEW_STATE_DIR=${stateDir} npm run review:replay`),
-    sudo(`systemctl start ${serviceName}`),
+    ...(isDockerMode()
+      ? [composeCommand("up -d --build")]
+      : [asApp(`env REVIEW_STATE_DIR=${stateDir} npm run review:replay`), sudo(`systemctl start ${config.serviceName}`)]),
   ].filter(Boolean);
   return lines.join("\n");
 }
 
 function remoteVerifyScript() {
-  return asApp(
-    `env REVIEW_STATE_API_BASE=${q(config.apiBase)} REVIEW_STATE_VERIFY_TOKEN=${q(config.verifyToken)} npm run review:verify-deploy -- --require-auth`,
-  );
+  const verifyCommand = `cd ${q(config.deployPath)} && env REVIEW_STATE_API_BASE=${q(config.apiBase)} REVIEW_STATE_VERIFY_TOKEN=${q(config.verifyToken)} npm run review:verify-deploy -- --require-auth`;
+  return asApp(`sh -lc ${q(verifyCommand)}`);
 }
 
 function remoteEdgeRefreshScript() {
@@ -351,6 +377,32 @@ function remoteEdgeRefreshScript() {
     "echo \"Shared edge proxy refresh completed\"",
   ];
   return lines.join("\n");
+}
+
+function isDockerMode() {
+  return config.deployMode === "docker";
+}
+
+function resolveComposeFilePath() {
+  if (config.dockerComposeFile) return config.dockerComposeFile;
+  return path.posix.join(config.deployPath, "deploy/docker/docker-compose.yml");
+}
+
+function resolveComposeEnvFile() {
+  if (config.dockerComposeEnvFile) return config.dockerComposeEnvFile;
+  return path.posix.join(path.posix.dirname(config.deployPath), "secrets", "melwater.env");
+}
+
+function composeCommand(args) {
+  const composeEnvFile = resolveComposeEnvFile();
+  const optionParts = [
+    "-f",
+    q(resolveComposeFilePath()),
+    "-p",
+    q(config.dockerComposeProject),
+    ...(composeEnvFile ? ["--env-file", q(composeEnvFile)] : []),
+  ];
+  return `cd ${q(config.deployPath)} && docker compose ${optionParts.join(" ")} ${args}`;
 }
 
 function sudo(command) {
