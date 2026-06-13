@@ -39,7 +39,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -1171,6 +1172,11 @@ h1 {
   background: rgba(255, 149, 0, 0.14);
 }
 
+.status-badge.muted {
+  color: #6d655f;
+  background: var(--muted-strong);
+}
+
 .header-badges {
   display: flex;
   flex-wrap: wrap;
@@ -1351,6 +1357,186 @@ h1 {
 
 .action-row select {
   min-width: 132px;
+}
+
+.action-toolbar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(118px, 0.72fr)) minmax(210px, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+  padding: 12px 16px 2px;
+}
+
+.action-toolbar label,
+.action-control-grid label {
+  display: grid;
+  gap: 5px;
+  color: var(--soft-text);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.action-toolbar select,
+.action-toolbar input,
+.action-control-grid select,
+.action-control-grid input {
+  width: 100%;
+  min-height: 34px;
+  padding: 0 10px;
+  color: #4d4541;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  outline: none;
+  font-size: 11px;
+}
+
+.action-toolbar input:focus,
+.action-control-grid input:focus,
+.action-toolbar select:focus,
+.action-control-grid select:focus {
+  border-color: rgba(194, 91, 110, 0.45);
+  box-shadow: 0 0 0 3px rgba(194, 91, 110, 0.08);
+}
+
+.action-search {
+  min-width: 0;
+}
+
+.action-export-button {
+  min-height: 34px;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.action-board {
+  gap: 12px;
+}
+
+.action-row.action-card {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  align-items: stretch;
+  gap: 14px;
+  padding: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(253, 250, 247, 0.82)),
+    var(--page);
+}
+
+.action-card-main {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.action-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-title-row strong {
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.action-title-row small {
+  color: var(--secondary-text);
+}
+
+.action-meta-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(86px, 0.55fr));
+  gap: 8px;
+}
+
+.action-meta-grid span,
+.action-impact-note {
+  min-width: 0;
+  padding: 9px 10px;
+  color: #6d655f;
+  background: rgba(245, 237, 232, 0.62);
+  border: 1px solid rgba(237, 230, 223, 0.78);
+  border-radius: 12px;
+  font-size: 10px;
+  line-height: 1.42;
+}
+
+.action-meta-grid b {
+  display: block;
+  margin-bottom: 3px;
+  color: #3c3430;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.action-impact-note {
+  color: #4d4541;
+  background: rgba(194, 91, 110, 0.07);
+  border-color: rgba(194, 91, 110, 0.14);
+}
+
+.action-proof-list {
+  display: grid;
+  gap: 7px;
+}
+
+.action-proof-list a,
+.action-proof-empty {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  min-width: 0;
+  padding: 8px 9px;
+  color: #6d655f;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  font-size: 10px;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.action-proof-list a {
+  overflow: hidden;
+  max-height: 42px;
+}
+
+.action-proof-list svg {
+  flex: 0 0 auto;
+  color: var(--primary);
+  margin-top: 1px;
+}
+
+.action-proof-empty {
+  color: #bd6500;
+  background: rgba(255, 149, 0, 0.08);
+  border-color: rgba(255, 149, 0, 0.17);
+}
+
+.action-control-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+  align-content: start;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.action-control-grid input {
+  text-overflow: ellipsis;
+}
+
+.action-more-note {
+  padding: 0 16px 16px;
+  color: var(--soft-text);
+  font-size: 11px;
 }
 
 .readiness.pass,
@@ -2330,6 +2516,7 @@ h1 {
 
   .top-grid,
   .filter-bar,
+  .action-toolbar,
   .summary-grid,
   .question-grid,
   .battlecard-grid,
@@ -2395,6 +2582,7 @@ h1 {
 
   .top-grid,
   .filter-bar,
+  .action-toolbar,
   .summary-grid,
   .question-grid,
   .battlecard-grid,
@@ -2413,6 +2601,7 @@ h1 {
   .command-card,
   .sample-card,
   .action-row,
+  .action-row.action-card,
   .audit-row,
   .alert-log-row,
   .opportunity-card,

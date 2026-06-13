@@ -4,6 +4,9 @@ import path from "node:path";
 export const schemaVersion = 2;
 
 export const namespaces = {
+  actionImpact: "action-impact.csv",
+  actionOwner: "action-owner.csv",
+  actionPriority: "action-priority.csv",
   actionStatus: "action-status.csv",
   conceptDecision: "concept-decision.csv",
   crisisTriage: "crisis-triage.csv",

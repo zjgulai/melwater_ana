@@ -230,6 +230,146 @@ function matchingQuotes(category, topic, limit = 3) {
     .slice(0, limit);
 }
 
+const actionStatuses = ["Proposed", "Accepted", "In Progress", "Shipped", "Measured", "Closed", "Rejected"];
+const actionPriorities = ["P0", "P1", "P2", "P3"];
+const actionOwnerHints = {
+  CX: "CX lead",
+  "Content/Marketing": "Content lead",
+  Data: "Data owner",
+  "Data/Business Leads": "Data + BU lead",
+  "Marketing/Data": "Growth analyst",
+  "PR/CX": "PR/CX duty owner",
+  Product: "PM owner",
+  "Product/CX": "PM + CX lead",
+  "Product/Content": "PM + Content lead",
+  "Product/Research": "Research owner",
+};
+
+function actionTopicId(action) {
+  return String(action.source_action || "").match(/topic:([a-z0-9_]+)/i)?.[1] || "";
+}
+
+function actionCategory(action) {
+  const source = String(action.source_action || "");
+  return [...new Set(vocData.painCards.map((card) => card.category))].find((category) => source.includes(category)) || "未归类";
+}
+
+function actionPainCard(action) {
+  const topicId = actionTopicId(action);
+  const category = actionCategory(action);
+  if (!topicId || category === "未归类") return null;
+  return vocData.painCards.find((card) => card.category === category && card.topicId === topicId) || null;
+}
+
+function actionQuoteLinks(action, limit = 2) {
+  const topicId = actionTopicId(action);
+  const category = actionCategory(action);
+  if (!topicId || category === "未归类") return [];
+  return vocData.quoteLibrary
+    .filter((quote) => quote.category === category && quote.topicId === topicId)
+    .slice(0, limit);
+}
+
+function derivedPriority(action, card) {
+  if (action.action_type === "query_update") return "P0";
+  const priorityScore = score(card?.priorityScore);
+  if (priorityScore >= 62) return "P1";
+  if (priorityScore >= 48) return "P2";
+  return "P3";
+}
+
+function derivedBusinessImpact(action, card) {
+  if (action.action_type === "query_update") {
+    return "恢复 blocked 品类的业务解释权限；precision >= 80% 后重开洞察链路";
+  }
+  if (card) {
+    return `${actionCategory(action)} · ${displayTopic(card)} 负向率 ${pct(card.negativeRate, 1)}，证据 ${card.evidenceCount} 条`;
+  }
+  if (action.action_type.includes("content")) return "把高置信原话转成内容 brief，并回看互动/转化信号";
+  if (action.owner_domain?.includes("PR")) return "缩短负向聚集的响应时间，降低事件扩散风险";
+  return action.expected_metric || "需要 owner 补齐业务指标和验收口径";
+}
+
+function actionOwnerHint(action) {
+  return action.owner_name || actionOwnerHints[action.owner_domain] || action.owner_domain || "Unassigned owner";
+}
+
+function enrichAction(action, drafts = {}) {
+  const card = actionPainCard(action);
+  const evidence = card?.evidenceDetails?.slice(0, 2) || [];
+  const quotes = actionQuoteLinks(action, 2);
+  return {
+    ...action,
+    category: actionCategory(action),
+    topicId: actionTopicId(action),
+    displayTopic: card ? displayTopic(card) : "Search quality",
+    ownerName: drafts.owner[action.action_id] || actionOwnerHint(action),
+    priority: drafts.priority[action.action_id] || derivedPriority(action, card),
+    status: drafts.status[action.action_id] || action.status,
+    businessImpact: drafts.impact[action.action_id] || derivedBusinessImpact(action, card),
+    evidence,
+    evidenceCount: card?.evidenceCount || evidence.length,
+    painCard: card,
+    quotes,
+  };
+}
+
+function browserCsvCell(value) {
+  const text = value == null ? "" : String(value);
+  return `"${text.replaceAll('"', '""')}"`;
+}
+
+function downloadActionCsv(actions) {
+  const headers = [
+    "action_id",
+    "action_type",
+    "category",
+    "topic_id",
+    "owner_domain",
+    "owner_name",
+    "priority",
+    "status",
+    "business_impact",
+    "due_date",
+    "review_date",
+    "expected_metric",
+    "evidence_count",
+    "quote_count",
+  ];
+  const rows = actions.map((action) => [
+    action.action_id,
+    action.action_type,
+    action.category,
+    action.topicId,
+    action.owner_domain || "unassigned",
+    action.ownerName,
+    action.priority,
+    action.status,
+    action.businessImpact,
+    action.due_date,
+    action.review_date,
+    action.expected_metric,
+    action.evidenceCount,
+    action.quotes.length,
+  ]);
+  const csv = [headers, ...rows].map((row) => row.map(browserCsvCell).join(",")).join("\n") + "\n";
+  const blobUrl = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  const anchor = document.createElement("a");
+  anchor.href = blobUrl;
+  anchor.download = `melwater-action-loop-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.append(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(blobUrl);
+}
+
+function combinedSyncState(states) {
+  if (states.includes("conflict")) return "conflict";
+  if (states.includes("local")) return "local";
+  if (states.every((state) => state === "api")) return "api";
+  return "loading";
+}
+
 function flattenWritebackNamespace(namespaceData = {}) {
   return Object.fromEntries(Object.entries(namespaceData).map(([key, entry]) => [key, entry?.value ?? entry]));
 }
@@ -2224,47 +2364,185 @@ function OpsStatusPage() {
 }
 
 function ActionLoopPage() {
-  const { values: statusDraft, writeValue: writeActionStatus, syncState } = useWritebackState("actionStatus");
-  const actions = vocData.actions.slice(0, 14);
+  const { values: statusDraft, writeValue: writeActionStatus, syncState: statusSync } = useWritebackState("actionStatus");
+  const { values: ownerDraft, writeValue: writeActionOwner, syncState: ownerSync } = useWritebackState("actionOwner");
+  const { values: priorityDraft, writeValue: writeActionPriority, syncState: prioritySync } = useWritebackState("actionPriority");
+  const { values: impactDraft, writeValue: writeActionImpact, syncState: impactSync } = useWritebackState("actionImpact");
+  const [ownerFilter, setOwnerFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [evidenceFilter, setEvidenceFilter] = useState("all");
+  const [query, setQuery] = useState("");
+  const syncState = combinedSyncState([statusSync, ownerSync, prioritySync, impactSync]);
+  const actions = useMemo(
+    () => vocData.actions.map((action) => enrichAction(action, {
+      impact: impactDraft,
+      owner: ownerDraft,
+      priority: priorityDraft,
+      status: statusDraft,
+    })),
+    [impactDraft, ownerDraft, priorityDraft, statusDraft],
+  );
+  const ownerOptions = useMemo(() => ["all", ...new Set(actions.map((action) => action.owner_domain || "unassigned"))], [actions]);
+  const filteredActions = actions.filter((action) => {
+    const text = `${action.action_type} ${action.source_action} ${action.category} ${action.topicId} ${action.ownerName} ${action.businessImpact}`.toLowerCase();
+    if (ownerFilter !== "all" && (action.owner_domain || "unassigned") !== ownerFilter) return false;
+    if (statusFilter !== "all" && action.status !== statusFilter) return false;
+    if (priorityFilter !== "all" && action.priority !== priorityFilter) return false;
+    if (evidenceFilter === "linked" && action.evidenceCount === 0 && action.quotes.length === 0) return false;
+    if (query.trim() && !text.includes(query.trim().toLowerCase())) return false;
+    return true;
+  });
+  const highPriorityCount = actions.filter((action) => ["P0", "P1"].includes(action.priority)).length;
+  const unassignedCount = actions.filter((action) => !ownerDraft[action.action_id] && !action.owner_name).length;
+  const evidenceLinkedCount = actions.filter((action) => action.evidenceCount > 0 || action.quotes.length > 0).length;
+  const writeMeta = (action) => ({
+    actionType: action.action_type,
+    category: action.category,
+    topicId: action.topicId,
+    ownerDomain: action.owner_domain || "unassigned",
+    sourceAction: action.source_action,
+  });
+
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
         <MetricCard label="Total actions" value={vocData.actions.length} caption="fact_action_register" tone="rose" />
-        <MetricCard label="Proposed" value={vocData.summaries.proposedActions} caption="等待 owner 接收" tone="amber" />
-        <MetricCard label="Measured" value={vocData.summaries.measuredActions} caption="复盘率 0%" tone="muted" />
-        <MetricCard label="Owner domains" value={vocData.actionStatusSummary.length} caption="当前为空 owner_name" tone="yellow" />
+        <MetricCard label="P0/P1 actions" value={highPriorityCount} caption="优先进入周会跟进" tone="amber" />
+        <MetricCard label="Need owner" value={unassignedCount} caption="owner_name 待落位" tone="yellow" />
+        <MetricCard label="Evidence linked" value={evidenceLinkedCount} caption="可追溯 quote / sample" tone="green" />
       </div>
       <section className="card data-table-card">
         <div className="card-header">
           <div>
             <h2>Action Register</h2>
-            <p>状态变更会写回本地 API，并导出 CSV/JSON 供后续自动化接管。</p>
+            <p>把 Playbook 的问题反推到 owner、优先级、业务影响、证据链和复盘口径。</p>
           </div>
           <SyncBadge state={syncState} />
         </div>
-        <div className="action-table">
-          {actions.map((action) => (
-            <article className="action-row" key={action.action_id}>
-              <div>
-                <strong>{action.action_type}</strong>
+        <div className="action-toolbar">
+          <label>
+            Owner
+            <select value={ownerFilter} onChange={(event) => setOwnerFilter(event.target.value)}>
+              {ownerOptions.map((owner) => (
+                <option key={owner} value={owner}>{owner === "all" ? "All owners" : owner}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Status
+            <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
+              <option value="all">All status</option>
+              {actionStatuses.map((status) => <option key={status}>{status}</option>)}
+            </select>
+          </label>
+          <label>
+            Priority
+            <select value={priorityFilter} onChange={(event) => setPriorityFilter(event.target.value)}>
+              <option value="all">All priority</option>
+              {actionPriorities.map((priority) => <option key={priority}>{priority}</option>)}
+            </select>
+          </label>
+          <label>
+            Evidence
+            <select value={evidenceFilter} onChange={(event) => setEvidenceFilter(event.target.value)}>
+              <option value="all">All actions</option>
+              <option value="linked">Evidence linked</option>
+            </select>
+          </label>
+          <label className="action-search">
+            Search
+            <input placeholder="topic / category / impact" value={query} onChange={(event) => setQuery(event.target.value)} />
+          </label>
+          <button className="filter-toggle action-export-button" onClick={() => downloadActionCsv(filteredActions)} type="button">
+            <IconDownload size={15} />
+            导出 {filteredActions.length} 条
+          </button>
+        </div>
+        <div className="action-table action-board">
+          {filteredActions.slice(0, 24).map((action) => (
+            <article className="action-row action-card" key={action.action_id}>
+              <div className="action-card-main">
+                <div className="action-title-row">
+                  <span className={`status-badge ${action.priority === "P0" ? "rose" : action.priority === "P1" ? "amber" : "muted"}`}>{action.priority}</span>
+                  <strong>{action.action_type.replaceAll("_", " ")}</strong>
+                  <small>{action.category} · {action.displayTopic}</small>
+                </div>
                 <p>{action.source_action}</p>
-                <small>{action.action_id} · {action.owner_domain || "unassigned"}</small>
+                <div className="action-meta-grid">
+                  <span><b>Expected</b>{action.expected_metric || "待补齐"}</span>
+                  <span><b>Due</b>{action.due_date || "TBD"}</span>
+                  <span><b>Review</b>{action.review_date || "TBD"}</span>
+                </div>
+                <div className="action-impact-note">{action.businessImpact}</div>
+                <div className="action-proof-list">
+                  {action.evidence.slice(0, 1).map((item) => (
+                    <a href={item.url} key={item.occurrenceId || item.url} rel="noreferrer" target="_blank">
+                      <IconExternalLink size={13} />
+                      {item.evidence}
+                    </a>
+                  ))}
+                  {action.quotes.slice(0, 1).map((quote) => (
+                    <a href={quote.url} key={quote.quoteId} rel="noreferrer" target="_blank">
+                      <IconMessageCircle size={13} />
+                      {quote.quoteText}
+                    </a>
+                  ))}
+                  {action.evidenceCount === 0 && action.quotes.length === 0 && (
+                    <span className="action-proof-empty">等待 query 治理后补齐 evidence / quote 链接</span>
+                  )}
+                </div>
               </div>
-              <select
-                value={statusDraft[action.action_id] || action.status}
-                onChange={(event) => writeActionStatus(action.action_id, event.target.value, {
-                  actionType: action.action_type,
-                  ownerDomain: action.owner_domain || "unassigned",
-                  sourceAction: action.source_action,
-                })}
-              >
-                {["Proposed", "Accepted", "In Progress", "Shipped", "Measured", "Closed", "Rejected"].map((status) => (
-                  <option key={status}>{status}</option>
-                ))}
-              </select>
+              <div className="action-control-grid">
+                <label>
+                  Status
+                  <select
+                    value={action.status}
+                    onChange={(event) => writeActionStatus(action.action_id, event.target.value, writeMeta(action))}
+                  >
+                    {actionStatuses.map((status) => (
+                      <option key={status}>{status}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Owner name
+                  <input
+                    defaultValue={action.ownerName}
+                    key={`${action.action_id}-${action.ownerName}`}
+                    onBlur={(event) => writeActionOwner(action.action_id, event.currentTarget.value.trim() || actionOwnerHint(action), writeMeta(action))}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") event.currentTarget.blur();
+                    }}
+                  />
+                </label>
+                <label>
+                  Priority
+                  <select
+                    value={action.priority}
+                    onChange={(event) => writeActionPriority(action.action_id, event.target.value, writeMeta(action))}
+                  >
+                    {actionPriorities.map((priority) => (
+                      <option key={priority}>{priority}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Biz impact
+                  <input
+                    defaultValue={action.businessImpact}
+                    key={`${action.action_id}-${action.businessImpact}`}
+                    onBlur={(event) => writeActionImpact(action.action_id, event.currentTarget.value.trim() || derivedBusinessImpact(action, action.painCard), writeMeta(action))}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") event.currentTarget.blur();
+                    }}
+                  />
+                </label>
+              </div>
             </article>
           ))}
         </div>
+        {filteredActions.length > 24 && <div className="action-more-note">已显示前 24 条；可继续筛选或导出全部 {filteredActions.length} 条。</div>}
       </section>
     </div>
   );
