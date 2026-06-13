@@ -140,6 +140,12 @@ MELWATER_OPS_REPORT_LATEST_JSON=/opt/melwater-ana/backups/ops-report-latest.json
 MELWATER_OPS_REPORT_LATEST_MD=/opt/melwater-ana/backups/ops-report-latest.md
 ```
 
+After commit and push, production `MELWATER_RELEASE_REF` and `/opt/melwater-ana/app/REVISION` were updated to:
+
+```bash
+23c098e3
+```
+
 Installed cron:
 
 ```bash
@@ -165,11 +171,11 @@ Healthcheck:
 ```json
 {
   "ok": true,
-  "checkedAt": "2026-06-13T04:52:28Z",
+  "checkedAt": "2026-06-13T04:54:36Z",
   "publicUrl": "https://melwater.lute-tlz-dddd.top",
   "homepageStatus": 200,
   "apiBase": "https://melwater.lute-tlz-dddd.top/api/review-state",
-  "releaseRef": "bce2d360-p14r2-working",
+  "releaseRef": "23c098e3",
   "failureCount": 0,
   "incidentThreshold": 3,
   "incidentOpen": false
@@ -180,7 +186,7 @@ Ops API:
 
 - `ok: true`
 - `auth.role: admin`
-- `release.ref: bce2d360-p14r2-working`
+- `release.ref: 23c098e3`
 - `reviewState.schemaVersion: 2`
 - `reviewState.replayOk: true`
 - `healthcheck.ok: true`
@@ -189,6 +195,7 @@ Ops API:
 - `opsReport.ok: true`
 - `opsReport.incidentStatus: none`
 - `opsReport.latestBackupFile: 20260613T043743Z-p14-smoke.tar.gz`
+- `opsReport.markdownFile: 20260613T045436Z-ops-report.md`
 
 Cron:
 
