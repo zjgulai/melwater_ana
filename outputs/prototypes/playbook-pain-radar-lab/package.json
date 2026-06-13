@@ -20,6 +20,9 @@
     "deploy:checklist": "bash deploy/scripts/melwater-prod-release-checklist.sh",
     "deploy:get-admin-token": "bash deploy/scripts/melwater-get-admin-token.sh",
     "deploy:orchestrate": "bash deploy/scripts/melwater-release-orchestrate.sh",
+    "ops:healthcheck": "sh deploy/scripts/melwater-healthcheck.sh",
+    "ops:report": "sh deploy/scripts/melwater-ops-report.sh",
+    "ops:install-cron": "sh deploy/scripts/melwater-install-ops-cron.sh",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1"
   },

@@ -101,7 +101,8 @@ ops_api_json() {
 
 mkdir -p "$REPORT_ROOT" "$OPS_ROOT"
 
-release_ref="$(cat "$APP_DIR/REVISION" 2>/dev/null || git -C "$APP_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+release_ref="${MELWATER_RELEASE_REF:-}"
+[ -n "$release_ref" ] || release_ref="$(cat "$APP_DIR/REVISION" 2>/dev/null || git -C "$APP_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 health_json="$(json_file_or_null "$RESULT_FILE")"
 incident_json="$(json_file_or_null "$INCIDENT_FILE")"
 backup_manifest="$(latest_backup_manifest)"

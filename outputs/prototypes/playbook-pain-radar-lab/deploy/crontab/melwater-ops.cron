@@ -1,6 +1,6 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-*/5 * * * * /opt/melwater-ana/app/deploy/scripts/melwater-healthcheck.sh >> /opt/melwater-ana/backups/healthcheck.log 2>&1
-17 3 * * * /opt/melwater-ana/app/deploy/scripts/melwater-backup.sh daily >> /opt/melwater-ana/backups/review-state-backup.log 2>&1
-23 3 * * * /opt/melwater-ana/app/deploy/scripts/melwater-ops-report.sh >> /opt/melwater-ana/backups/ops-report.log 2>&1
+*/5 * * * * ubuntu /opt/melwater-ana/app/deploy/scripts/melwater-healthcheck.sh >> /opt/melwater-ana/backups/healthcheck.log 2>&1
+17 3 * * * ubuntu /opt/melwater-ana/app/deploy/scripts/melwater-backup.sh daily >> /opt/melwater-ana/backups/review-state-backup.log 2>&1
+23 3 * * * ubuntu /opt/melwater-ana/app/deploy/scripts/melwater-ops-report.sh >> /opt/melwater-ana/backups/ops-report.log 2>&1

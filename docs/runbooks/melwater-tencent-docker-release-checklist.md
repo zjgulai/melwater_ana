@@ -174,3 +174,18 @@ npm run deploy:orchestrate -- --skip-public-verify --skip-api-verify
 - 共享边缘（`ai_video_nginx`）场景请保留 `MELWATER_EDGE_RESTART_ENABLED=1`，避免上游缓存导致 API 502。
 - 当 `REVIEW_STATE_API_BASE` 非 API 路径（未以 `/api/review-state` 结尾）时，部署验证可能命中前端 HTML，出现误判。
 - `verifyDeployment.mjs --require-auth` 如返回 401，通常是 token 错误或缺失；在本仓库当前部署体系中，远端 `melwater.env` 以 `REVIEW_STATE_TOKENS` 管理多 token，不会天然注入 `REVIEW_STATE_VERIFY_TOKEN`。
+
+## 六、发布后可观测性闭环
+
+发布和回滚演练通过后，应确保生产健康巡检、备份和 Ops report cron 已安装：
+
+```bash
+cd /opt/melwater-ana/app
+sh deploy/scripts/melwater-install-ops-cron.sh --run-now
+```
+
+详细流程见：
+
+```text
+docs/runbooks/melwater-production-observability.md
+```

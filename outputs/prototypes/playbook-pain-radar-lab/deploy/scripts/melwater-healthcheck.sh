@@ -198,7 +198,8 @@ if ! docker ps --filter name=melwater_web --filter health=healthy --format '{{.N
 fi
 
 cd "$APP_DIR"
-release_ref="$(cat "$APP_DIR/REVISION" 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo unknown)"
+release_ref="${MELWATER_RELEASE_REF:-}"
+[ -n "$release_ref" ] || release_ref="$(cat "$APP_DIR/REVISION" 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo unknown)"
 checked_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 previous_count="$(read_failure_count)"
 write_failure_count 0
