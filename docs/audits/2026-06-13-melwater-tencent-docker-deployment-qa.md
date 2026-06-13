@@ -222,6 +222,28 @@ After force-recreating the edge Nginx container:
 - Production review-state starts with an empty persistent Docker volume. This is acceptable for a fresh production writeback state; seed/import can be added if prior local QA state should be preserved.
 - Edge Nginx is still a shared container for multiple applications. Melwater runtime is isolated, but public TLS routing necessarily passes through the shared edge.
 
+### Upstream IP Staleness Debt (Observed)
+
+During rollout, public API path `/api/review-state/*` briefly returned `502 Bad Gateway` while root `/` stayed healthy. Root cause was an upstream IP cache in `ai_video_nginx` after `melwater_api` container restart (old container IP remained cached).
+
+Mitigation applied in this round:
+
+- Restarted `ai_video_nginx` after redeploy so DNS name resolution repoints to current container IPs.
+
+Recommendation for future rounds:
+
+1. Add a fixed post-deploy edge refresh step:
+
+```bash
+docker restart ai_video_nginx
+```
+
+2. Keep a post-deploy API health assertion for both
+   - `/api/review-state/health`
+   - `/api/review-state/metrics`
+
+to detect upstream refresh regressions immediately.
+
 ## Operational Commands
 
 Check containers:
@@ -244,6 +266,12 @@ View production tokens on the server:
 
 ```bash
 cat /opt/melwater-ana/secrets/access-tokens.txt
+```
+
+After Melwater deploy/rebuild, refresh shared edge DNS cache by restarting the edge proxy:
+
+```bash
+docker restart ai_video_nginx
 ```
 
 Browser token setup for shared writeback sync:
