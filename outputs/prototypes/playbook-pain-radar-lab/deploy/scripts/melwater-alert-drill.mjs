@@ -9,7 +9,11 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const appDir = process.env.MELWATER_APP_DIR || path.resolve(scriptDir, "../..");
 const args = process.argv.slice(2);
 const options = {
-  envFile: readArg("env-file") || process.env.MELWATER_ENV_FILE || "/opt/melwater-ana/secrets/melwater.env",
+  envFile:
+    readArg("melwater-env-file") ||
+    readArg("env-file") ||
+    process.env.MELWATER_ENV_FILE ||
+    "/opt/melwater-ana/secrets/melwater.env",
   opsRoot: readArg("ops-root") || process.env.MELWATER_OPS_ROOT || "/opt/melwater-ana/backups",
   webhookUrl: readArg("webhook-url") || process.env.MELWATER_ALERT_WEBHOOK_URL || "",
   webhookType: readArg("webhook-type") || process.env.MELWATER_ALERT_WEBHOOK_TYPE || "generic",
@@ -31,7 +35,7 @@ Options:
   --recovery-mode=skip       Skip recovery stage for local script checks.
   --recovery-attempts=N      Recovery healthcheck attempts. Default: 8.
   --recovery-sleep=N         Seconds between recovery attempts. Default: 5.
-  --env-file=PATH            Production env file. Default: /opt/melwater-ana/secrets/melwater.env.
+  --melwater-env-file=PATH   Production env file. Default: /opt/melwater-ana/secrets/melwater.env.
   --ops-root=PATH            Ops output root. Default: /opt/melwater-ana/backups.
   --threshold=N              Incident threshold for the drill. Default: 2.
   --skip-ops-report          Do not regenerate the Ops report after writing drill results.

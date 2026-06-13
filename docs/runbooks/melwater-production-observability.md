@@ -157,6 +157,28 @@ MELWATER_ALERT_EXPECT_STATUS=204 sh deploy/scripts/melwater-alert-test.sh --send
 - `healthcheck_incident_open`：连续失败达到阈值，等级 `critical`
 - `healthcheck_recovered`：故障后恢复，等级 `resolved`
 
+外部 webhook readiness gate：
+
+```bash
+cd /opt/melwater-ana/app
+node deploy/scripts/melwater-alert-webhook-readiness.mjs --no-send --skip-drill
+```
+
+如果需要指定非默认 env 文件，使用 `--melwater-env-file=/path/to/melwater.env`；不要直接使用 Node 26 的 `--env-file` 参数名。
+
+如生产环境尚未配置 `MELWATER_ALERT_WEBHOOK_URL`，该命令必须返回 `ok=false`、`ready=false`，并给出下一步配置动作。真实 webhook 配好后，执行：
+
+```bash
+cd /opt/melwater-ana/app
+node deploy/scripts/melwater-alert-webhook-readiness.mjs --send
+```
+
+该命令会先发送一条 `alert_smoke_test`，HTTP 状态通过后再执行 external webhook drill。验收时需要同时满足：
+
+- `smokeTest.ok=true`
+- `externalDrill.ok=true`
+- 飞书/企微目标频道中能看到 smoke alert 和 drill alert
+
 ## 六、告警三段式演练
 
 外部 webhook 正式接入前后，都应定期跑告警演练。默认模式会启动本机临时 mock webhook，不会依赖飞书/企微真实凭证：
@@ -191,9 +213,7 @@ node deploy/scripts/melwater-alert-drill.mjs --recovery-attempts=12 --recovery-s
 
 ```bash
 cd /opt/melwater-ana/app
-node deploy/scripts/melwater-alert-drill.mjs \
-  --webhook-url="$MELWATER_ALERT_WEBHOOK_URL" \
-  --webhook-type=feishu
+node deploy/scripts/melwater-alert-webhook-readiness.mjs --send
 ```
 
 本地只检查脚本链路、不跑真实恢复时：

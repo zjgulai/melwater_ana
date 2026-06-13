@@ -25,6 +25,8 @@
     "ops:install-cron": "sh deploy/scripts/melwater-install-ops-cron.sh",
     "ops:alert-test": "sh deploy/scripts/melwater-alert-test.sh",
     "ops:alert-drill": "node deploy/scripts/melwater-alert-drill.mjs",
+    "ops:alert-webhook-readiness": "node deploy/scripts/melwater-alert-webhook-readiness.mjs",
+    "test:webhook-readiness": "node --test deploy/scripts/melwater-alert-webhook-readiness.test.mjs",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1"
   },
