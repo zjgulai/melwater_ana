@@ -232,6 +232,7 @@ function matchingQuotes(category, topic, limit = 3) {
 
 const actionStatuses = ["Proposed", "Accepted", "In Progress", "Shipped", "Measured", "Closed", "Rejected"];
 const actionPriorities = ["P0", "P1", "P2", "P3"];
+const actionPriorityRank = { P0: 0, P1: 1, P2: 2, P3: 3 };
 const actionOwnerHints = {
   CX: "CX lead",
   "Content/Marketing": "Content lead",
@@ -298,19 +299,99 @@ function enrichAction(action, drafts = {}) {
   const card = actionPainCard(action);
   const evidence = card?.evidenceDetails?.slice(0, 2) || [];
   const quotes = actionQuoteLinks(action, 2);
+  const ownerOverride = drafts.owner?.[action.action_id];
+  const priorityOverride = drafts.priority?.[action.action_id];
+  const statusOverride = drafts.status?.[action.action_id];
+  const impactOverride = drafts.impact?.[action.action_id];
   return {
     ...action,
     category: actionCategory(action),
     topicId: actionTopicId(action),
     displayTopic: card ? displayTopic(card) : "Search quality",
-    ownerName: drafts.owner[action.action_id] || actionOwnerHint(action),
-    priority: drafts.priority[action.action_id] || derivedPriority(action, card),
-    status: drafts.status[action.action_id] || action.status,
-    businessImpact: drafts.impact[action.action_id] || derivedBusinessImpact(action, card),
+    ownerName: ownerOverride || actionOwnerHint(action),
+    ownerResolved: Boolean(ownerOverride || action.owner_name),
+    priority: priorityOverride || derivedPriority(action, card),
+    status: statusOverride || action.status,
+    businessImpact: impactOverride || derivedBusinessImpact(action, card),
     evidence,
     evidenceCount: card?.evidenceCount || evidence.length,
     painCard: card,
     quotes,
+  };
+}
+
+function actionDueInfo(action, now = new Date()) {
+  if (!action.due_date) return { date: null, days: null, label: "No due date", tone: "muted" };
+  const [year, month, day] = String(action.due_date).split("-").map(Number);
+  const due = new Date(year, month - 1, day);
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.ceil((due.getTime() - today.getTime()) / 86400000);
+  if (days < 0) return { date: action.due_date, days, label: `${Math.abs(days)}d overdue`, tone: "rose" };
+  if (days === 0) return { date: action.due_date, days, label: "Due today", tone: "rose" };
+  if (days <= 7) return { date: action.due_date, days, label: `${days}d left`, tone: "amber" };
+  if (days <= 14) return { date: action.due_date, days, label: `${days}d left`, tone: "yellow" };
+  return { date: action.due_date, days, label: `${days}d left`, tone: "muted" };
+}
+
+function actionEvidenceStrength(action) {
+  if (action.action_type === "query_update") {
+    return { label: "QA required", score: 0, tone: "amber", caption: "blocked search needs sample review" };
+  }
+  const scoreValue = action.evidenceCount + action.quotes.length * 2;
+  if (scoreValue >= 20) return { label: "Strong", score: scoreValue, tone: "green", caption: `${action.evidenceCount} samples / ${action.quotes.length} quotes` };
+  if (scoreValue >= 6) return { label: "Medium", score: scoreValue, tone: "amber", caption: `${action.evidenceCount} samples / ${action.quotes.length} quotes` };
+  if (scoreValue > 0) return { label: "Weak", score: scoreValue, tone: "yellow", caption: `${action.evidenceCount} samples / ${action.quotes.length} quotes` };
+  return { label: "Missing", score: 0, tone: "rose", caption: "no evidence linked" };
+}
+
+function actionDecisionLane(action) {
+  if (action.status === "Closed" || action.status === "Rejected") return "Archive";
+  if (action.action_type === "query_update") return "Approve data fix";
+  if (!action.ownerResolved) return "Confirm owner";
+  if (actionEvidenceStrength(action).score < 6) return "Request evidence";
+  if (action.priority === "P0" || action.priority === "P1") return "Commit this cycle";
+  return "Track next";
+}
+
+function buildWeeklyActionReview(actions) {
+  const active = actions.filter((action) => !["Closed", "Rejected"].includes(action.status));
+  const enriched = active.map((action) => ({
+    ...action,
+    due: actionDueInfo(action),
+    evidenceStrength: actionEvidenceStrength(action),
+    decisionLane: actionDecisionLane(action),
+  }));
+  const queue = enriched
+    .filter((action) => ["P0", "P1"].includes(action.priority) || !action.ownerResolved || action.due.days == null || action.due.days <= 14)
+    .sort((a, b) => (
+      actionPriorityRank[a.priority] - actionPriorityRank[b.priority]
+      || Number(a.ownerResolved) - Number(b.ownerResolved)
+      || (a.due.days ?? 999) - (b.due.days ?? 999)
+      || b.evidenceStrength.score - a.evidenceStrength.score
+    ));
+  const ownerSummary = [...new Map(enriched.map((action) => [action.owner_domain || "unassigned", {
+    owner: action.owner_domain || "unassigned",
+    total: 0,
+    p0p1: 0,
+    needsOwner: 0,
+    strongEvidence: 0,
+  }])).values()];
+  for (const summary of ownerSummary) {
+    const rows = enriched.filter((action) => (action.owner_domain || "unassigned") === summary.owner);
+    summary.total = rows.length;
+    summary.p0p1 = rows.filter((action) => ["P0", "P1"].includes(action.priority)).length;
+    summary.needsOwner = rows.filter((action) => !action.ownerResolved).length;
+    summary.strongEvidence = rows.filter((action) => actionEvidenceStrength(action).score >= 20).length;
+  }
+  ownerSummary.sort((a, b) => b.p0p1 - a.p0p1 || b.needsOwner - a.needsOwner || b.total - a.total);
+  return {
+    active,
+    queue,
+    ownerSummary,
+    p0p1: enriched.filter((action) => ["P0", "P1"].includes(action.priority)).length,
+    dueWithin14: enriched.filter((action) => action.due.days != null && action.due.days <= 14).length,
+    needsOwner: enriched.filter((action) => !action.ownerResolved).length,
+    evidenceReady: enriched.filter((action) => action.evidenceStrength.score >= 20).length,
   };
 }
 
@@ -2363,6 +2444,97 @@ function OpsStatusPage() {
   );
 }
 
+function WeeklyActionReview({ review, onStatusChange, writeMeta }) {
+  const queuePreview = review.queue.slice(0, 10);
+  const laneCounts = ["Confirm owner", "Approve data fix", "Commit this cycle", "Request evidence", "Track next"].map((lane) => ({
+    lane,
+    count: review.queue.filter((action) => action.decisionLane === lane).length,
+  }));
+
+  return (
+    <section className="card weekly-review-card">
+      <div className="card-header">
+        <div>
+          <h2>Weekly Action Review</h2>
+          <p>按优先级、owner、到期窗口和证据强度生成本周周会决策队列。</p>
+        </div>
+        <div className="header-badges">
+          <span className="status-badge rose">{review.queue.length} in queue</span>
+          <span className="status-badge amber">{review.dueWithin14} due ≤14d</span>
+        </div>
+      </div>
+
+      <div className="weekly-review-grid">
+        <div className="weekly-agenda">
+          <div className="meeting-lane-grid">
+            {laneCounts.map((item) => (
+              <span key={item.lane}>
+                <strong>{item.count}</strong>
+                <small>{item.lane}</small>
+              </span>
+            ))}
+          </div>
+
+          <div className="weekly-queue-list">
+            {queuePreview.map((action, index) => (
+              <article className="weekly-queue-row" key={action.action_id}>
+                <div className="queue-rank">{index + 1}</div>
+                <div className="queue-main">
+                  <div className="action-title-row">
+                    <span className={`status-badge ${action.priority === "P0" ? "rose" : action.priority === "P1" ? "amber" : "muted"}`}>{action.priority}</span>
+                    <strong>{action.decisionLane}</strong>
+                    <small>{action.owner_domain || "unassigned"} · {action.category} · {action.displayTopic}</small>
+                  </div>
+                  <p>{action.businessImpact}</p>
+                  <div className="queue-signal-row">
+                    <span className={`status-badge ${action.due.tone}`}>{action.due.label}</span>
+                    <span className={`status-badge ${action.evidenceStrength.tone}`}>{action.evidenceStrength.label}</span>
+                    <small>{action.evidenceStrength.caption}</small>
+                  </div>
+                </div>
+                <div className="queue-actions">
+                  {["Accepted", "In Progress", "Measured"].map((status) => (
+                    <button
+                      className={action.status === status ? "mini-state active" : "mini-state"}
+                      key={status}
+                      onClick={() => onStatusChange(action.action_id, status, writeMeta(action))}
+                      type="button"
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <aside className="weekly-owner-panel">
+          <div>
+            <h3>Owner Load</h3>
+            <p>先解决 owner 未落位，再承诺交付节奏。</p>
+          </div>
+          <div className="owner-load-list">
+            {review.ownerSummary.slice(0, 7).map((owner) => (
+              <article key={owner.owner}>
+                <div>
+                  <strong>{owner.owner}</strong>
+                  <small>{owner.total} actions · {owner.needsOwner} need owner</small>
+                </div>
+                <span>{owner.p0p1} P0/P1</span>
+              </article>
+            ))}
+          </div>
+          <div className="weekly-decision-note">
+            <strong>Meeting rule</strong>
+            <p>P0/P1 必须在会中明确 owner、状态和验收指标；证据不足的 action 不能直接承诺上线，只能进入 evidence request。</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
 function ActionLoopPage() {
   const { values: statusDraft, writeValue: writeActionStatus, syncState: statusSync } = useWritebackState("actionStatus");
   const { values: ownerDraft, writeValue: writeActionOwner, syncState: ownerSync } = useWritebackState("actionOwner");
@@ -2396,6 +2568,7 @@ function ActionLoopPage() {
   const highPriorityCount = actions.filter((action) => ["P0", "P1"].includes(action.priority)).length;
   const unassignedCount = actions.filter((action) => !ownerDraft[action.action_id] && !action.owner_name).length;
   const evidenceLinkedCount = actions.filter((action) => action.evidenceCount > 0 || action.quotes.length > 0).length;
+  const weeklyReview = useMemo(() => buildWeeklyActionReview(actions), [actions]);
   const writeMeta = (action) => ({
     actionType: action.action_type,
     category: action.category,
@@ -2412,6 +2585,7 @@ function ActionLoopPage() {
         <MetricCard label="Need owner" value={unassignedCount} caption="owner_name 待落位" tone="yellow" />
         <MetricCard label="Evidence linked" value={evidenceLinkedCount} caption="可追溯 quote / sample" tone="green" />
       </div>
+      <WeeklyActionReview review={weeklyReview} onStatusChange={writeActionStatus} writeMeta={writeMeta} />
       <section className="card data-table-card">
         <div className="card-header">
           <div>

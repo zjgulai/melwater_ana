@@ -1172,6 +1172,11 @@ h1 {
   background: rgba(255, 149, 0, 0.14);
 }
 
+.status-badge.yellow {
+  color: #8a6a00;
+  background: rgba(231, 168, 79, 0.18);
+}
+
 .status-badge.muted {
   color: #6d655f;
   background: var(--muted-strong);
@@ -1357,6 +1362,188 @@ h1 {
 
 .action-row select {
   min-width: 132px;
+}
+
+.weekly-review-card {
+  overflow: hidden;
+}
+
+.weekly-review-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 14px;
+  padding: 0 16px 16px;
+}
+
+.weekly-agenda {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.meeting-lane-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.meeting-lane-grid span {
+  min-height: 58px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 10px;
+  background: rgba(245, 237, 232, 0.62);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.meeting-lane-grid strong {
+  color: #302b28;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.meeting-lane-grid small {
+  color: var(--secondary-text);
+  font-size: 10px;
+}
+
+.weekly-queue-list {
+  display: grid;
+  gap: 9px;
+}
+
+.weekly-queue-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  gap: 11px;
+  align-items: start;
+  padding: 12px;
+  color: #574f4b;
+  background: var(--page);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+
+.queue-rank {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.queue-main {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.queue-main p {
+  margin: 0;
+  color: #6d655f;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.queue-signal-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.queue-signal-row small {
+  color: var(--soft-text);
+  font-size: 10px;
+}
+
+.queue-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: 220px;
+}
+
+.weekly-owner-panel {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  min-width: 0;
+  padding: 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(253, 250, 247, 0.82)),
+    var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.weekly-owner-panel h3 {
+  margin: 0 0 5px;
+  color: #302b28;
+  font-size: 13px;
+}
+
+.weekly-owner-panel p {
+  margin: 0;
+  color: var(--secondary-text);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.owner-load-list {
+  display: grid;
+  gap: 8px;
+}
+
+.owner-load-list article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+}
+
+.owner-load-list strong {
+  display: block;
+  color: #302b28;
+  font-size: 11px;
+}
+
+.owner-load-list small {
+  color: var(--soft-text);
+  font-size: 10px;
+}
+
+.owner-load-list span {
+  color: var(--primary-dark);
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.weekly-decision-note {
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  color: #5f5753;
+  background: rgba(194, 91, 110, 0.07);
+  border: 1px solid rgba(194, 91, 110, 0.14);
+  border-radius: 14px;
+}
+
+.weekly-decision-note strong {
+  color: var(--primary-dark);
+  font-size: 11px;
 }
 
 .action-toolbar {
@@ -2517,6 +2704,7 @@ h1 {
   .top-grid,
   .filter-bar,
   .action-toolbar,
+  .weekly-review-grid,
   .summary-grid,
   .question-grid,
   .battlecard-grid,
@@ -2530,7 +2718,8 @@ h1 {
 
   .severity-grid,
   .trend-grid,
-  .insight-panel {
+  .insight-panel,
+  .meeting-lane-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -2583,6 +2772,8 @@ h1 {
   .top-grid,
   .filter-bar,
   .action-toolbar,
+  .weekly-review-grid,
+  .meeting-lane-grid,
   .summary-grid,
   .question-grid,
   .battlecard-grid,
@@ -2602,6 +2793,7 @@ h1 {
   .sample-card,
   .action-row,
   .action-row.action-card,
+  .weekly-queue-row,
   .audit-row,
   .alert-log-row,
   .opportunity-card,
