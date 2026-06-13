@@ -84,6 +84,12 @@ MELWATER_RELEASE_REF=21753102-p14-working
 MELWATER_BACKUP_HOST_ROOT=/opt/melwater-ana/backups
 ```
 
+After commit and push, production `MELWATER_RELEASE_REF` and `/opt/melwater-ana/app/REVISION` were updated to:
+
+```bash
+d32febcd
+```
+
 Rebuilt:
 
 ```bash
@@ -133,6 +139,7 @@ Ops API:
 
 - `ok: true`
 - `auth.role: admin`
+- `release.ref: d32febcd`
 - `reviewState.schemaVersion: 2`
 - `reviewState.replayOk: true`
 - `healthcheck.ok: true`
