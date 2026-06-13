@@ -303,6 +303,7 @@ function enrichAction(action, drafts = {}) {
   const priorityOverride = drafts.priority?.[action.action_id];
   const statusOverride = drafts.status?.[action.action_id];
   const impactOverride = drafts.impact?.[action.action_id];
+  const baseStatus = action.status;
   return {
     ...action,
     category: actionCategory(action),
@@ -312,6 +313,7 @@ function enrichAction(action, drafts = {}) {
     ownerResolved: Boolean(ownerOverride || action.owner_name),
     priority: priorityOverride || derivedPriority(action, card),
     status: statusOverride || action.status,
+    baseStatus,
     businessImpact: impactOverride || derivedBusinessImpact(action, card),
     evidence,
     evidenceCount: card?.evidenceCount || evidence.length,
@@ -393,6 +395,86 @@ function buildWeeklyActionReview(actions) {
     needsOwner: enriched.filter((action) => !action.ownerResolved).length,
     evidenceReady: enriched.filter((action) => action.evidenceStrength.score >= 20).length,
   };
+}
+
+function formatSnapshotDate(date = new Date()) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function buildMeetingSnapshotPayload(review, reviewActions, overrides = {}) {
+  const snapshotDate = formatSnapshotDate();
+  const snapshotTitle = overrides.title || `Melwater Weekly Action Review ${snapshotDate}`;
+  const note = overrides.note || "";
+  const snapshotKey = `weekly-${snapshotDate}`;
+  return {
+    schemaVersion: 1,
+    kind: "meeting-snapshot",
+    snapshotDate,
+    snapshotKey,
+    snapshotTitle,
+    capturedBy: getReviewer(),
+    capturedAt: new Date().toISOString(),
+    meetingWindow: {
+      from: snapshotDate,
+      to: snapshotDate,
+      status: "closed",
+    },
+    summary: {
+      queueSize: review.queue.length,
+      activeSize: review.active.length,
+      p0p1: review.p0p1,
+      dueWithin14: review.dueWithin14,
+      needsOwner: review.needsOwner,
+      evidenceReady: review.evidenceReady,
+    },
+    ownerSummary: review.ownerSummary,
+    queueSnapshot: review.queue.map((action) => ({
+      action_id: action.action_id,
+      action_type: action.action_type,
+      category: action.category,
+      topicId: action.topicId,
+      owner: action.ownerName,
+      owner_domain: action.owner_domain || "unassigned",
+      priority: action.priority,
+      decisionLane: action.decisionLane,
+      status: action.status,
+      baseStatus: action.baseStatus,
+      statusChanged: action.status !== action.baseStatus,
+      due: action.due,
+      evidenceStrength: action.evidenceStrength,
+      businessImpact: action.businessImpact,
+      reviewMeta: {
+        sourceAction: action.source_action,
+        reviewDate: action.review_date,
+        expectedMetric: action.expected_metric,
+      },
+    })),
+    allActionStatus: reviewActions.map((action) => ({
+      action_id: action.action_id,
+      status: action.status,
+      baseStatus: action.baseStatus,
+    })),
+    decision: {
+      meetingNote: note,
+      actionCount: review.queue.length,
+      timestamp: new Date().toISOString(),
+    },
+  };
+}
+
+function downloadMeetingSnapshot(snapshot) {
+  if (!snapshot) return;
+  const blobUrl = URL.createObjectURL(new Blob([JSON.stringify(snapshot, null, 2)], { type: "application/json;charset=utf-8" }));
+  const anchor = document.createElement("a");
+  anchor.href = blobUrl;
+  anchor.download = `${snapshot.snapshotKey || formatSnapshotDate()}.meeting-snapshot.json`;
+  document.body.append(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(blobUrl);
 }
 
 function browserCsvCell(value) {
@@ -2444,12 +2526,42 @@ function OpsStatusPage() {
   );
 }
 
-function WeeklyActionReview({ review, onStatusChange, writeMeta }) {
+function WeeklyActionReview({
+  review,
+  reviewActions,
+  onStatusChange,
+  writeMeta,
+  onSaveSnapshot,
+  latestSnapshot,
+  syncState,
+}) {
   const queuePreview = review.queue.slice(0, 10);
   const laneCounts = ["Confirm owner", "Approve data fix", "Commit this cycle", "Request evidence", "Track next"].map((lane) => ({
     lane,
     count: review.queue.filter((action) => action.decisionLane === lane).length,
   }));
+  const [snapshotTitle, setSnapshotTitle] = useState("");
+  const [snapshotNote, setSnapshotNote] = useState("");
+
+  const proposedTitle = snapshotTitle.trim() || `Melwater Weekly Action Review ${formatSnapshotDate()}`;
+  const latestAt = latestSnapshot?.capturedAt || "";
+  const latestLabel = latestAt ? `上次归档: ${new Date(latestAt).toLocaleString("zh-CN", { hour12: false })}` : "暂无周会归档";
+
+  const handleSave = () => {
+    const payload = buildMeetingSnapshotPayload(review, reviewActions, {
+      title: snapshotTitle.trim(),
+      note: snapshotNote.trim(),
+    });
+    onSaveSnapshot(payload);
+  };
+
+  const handleExport = () => {
+    const payload = buildMeetingSnapshotPayload(review, reviewActions, {
+      title: snapshotTitle.trim(),
+      note: snapshotNote.trim(),
+    });
+    downloadMeetingSnapshot(payload);
+  };
 
   return (
     <section className="card weekly-review-card">
@@ -2461,7 +2573,47 @@ function WeeklyActionReview({ review, onStatusChange, writeMeta }) {
         <div className="header-badges">
           <span className="status-badge rose">{review.queue.length} in queue</span>
           <span className="status-badge amber">{review.dueWithin14} due ≤14d</span>
+          <span className={`status-badge ${syncState === "api" ? "green" : "muted"}`}>{syncState === "api" ? "snapshot api" : "snapshot local"}</span>
         </div>
+      </div>
+      <div className="meeting-snapshot-controls">
+        <label>
+          会议信息
+          <input
+            value={snapshotTitle}
+            onChange={(event) => setSnapshotTitle(event.target.value)}
+            placeholder={`Melwater Weekly Action Review ${formatSnapshotDate()}`}
+          />
+        </label>
+        <label>
+          本周决策记录
+          <textarea
+            value={snapshotNote}
+            onChange={(event) => setSnapshotNote(event.target.value)}
+            rows={3}
+            placeholder="记录每条 action 的本周决策、owner 确认、证据补齐要求和跟进原因。"
+          />
+        </label>
+        <div className="snapshot-toolbar">
+          <button onClick={handleSave} type="button">
+            <IconClipboardCheck size={15} />
+            保存归档快照
+          </button>
+          <button onClick={handleExport} type="button">
+            <IconDownload size={15} />
+            导出快照 JSON
+          </button>
+        </div>
+        <div className="snapshot-meta">
+          <strong>{proposedTitle}</strong>
+          <span>{latestLabel}</span>
+        </div>
+        {latestSnapshot && (
+          <div className="snapshot-latest">
+            <small>Latest snapshot: queue {latestSnapshot.summary?.queueSize || 0}, owner load {latestSnapshot.ownerSummary?.length || 0}</small>
+            <small>{latestSnapshot.summary?.meetingNote || latestSnapshot.decision?.meetingNote || "—"}</small>
+          </div>
+        )}
       </div>
 
       <div className="weekly-review-grid">
@@ -2540,6 +2692,7 @@ function ActionLoopPage() {
   const { values: ownerDraft, writeValue: writeActionOwner, syncState: ownerSync } = useWritebackState("actionOwner");
   const { values: priorityDraft, writeValue: writeActionPriority, syncState: prioritySync } = useWritebackState("actionPriority");
   const { values: impactDraft, writeValue: writeActionImpact, syncState: impactSync } = useWritebackState("actionImpact");
+  const { values: meetingSnapshotDraft, writeValue: writeMeetingSnapshot, syncState: meetingSnapshotSync } = useWritebackState("meetingSnapshot");
   const [ownerFilter, setOwnerFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -2576,6 +2729,24 @@ function ActionLoopPage() {
     ownerDomain: action.owner_domain || "unassigned",
     sourceAction: action.source_action,
   });
+  const latestSnapshot = useMemo(() => {
+    const candidates = Object.entries(meetingSnapshotDraft)
+      .map(([snapshotKey, snapshot]) => ({ snapshotKey, ...snapshot }))
+      .filter((snapshot) => snapshot.summary && snapshot.snapshotDate)
+      .sort((a, b) => new Date(b.capturedAt || b.snapshotDate).getTime() - new Date(a.capturedAt || a.snapshotDate).getTime());
+    return candidates[0] || null;
+  }, [meetingSnapshotDraft]);
+  const saveSnapshot = useCallback(
+    (snapshot) => {
+      writeMeetingSnapshot(snapshot.snapshotKey || `weekly-${formatSnapshotDate()}`, {
+        ...snapshot,
+        updatedBy: getReviewer(),
+      }, {
+        source: "weekly_action_review",
+      });
+    },
+    [writeMeetingSnapshot],
+  );
 
   return (
     <div className="lab-stack">
@@ -2585,7 +2756,15 @@ function ActionLoopPage() {
         <MetricCard label="Need owner" value={unassignedCount} caption="owner_name 待落位" tone="yellow" />
         <MetricCard label="Evidence linked" value={evidenceLinkedCount} caption="可追溯 quote / sample" tone="green" />
       </div>
-      <WeeklyActionReview review={weeklyReview} onStatusChange={writeActionStatus} writeMeta={writeMeta} />
+      <WeeklyActionReview
+        review={weeklyReview}
+        reviewActions={actions}
+        onStatusChange={writeActionStatus}
+        writeMeta={writeMeta}
+        onSaveSnapshot={saveSnapshot}
+        latestSnapshot={latestSnapshot}
+        syncState={meetingSnapshotSync}
+      />
       <section className="card data-table-card">
         <div className="card-header">
           <div>

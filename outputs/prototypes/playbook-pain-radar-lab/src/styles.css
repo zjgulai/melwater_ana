@@ -1368,6 +1368,99 @@ h1 {
   overflow: hidden;
 }
 
+.meeting-snapshot-controls {
+  display: grid;
+  gap: 10px;
+  padding: 0 16px 14px;
+}
+
+.meeting-snapshot-controls label {
+  display: grid;
+  gap: 6px;
+  color: #4d463f;
+  font-size: 11px;
+}
+
+.meeting-snapshot-controls input,
+.meeting-snapshot-controls textarea {
+  width: 100%;
+  min-height: 34px;
+  resize: vertical;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: #3f3a35;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.snapshot-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.snapshot-toolbar button {
+  min-height: 32px;
+  padding: 0 12px;
+  color: #fff;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.snapshot-toolbar button:last-child {
+  color: #4e4742;
+  background: #fff;
+  border-color: var(--border);
+}
+
+.snapshot-toolbar button svg {
+  color: #fff;
+}
+
+.snapshot-toolbar button:last-child svg {
+  color: #605854;
+}
+
+.snapshot-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.snapshot-meta strong {
+  font-size: 12px;
+  color: #3c3632;
+}
+
+.snapshot-meta span {
+  color: var(--secondary-text);
+  font-size: 11px;
+}
+
+.snapshot-latest {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.snapshot-latest small {
+  color: var(--soft-text);
+  font-size: 10px;
+}
+
 .weekly-review-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 310px;

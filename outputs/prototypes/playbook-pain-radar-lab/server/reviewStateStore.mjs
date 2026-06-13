@@ -10,6 +10,7 @@ export const namespaces = {
   actionStatus: "action-status.csv",
   conceptDecision: "concept-decision.csv",
   crisisTriage: "crisis-triage.csv",
+  meetingSnapshot: "meeting-snapshot.csv",
   quoteReview: "quote-review.csv",
   searchVerdict: "search-verdict.csv",
 };
