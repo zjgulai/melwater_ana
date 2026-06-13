@@ -384,4 +384,13 @@ node outputs/prototypes/playbook-pain-radar-lab/server/remoteRelease.mjs --mode=
 - `verify` 回归结果 `ok: true`
 - 指标仍满足 `melwater_review_state_replay_ok 1`
 
+实测结果（本次执行）：
+
+- `release-dir`: `outputs/prototypes/playbook-pain-radar-lab/releases/playbook-pain-radar-lab-0.0.0-2026-06-13T08-11-13-364Z`
+- `remoteRelease` 执行返回 `ok: true`
+- 关键步骤 `restore rollback snapshot and restart service` / `verify restored application` 均通过
+- 回滚后执行 `verifyPublicSite`：
+  - `https://melwater.lute-tlz-dddd.top` -> `HTTP 200`
+  - `title: Melwater Analyst Lab - Pain Radar`
+
 补充：新增配置校验会在 `REVIEW_STATE_API_BASE` 未以 `/api/review-state` 结尾时给出 warning，提示可能回到前端 HTML 页面而非 API JSON 的风险。
