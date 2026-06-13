@@ -18,6 +18,9 @@ services:
       MELWATER_RELEASE_REF: ${MELWATER_RELEASE_REF:-unknown}
       MELWATER_OPS_BACKUP_ROOT: /ops/backups/review-state
       MELWATER_OPS_LAST_HEALTH_FILE: /ops/backups/last-health.json
+      MELWATER_OPS_INCIDENT_FILE: /ops/backups/health-incident.json
+      MELWATER_OPS_REPORT_FILE: /ops/backups/ops-report-latest.json
+      MELWATER_OPS_ALERT_LOG_FILE: /ops/backups/health-alerts.log
     volumes:
       - review_state:/data/review-state
       - ${MELWATER_BACKUP_HOST_ROOT:-/opt/melwater-ana/backups}:/ops/backups:ro

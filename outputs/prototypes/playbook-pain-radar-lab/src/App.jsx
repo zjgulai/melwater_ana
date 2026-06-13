@@ -1922,7 +1922,12 @@ function OpsStatusPage() {
   const health = opsStatus?.healthcheck;
   const backup = opsStatus?.backup?.latest;
   const reviewState = opsStatus?.reviewState;
+  const incident = opsStatus?.incident;
+  const opsReport = opsStatus?.opsReport;
+  const alertLog = opsStatus?.alertLog?.latest || [];
   const authTone = authStatus.state === "ok" ? "green" : authStatus.state === "loading" ? "amber" : "rose";
+  const incidentTone = incident?.status === "open" ? "rose" : incident?.status === "resolved" ? "green" : "muted";
+  const incidentLabel = incident?.status || "none";
 
   return (
     <div className="lab-stack">
@@ -1930,7 +1935,7 @@ function OpsStatusPage() {
         <MetricCard label="API Token" value={authStatus.state === "ok" ? authStatus.role || "ok" : "check"} caption={authStatus.label} tone={authStatus.state === "ok" ? "green" : "amber"} />
         <MetricCard label="Release" value={shortHash(opsStatus?.release?.ref)} caption="MELWATER_RELEASE_REF" tone="rose" />
         <MetricCard label="Health" value={health?.ok ? "OK" : "Need check"} caption={formatDateTime(health?.checkedAt)} tone={health?.ok ? "green" : "yellow"} />
-        <MetricCard label="Backup" value={backup ? formatBytes(backup.bytes) : "none"} caption={formatDateTime(backup?.createdAt)} tone={backup ? "amber" : "muted"} />
+        <MetricCard label="Incident" value={incidentLabel} caption={formatDateTime(incident?.openedAt || incident?.resolvedAt)} tone={incidentTone} />
       </div>
 
       <div className="ops-layout">
@@ -2000,6 +2005,19 @@ function OpsStatusPage() {
               <p>{health?.error || `${health?.publicUrl || "public site"} · HTTP ${health?.homepageStatus || "unknown"}`}</p>
             </div>
           </div>
+          {incident && (
+            <div className={`ops-health-banner ${incident.status === "open" ? "blocked" : "pass"}`}>
+              {incident.status === "open" ? <IconBell size={18} /> : <IconCircleCheck size={18} />}
+              <div>
+                <strong>Incident: {incident.status}</strong>
+                <p>
+                  {incident.status === "open"
+                    ? `${incident.failureCount || 0}/${incident.threshold || 0} consecutive failures · ${incident.error || "unknown error"}`
+                    : `resolved at ${formatDateTime(incident.resolvedAt)} after ${incident.failureCount || 0} failure(s)`}
+                </p>
+              </div>
+            </div>
+          )}
           <div className="ops-kv-grid">
             <span>
               <small>checkedAt</small>
@@ -2083,10 +2101,28 @@ function OpsStatusPage() {
               </div>
             </div>
           )}
+          {opsReport && (
+            <div className="backup-card">
+              <strong>Ops report · {opsReport.healthOk}</strong>
+              <p>{formatDateTime(opsReport.generatedAt)} · incident {opsReport.incidentStatus || "none"} · {opsReport.latestBackupFile || "no backup"}</p>
+              <code>{opsReport.markdownFile || "markdown unavailable"}</code>
+            </div>
+          )}
+          {alertLog.length > 0 && (
+            <div className="alert-log-list">
+              {alertLog.slice(-4).map((entry, index) => (
+                <div className="alert-log-row" key={`${entry.timestamp || index}-${entry.message || index}`}>
+                  <span className={`status-badge ${entry.ok ? "green" : "rose"}`}>{entry.ok ? "recovered" : "failure"}</span>
+                  <p>{entry.message || "health event"}</p>
+                  <small>{formatDateTime(entry.timestamp)} · count {entry.failureCount ?? 0}</small>
+                </div>
+              ))}
+            </div>
+          )}
           <div className="ops-runbook">
             <span>
               <strong>当前降级闭环</strong>
-              <small>页面 token + cron healthcheck + backup manifest，可覆盖外部 webhook 空窗期。</small>
+              <small>页面 token + cron healthcheck + incident JSON + ops report，可覆盖外部 webhook 空窗期。</small>
             </span>
             <span>
               <strong>下一步接入</strong>

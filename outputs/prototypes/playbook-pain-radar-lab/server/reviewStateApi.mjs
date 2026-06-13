@@ -13,6 +13,9 @@ export function createReviewStateApi({
   releaseRefFile = process.env.MELWATER_RELEASE_REF_FILE || path.join(rootDir, "REVISION"),
   opsBackupRoot = process.env.MELWATER_OPS_BACKUP_ROOT || path.join(stateDir, "backups"),
   opsLastHealthFile = process.env.MELWATER_OPS_LAST_HEALTH_FILE || "",
+  opsIncidentFile = process.env.MELWATER_OPS_INCIDENT_FILE || "",
+  opsReportFile = process.env.MELWATER_OPS_REPORT_FILE || "",
+  opsAlertLogFile = process.env.MELWATER_OPS_ALERT_LOG_FILE || "",
 } = {}) {
   const store = createReviewStateStore({ stateDir });
   store.migrate();
@@ -213,9 +216,45 @@ export function createReviewStateApi({
     }
   }
 
+  function logTail(filePath, limit = 10) {
+    if (!filePath) return [];
+    try {
+      return fs
+        .readFileSync(filePath, "utf8")
+        .split("\n")
+        .filter(Boolean)
+        .slice(-limit)
+        .map((line) => {
+          try {
+            return JSON.parse(line);
+          } catch {
+            return { message: line };
+          }
+        });
+    } catch {
+      return [];
+    }
+  }
+
+  function opsReportSummary(report) {
+    if (!report) return null;
+    return {
+      ok: Boolean(report.ok),
+      generatedAt: report.generatedAt || null,
+      releaseRef: report.releaseRef || null,
+      healthOk: report.healthOk || null,
+      incidentStatus: report.incidentStatus || null,
+      latestBackupFile: report.latestBackupFile || null,
+      markdownFile: report.reportFiles?.markdown ? path.basename(report.reportFiles.markdown) : null,
+      jsonFile: report.reportFiles?.json ? path.basename(report.reportFiles.json) : null,
+    };
+  }
+
   function buildOpsStatus(auth) {
     const metrics = store.buildMetrics();
     const lastHealth = readJsonFile(opsLastHealthFile);
+    const incident = readJsonFile(opsIncidentFile);
+    const report = readJsonFile(opsReportFile);
     const latestBackup = latestBackupManifest();
     const releaseRef = process.env.MELWATER_RELEASE_REF || readTextFile(releaseRefFile) || "unknown";
     return {
@@ -256,6 +295,23 @@ export function createReviewStateApi({
       backup: {
         latest: latestBackup,
       },
+      incident: incident
+        ? {
+            ok: Boolean(incident.ok),
+            status: incident.status || null,
+            incidentType: incident.incidentType || null,
+            openedAt: incident.openedAt || null,
+            resolvedAt: incident.resolvedAt || null,
+            lastFailureAt: incident.lastFailureAt || null,
+            failureCount: Number(incident.failureCount || 0),
+            threshold: Number(incident.threshold || 0),
+            error: incident.error || null,
+          }
+        : null,
+      alertLog: {
+        latest: logTail(opsAlertLogFile, 10),
+      },
+      opsReport: opsReportSummary(report),
     };
   }
 
