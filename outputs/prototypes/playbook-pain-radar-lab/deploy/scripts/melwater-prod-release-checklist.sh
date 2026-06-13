@@ -106,8 +106,22 @@ if [ "$RUN_DEPLOY" = true ]; then
       PUBLIC_SITE_EXPECT_TEXT="Melwater"
     fi
     run_cmd node server/verifyPublicSite.mjs --url="$PUBLIC_SITE_URL" --expect="$PUBLIC_SITE_EXPECT_TEXT"
-    if [ -n "${REVIEW_STATE_API_BASE:-}" ] && [ -n "${REVIEW_STATE_VERIFY_TOKEN:-}" ]; then
-      run_cmd node server/verifyDeployment.mjs --require-auth
+    if [ -n "${REVIEW_STATE_API_BASE:-}" ]; then
+      VERIFY_TOKEN="${REVIEW_STATE_VERIFY_TOKEN:-}"
+      if [ -z "${VERIFY_TOKEN}" ]; then
+        echo "REVIEW_STATE_VERIFY_TOKEN missing; resolving admin token from remote compose env..."
+        if RESOLVED_TOKEN="$(bash deploy/scripts/melwater-get-admin-token.sh)"; then
+          VERIFY_TOKEN="$RESOLVED_TOKEN"
+        else
+          echo "Failed to resolve token, skip API verify"
+        fi
+      fi
+
+      if [ -n "${VERIFY_TOKEN:-}" ]; then
+        REVIEW_STATE_VERIFY_TOKEN="$VERIFY_TOKEN" run_cmd node server/verifyDeployment.mjs --require-auth
+      else
+        echo "Skip API verify: token cannot be resolved"
+      fi
     else
       echo "Skip API verify: REVIEW_STATE_API_BASE / REVIEW_STATE_VERIFY_TOKEN missing"
     fi
