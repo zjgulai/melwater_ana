@@ -54,6 +54,12 @@ Recommended Tencent Cloud defaults:
 - Service: `melwater-review-state-api`
 - App user: `melwater`
 
+Edge proxy refresh (for shared ingress scenarios):
+
+- Set `MELWATER_EDGE_RESTART_ENABLED=1` (or any truthy value: `true`, `1`, `on`).
+- Default container is `ai_video_nginx`; override with `MELWATER_EDGE_CONTAINER`.
+- Optional override command `MELWATER_EDGE_REFRESH_CMD` (for example: `docker restart ai_video_nginx`).
+
 ## Preflight
 
 Local preflight validates env variables and the latest local release package:
@@ -79,6 +85,7 @@ The SSH check confirms:
 - `node`, `npm`, `tar`, `rsync`, `sha256sum`, and `systemctl` exist on the server
 - Passwordless sudo is available when `MELWATER_REMOTE_USE_SUDO=1`
 - The remote stage parent directory can be created
+- `docker` exists when edge refresh is enabled with the default docker command
 
 ## Deploy
 
@@ -104,7 +111,8 @@ The deploy flow:
 6. Runs `npm ci --omit=dev`.
 7. Runs review-state migration against `MELWATER_REMOTE_STATE_DIR`.
 8. Restarts the systemd service.
-9. Runs authenticated deployment verification.
+9. Refreshes shared edge proxy (optional, non-blocking).
+10. Runs authenticated deployment verification.
 
 ## Rollback
 
@@ -125,7 +133,7 @@ The rollback flow restores:
 - `rollback/dist/` to the app `dist/`
 - `rollback/state/` to the persistent state directory
 
-Then it replays state and runs authenticated deployment verification.
+Then it replays state, refreshes the shared edge proxy (optional, non-blocking), and runs authenticated deployment verification.
 
 ## Public Site Smoke Check
 

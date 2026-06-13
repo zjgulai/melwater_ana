@@ -30,6 +30,9 @@ const config = {
   useSudo: process.env.MELWATER_REMOTE_USE_SUDO !== "0",
   apiBase: (process.env.REVIEW_STATE_API_BASE || "").replace(/\/$/, ""),
   verifyToken: process.env.REVIEW_STATE_VERIFY_TOKEN || process.env.REVIEW_STATE_TOKEN || process.env.REVIEW_STATE_ADMIN_TOKEN || "",
+  edgeContainer: process.env.MELWATER_EDGE_CONTAINER || "ai_video_nginx",
+  edgeRefreshEnabled: isTruthyEnv(process.env.MELWATER_EDGE_RESTART_ENABLED || process.env.MELWATER_EDGE_REFRESH_ENABLED),
+  edgeRefreshCommand: process.env.MELWATER_EDGE_REFRESH_CMD || "",
 };
 
 if (!config.remoteOwner && config.appUser && config.useSudo) config.remoteOwner = `${config.appUser}:${config.appUser}`;
@@ -56,8 +59,12 @@ if (!failures.length && execute) {
     const execution = runStep(step);
     executions.push(execution);
     if (!execution.ok) {
-      failures.push({ scope: "remote-command", label: step.label, status: execution.status, error: "command-failed" });
-      break;
+      if (step.optional) {
+        warnings.push(`optional step failed but ignored: ${step.label}`);
+      } else {
+        failures.push({ scope: "remote-command", label: step.label, status: execution.status, error: "command-failed" });
+        break;
+      }
     }
   }
 }
@@ -95,6 +102,9 @@ const result = {
     useSudo: config.useSudo,
     apiBase: config.apiBase || null,
     verifyTokenProvided: Boolean(config.verifyToken),
+    edgeRefreshEnabled: config.edgeRefreshEnabled,
+    edgeContainer: config.edgeContainer || null,
+    edgeRefreshCommand: resolveEdgeRefreshCommand() || null,
   },
   commands: plan.map(({ label, text }) => ({ label, text })),
   executions,
@@ -209,8 +219,16 @@ function buildPlan() {
 
   if (mode === "deploy") {
     steps.push(sshStep("deploy release and restart service", remoteDeployScript(releaseStageDir, appName)));
+    if (shouldRefreshEdge()) {
+      steps.push(sshStep("refresh shared edge proxy", remoteEdgeRefreshScript(), { optional: true }));
+    }
+    steps.push(sshStep("verify deployed application", remoteVerifyScript()));
   } else if (mode === "rollback") {
     steps.push(sshStep("restore rollback snapshot and restart service", remoteRollbackScript(releaseStageDir, rollbackName)));
+    if (shouldRefreshEdge()) {
+      steps.push(sshStep("refresh shared edge proxy", remoteEdgeRefreshScript(), { optional: true }));
+    }
+    steps.push(sshStep("verify restored application", remoteVerifyScript()));
   }
 
   return steps;
@@ -262,6 +280,7 @@ function remotePreflightScript() {
     "command -v sha256sum >/dev/null",
     "command -v systemctl >/dev/null",
   ];
+  if (shouldRefreshEdge() && edgeRefreshUsesDocker()) lines.push("command -v docker >/dev/null");
   if (config.useSudo) lines.push("sudo -n true");
   lines.push(`test -d ${q(path.posix.dirname(config.remoteStageRoot))} || mkdir -p ${q(path.posix.dirname(config.remoteStageRoot))}`);
   lines.push("printf 'melwater-preflight-ok\\n'");
@@ -288,7 +307,6 @@ function remoteDeployScript(releaseStageDir, appName) {
     asApp("npm ci --omit=dev"),
     asApp(`env REVIEW_STATE_DIR=${stateDir} npm run review:migrate`),
     sudo(`systemctl restart ${serviceName}`),
-    asApp(`env REVIEW_STATE_API_BASE=${q(config.apiBase)} REVIEW_STATE_VERIFY_TOKEN=${q(config.verifyToken)} npm run review:verify-deploy -- --require-auth`),
   ].filter(Boolean);
   return lines.join("\n");
 }
@@ -312,8 +330,26 @@ function remoteRollbackScript(releaseStageDir, rollbackName) {
     `cd ${deployPath}`,
     asApp(`env REVIEW_STATE_DIR=${stateDir} npm run review:replay`),
     sudo(`systemctl start ${serviceName}`),
-    asApp(`env REVIEW_STATE_API_BASE=${q(config.apiBase)} REVIEW_STATE_VERIFY_TOKEN=${q(config.verifyToken)} npm run review:verify-deploy -- --require-auth`),
   ].filter(Boolean);
+  return lines.join("\n");
+}
+
+function remoteVerifyScript() {
+  return asApp(
+    `env REVIEW_STATE_API_BASE=${q(config.apiBase)} REVIEW_STATE_VERIFY_TOKEN=${q(config.verifyToken)} npm run review:verify-deploy -- --require-auth`,
+  );
+}
+
+function remoteEdgeRefreshScript() {
+  const edgeRefreshCommand = resolveEdgeRefreshCommand();
+  if (!edgeRefreshCommand) return "";
+
+  const lines = [
+    "set -e",
+    "echo \"Refreshing shared edge proxy\"",
+    edgeRefreshCommand,
+    "echo \"Shared edge proxy refresh completed\"",
+  ];
   return lines.join("\n");
 }
 
@@ -361,4 +397,23 @@ function redactSecrets(value) {
 
 function q(value) {
   return `'${String(value).replaceAll("'", "'\\''")}'`;
+}
+
+function isTruthyEnv(value = "") {
+  return ["1", "true", "yes", "on", "enabled"].includes(String(value).trim().toLowerCase());
+}
+
+function shouldRefreshEdge() {
+  return config.edgeRefreshEnabled && Boolean(resolveEdgeRefreshCommand());
+}
+
+function edgeRefreshUsesDocker() {
+  const command = (resolveEdgeRefreshCommand() || "").trim();
+  return /^docker(\s+.*)?$/u.test(command);
+}
+
+function resolveEdgeRefreshCommand() {
+  if (config.edgeRefreshCommand) return config.edgeRefreshCommand;
+  if (!config.edgeRefreshEnabled) return "";
+  return `docker restart ${q(config.edgeContainer)}`;
 }

@@ -244,6 +244,15 @@ docker restart ai_video_nginx
 
 to detect upstream refresh regressions immediately.
 
+This can now be automated in `remoteRelease.mjs` by enabling:
+
+- `MELWATER_EDGE_RESTART_ENABLED=1`
+- Optionally override:
+  - `MELWATER_EDGE_CONTAINER=ai_video_nginx`
+  - `MELWATER_EDGE_REFRESH_CMD=docker restart ai_video_nginx`
+
+When enabled, deploy/rollback runs a non-blocking "refresh shared edge proxy" step right after restarting service, then runs the authenticated verification.
+
 ## Operational Commands
 
 Check containers:
