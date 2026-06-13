@@ -1,0 +1,13 @@
+node_modules
+dist
+qa
+releases
+state
+.npm-cache
+.env
+.env.*
+!.env.example
+*.pem
+.DS_Store
+Dockerfile*
+deploy/docker/.env

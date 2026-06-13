@@ -1,0 +1,48 @@
+name: melwater_ana
+
+services:
+  api:
+    container_name: melwater_api
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile.api
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      REVIEW_STATE_PORT: 4174
+      REVIEW_STATE_DIR: /data/review-state
+      REVIEW_STATE_CORS_ORIGIN: ${MELWATER_PUBLIC_ORIGIN:-https://melwater.lute-tlz-dddd.top}
+      REVIEW_STATE_TOKENS: ${REVIEW_STATE_TOKENS:?REVIEW_STATE_TOKENS is required}
+      REVIEW_STATE_HEALTH_TOKEN: ${REVIEW_STATE_HEALTH_TOKEN:?REVIEW_STATE_HEALTH_TOKEN is required}
+      REVIEW_STATE_BACKUP_KEEP: ${REVIEW_STATE_BACKUP_KEEP:-14}
+    volumes:
+      - review_state:/data/review-state
+    networks:
+      - internal
+      - lighthouse_ai_video_net
+
+  web:
+    container_name: melwater_web
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile.web
+      args:
+        VITE_REVIEW_STATE_API_BASE: ""
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - internal
+      - lighthouse_ai_video_net
+
+volumes:
+  review_state:
+    name: melwater_review_state
+
+networks:
+  internal:
+    name: melwater_internal
+    driver: bridge
+  lighthouse_ai_video_net:
+    external: true

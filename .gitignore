@@ -1,6 +1,7 @@
 # Local secrets and machine state
 .env
 .env.*
+*.pem
 .DS_Store
 coscli.log
 
