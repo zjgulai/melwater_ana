@@ -103,6 +103,12 @@ MELWATER_OPS_REPORT_LATEST_JSON_FILE=/opt/melwater-ana/backups/ops-report-latest
 MELWATER_OPS_REPORT_LATEST_MD_FILE=/opt/melwater-ana/backups/ops-report-latest.md
 ```
 
+After commit and push, production `MELWATER_RELEASE_REF` and `/opt/melwater-ana/app/REVISION` were updated to:
+
+```bash
+046fdbca
+```
+
 Rebuilt:
 
 ```bash
@@ -122,11 +128,11 @@ Healthcheck:
 ```json
 {
   "ok": true,
-  "checkedAt": "2026-06-13T05:06:18Z",
+  "checkedAt": "2026-06-13T05:08:00Z",
   "publicUrl": "https://melwater.lute-tlz-dddd.top",
   "homepageStatus": 200,
   "apiBase": "https://melwater.lute-tlz-dddd.top/api/review-state",
-  "releaseRef": "b8c00b88-p14r3-working",
+  "releaseRef": "046fdbca",
   "failureCount": 0,
   "incidentThreshold": 3,
   "incidentOpen": false
@@ -136,7 +142,7 @@ Healthcheck:
 Manual report:
 
 - `POST /ops/report` returned `ok: true`.
-- Latest generated Markdown: `20260613T050619Z-ops-report-api.md`.
+- Latest generated Markdown: `20260613T050800Z-ops-report-api.md`.
 - Certificate:
   - `host: melwater.lute-tlz-dddd.top`
   - `notAfter: Sep 11 02:49:24 2026 GMT`
@@ -162,11 +168,11 @@ Ops API:
 
 - `ok: true`
 - `auth.role: admin`
-- `release.ref: b8c00b88-p14r3-working`
+- `release.ref: 046fdbca`
 - `reviewState.replayOk: true`
 - `healthcheck.ok: true`
 - `opsReport.ok: true`
-- `opsReport.markdownFile: 20260613T050619Z-ops-report-api.md`
+- `opsReport.markdownFile: 20260613T050800Z-ops-report-api.md`
 - `certificate.daysRemaining: 90`
 
 ## Acceptance
