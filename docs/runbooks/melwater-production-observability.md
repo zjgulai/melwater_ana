@@ -157,7 +157,60 @@ MELWATER_ALERT_EXPECT_STATUS=204 sh deploy/scripts/melwater-alert-test.sh --send
 - `healthcheck_incident_open`：连续失败达到阈值，等级 `critical`
 - `healthcheck_recovered`：故障后恢复，等级 `resolved`
 
-## 六、故障处理
+## 六、告警三段式演练
+
+外部 webhook 正式接入前后，都应定期跑告警演练。默认模式会启动本机临时 mock webhook，不会依赖飞书/企微真实凭证：
+
+```bash
+cd /opt/melwater-ana/app
+node deploy/scripts/melwater-alert-drill.mjs
+```
+
+恢复阶段默认最多重试 8 次、每次间隔 5 秒，用来覆盖刚部署后 Docker health 仍处在 `starting` 的窗口。临时调整：
+
+```bash
+node deploy/scripts/melwater-alert-drill.mjs --recovery-attempts=12 --recovery-sleep=5
+```
+
+演练内容：
+
+1. 使用独立演练状态目录模拟第一次健康检查失败，触发 `healthcheck_failed`
+2. 第二次失败达到阈值，触发 `healthcheck_incident_open`
+3. 使用真实生产健康检查恢复，触发 `healthcheck_recovered`
+4. 生成 `alert-drill-latest.json/md`
+5. 重新生成 Ops report，并把本次 drill 摘要写入 `latestAlertDrill`
+
+产物位置：
+
+- `/opt/melwater-ana/backups/alert-drills/<timestamp>/alert-drill.json`
+- `/opt/melwater-ana/backups/alert-drills/<timestamp>/alert-drill.md`
+- `/opt/melwater-ana/backups/alert-drill-latest.json`
+- `/opt/melwater-ana/backups/alert-drill-latest.md`
+
+真实 webhook 演练：
+
+```bash
+cd /opt/melwater-ana/app
+node deploy/scripts/melwater-alert-drill.mjs \
+  --webhook-url="$MELWATER_ALERT_WEBHOOK_URL" \
+  --webhook-type=feishu
+```
+
+本地只检查脚本链路、不跑真实恢复时：
+
+```bash
+node deploy/scripts/melwater-alert-drill.mjs --recovery-mode=skip --skip-ops-report
+```
+
+验收门禁：
+
+- `alert-drill-latest.json` 中 `ok=true`
+- mock 模式下 webhook event 必须包含 `healthcheck_failed`、`healthcheck_incident_open`、`healthcheck_recovered`
+- `alert-drill-latest.json` 中 `missingWebhookEvents=[]`
+- Ops report 中 `latestAlertDrill.ok=true`
+- 生产正式 `last-health.json` 保持 `ok=true`
+
+## 七、故障处理
 
 健康检查失败时：
 
@@ -189,7 +242,7 @@ docker restart ai_video_nginx
 
 5. 如 review-state 状态异常，先做备份，再按发布 runbook 执行回滚或恢复。
 
-## 七、验收门禁
+## 八、验收门禁
 
 生产可观测性闭环完成必须满足：
 

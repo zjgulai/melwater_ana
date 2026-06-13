@@ -18,6 +18,9 @@ REPORT_ROOT="${MELWATER_OPS_REPORT_ROOT:-$OPS_ROOT/ops-reports}"
 RESULT_FILE="${MELWATER_HEALTH_RESULT_FILE:-$OPS_ROOT/last-health.json}"
 INCIDENT_FILE="${MELWATER_HEALTH_INCIDENT_FILE:-$OPS_ROOT/health-incident.json}"
 ALERT_LOG="${MELWATER_HEALTH_ALERT_LOG:-$OPS_ROOT/health-alerts.log}"
+ALERT_DRILL_ROOT="${MELWATER_ALERT_DRILL_ROOT:-$OPS_ROOT/alert-drills}"
+ALERT_DRILL_LATEST_JSON="${MELWATER_ALERT_DRILL_LATEST_JSON:-$OPS_ROOT/alert-drill-latest.json}"
+ALERT_DRILL_LATEST_MD="${MELWATER_ALERT_DRILL_LATEST_MD:-$OPS_ROOT/alert-drill-latest.md}"
 LATEST_JSON="${MELWATER_OPS_REPORT_LATEST_JSON:-$OPS_ROOT/ops-report-latest.json}"
 LATEST_MD="${MELWATER_OPS_REPORT_LATEST_MD:-$OPS_ROOT/ops-report-latest.md}"
 TIMEOUT="${MELWATER_OPS_REPORT_TIMEOUT:-15}"
@@ -116,6 +119,7 @@ fi
 containers_json="$(container_status_json)"
 certificate_json="$(cert_json)"
 ops_json="$(ops_api_json)"
+alert_drill_json="$(json_file_or_null "$ALERT_DRILL_LATEST_JSON")"
 health_ok="$(json_bool_field ok "$RESULT_FILE")"
 incident_status="$(json_field status "$INCIDENT_FILE")"
 [ -n "$incident_status" ] || incident_status="none"
@@ -133,6 +137,7 @@ cat > "$REPORT_JSON" <<EOF
   "healthcheck": $health_json,
   "incident": $incident_json,
   "latestBackup": $backup_json,
+  "latestAlertDrill": $alert_drill_json,
   "containers": $containers_json,
   "certificate": $certificate_json,
   "opsApi": $ops_json,
@@ -150,6 +155,10 @@ health_checked_at="$(json_field checkedAt "$RESULT_FILE")"
 health_error="$(json_field error "$RESULT_FILE")"
 incident_opened_at="$(json_field openedAt "$INCIDENT_FILE")"
 incident_resolved_at="$(json_field resolvedAt "$INCIDENT_FILE")"
+alert_drill_ok="$(json_bool_field ok "$ALERT_DRILL_LATEST_JSON")"
+alert_drill_generated_at="$(json_field generatedAt "$ALERT_DRILL_LATEST_JSON")"
+alert_drill_mode="$(json_field mode "$ALERT_DRILL_LATEST_JSON")"
+alert_drill_release="$(json_field releaseRef "$ALERT_DRILL_LATEST_JSON")"
 backup_created_at="$(json_field createdAt "$backup_manifest")"
 backup_sha="$(json_field sha256 "$backup_manifest")"
 cert_not_after="$(printf '%s' "$certificate_json" | sed -n 's/.*"notAfter":"\([^"]*\)".*/\1/p')"
@@ -181,6 +190,15 @@ cat > "$REPORT_MD" <<EOF
 
 - Host: $(printf '%s' "$PUBLIC_URL" | sed 's#^[a-zA-Z][a-zA-Z0-9+.-]*://##;s#/.*##;s#:.*##')
 - Not after: ${cert_not_after:-unknown}
+
+## Alert Drill
+
+- OK: $alert_drill_ok
+- Last generated: ${alert_drill_generated_at:-none}
+- Mode: ${alert_drill_mode:-none}
+- Release: ${alert_drill_release:-none}
+- Latest JSON: $ALERT_DRILL_LATEST_JSON
+- Latest Markdown: $ALERT_DRILL_LATEST_MD
 
 ## Containers
 

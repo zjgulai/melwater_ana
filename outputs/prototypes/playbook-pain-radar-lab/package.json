@@ -24,6 +24,7 @@
     "ops:report": "sh deploy/scripts/melwater-ops-report.sh",
     "ops:install-cron": "sh deploy/scripts/melwater-install-ops-cron.sh",
     "ops:alert-test": "sh deploy/scripts/melwater-alert-test.sh",
+    "ops:alert-drill": "node deploy/scripts/melwater-alert-drill.mjs",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1"
   },
