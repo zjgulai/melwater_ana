@@ -118,6 +118,9 @@ Ops report：
 ```bash
 MELWATER_ALERT_WEBHOOK_URL=...
 MELWATER_ALERT_WEBHOOK_TYPE=feishu
+MELWATER_ALERT_DRY_RUN=0
+MELWATER_ALERT_TIMEOUT=15
+MELWATER_ALERT_EXPECT_STATUS=2xx
 ```
 
 可选值：
@@ -125,6 +128,34 @@ MELWATER_ALERT_WEBHOOK_TYPE=feishu
 - `generic`
 - `feishu`
 - `wecom`
+
+配置后先不要等真实故障触发，先执行 smoke test：
+
+```bash
+cd /opt/melwater-ana/app
+sh deploy/scripts/melwater-alert-test.sh --dry-run --webhook-type=feishu
+sh deploy/scripts/melwater-alert-test.sh --send --webhook-type=feishu --message="Melwater Feishu webhook smoke test"
+```
+
+企微示例：
+
+```bash
+cd /opt/melwater-ana/app
+sh deploy/scripts/melwater-alert-test.sh --dry-run --webhook-type=wecom
+sh deploy/scripts/melwater-alert-test.sh --send --webhook-type=wecom --message="Melwater WeCom webhook smoke test"
+```
+
+如 webhook 服务返回 `204` 而不是 `200`，可调整：
+
+```bash
+MELWATER_ALERT_EXPECT_STATUS=204 sh deploy/scripts/melwater-alert-test.sh --send
+```
+
+真实 healthcheck 告警事件包括：
+
+- `healthcheck_failed`：单次失败，等级 `warning`
+- `healthcheck_incident_open`：连续失败达到阈值，等级 `critical`
+- `healthcheck_recovered`：故障后恢复，等级 `resolved`
 
 ## 六、故障处理
 
