@@ -17,6 +17,7 @@
     "deploy:remote": "node server/remoteRelease.mjs --mode=deploy",
     "deploy:rollback": "node server/remoteRelease.mjs --mode=rollback",
     "deploy:verify-public": "node server/verifyPublicSite.mjs",
+    "deploy:checklist": "bash deploy/scripts/melwater-prod-release-checklist.sh",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1"
   },
