@@ -21,9 +21,12 @@ services:
       MELWATER_OPS_INCIDENT_FILE: /ops/backups/health-incident.json
       MELWATER_OPS_REPORT_FILE: /ops/backups/ops-report-latest.json
       MELWATER_OPS_ALERT_LOG_FILE: /ops/backups/health-alerts.log
+      MELWATER_OPS_REPORT_DIR: /ops/backups/ops-reports
+      MELWATER_OPS_REPORT_LATEST_JSON_FILE: /ops/backups/ops-report-latest.json
+      MELWATER_OPS_REPORT_LATEST_MD_FILE: /ops/backups/ops-report-latest.md
     volumes:
       - review_state:/data/review-state
-      - ${MELWATER_BACKUP_HOST_ROOT:-/opt/melwater-ana/backups}:/ops/backups:ro
+      - ${MELWATER_BACKUP_HOST_ROOT:-/opt/melwater-ana/backups}:/ops/backups
     networks:
       - internal
       - lighthouse_ai_video_net

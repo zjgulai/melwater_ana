@@ -1819,10 +1819,14 @@ function OpsStatusPage() {
   const [authStatus, setAuthStatus] = useState({ state: "loading", label: "checking token" });
   const [opsStatus, setOpsStatus] = useState(null);
   const [opsSyncState, setOpsSyncState] = useState("loading");
+  const [opsActionState, setOpsActionState] = useState({ state: "idle", message: "" });
   const [message, setMessage] = useState("");
 
-  const fetchJsonWithToken = useCallback(async (path, token) => {
-    const response = await fetch(reviewStateUrl(path), { headers: reviewStateHeaders({}, token) });
+  const requestJsonWithToken = useCallback(async (path, token, options = {}) => {
+    const response = await fetch(reviewStateUrl(path), {
+      ...options,
+      headers: reviewStateHeaders(options.headers || {}, token),
+    });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       const error = new Error(payload.error || `HTTP ${response.status}`);
@@ -1837,7 +1841,7 @@ function OpsStatusPage() {
     (token) => {
       const targetToken = String(token || "").trim();
       setAuthStatus({ state: "loading", label: "checking token" });
-      return fetchJsonWithToken("/health", targetToken)
+      return requestJsonWithToken("/health", targetToken)
         .then((payload) => {
           setAuthStatus({
             state: "ok",
@@ -1855,14 +1859,14 @@ function OpsStatusPage() {
           return null;
         });
     },
-    [fetchJsonWithToken],
+    [requestJsonWithToken],
   );
 
   const loadOps = useCallback(
     (token) => {
       const targetToken = String(token || "").trim();
       setOpsSyncState("loading");
-      return fetchJsonWithToken("/ops", targetToken)
+      return requestJsonWithToken("/ops", targetToken)
         .then((payload) => {
           setOpsStatus(payload);
           setOpsSyncState("api");
@@ -1874,7 +1878,7 @@ function OpsStatusPage() {
           return null;
         });
     },
-    [fetchJsonWithToken],
+    [requestJsonWithToken],
   );
 
   useEffect(() => {
@@ -1919,11 +1923,73 @@ function OpsStatusPage() {
     }
   }
 
+  async function runOpsAction(action) {
+    const token = String(savedToken || draftToken || "").trim();
+    if (!token) {
+      setOpsActionState({ state: "error", message: "请先保存 admin token，再执行手动运维动作。" });
+      return;
+    }
+    const actionLabel = action === "backup" ? "API 备份" : "Ops report";
+    const path = action === "backup" ? "/ops/backup" : "/ops/report";
+    const body = action === "backup"
+      ? { label: `ops-ui-${new Date().toISOString().replace(/[:.]/g, "-")}` }
+      : {};
+    setOpsActionState({ state: "loading", message: `${actionLabel} 执行中...` });
+    try {
+      const payload = await requestJsonWithToken(path, token, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Melwater-User": reviewer.trim() || "Analyst" },
+        body: JSON.stringify(body),
+      });
+      await loadOps(token);
+      setSavedToken(token);
+      setOpsActionState({
+        state: "ok",
+        message: action === "backup"
+          ? `API 备份完成：${payload.backup?.label || body.label}`
+          : `Ops report 已生成：${payload.reportFiles?.markdown || "latest markdown"}`,
+      });
+    } catch (error) {
+      setOpsActionState({
+        state: "error",
+        message: error.status === 403 ? `${actionLabel} 需要 admin token。` : `${actionLabel} 失败：${error.message}`,
+      });
+    }
+  }
+
+  async function downloadLatestReport() {
+    const token = String(savedToken || draftToken || "").trim();
+    if (!token) {
+      setOpsActionState({ state: "error", message: "请先保存 token，再下载 latest report。" });
+      return;
+    }
+    setOpsActionState({ state: "loading", message: "正在下载 latest Markdown report..." });
+    try {
+      const response = await fetch(reviewStateUrl("/ops/report/latest.md"), {
+        headers: reviewStateHeaders({}, token),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const text = await response.text();
+      const blobUrl = URL.createObjectURL(new Blob([text], { type: "text/markdown;charset=utf-8" }));
+      const anchor = document.createElement("a");
+      anchor.href = blobUrl;
+      anchor.download = opsReport?.markdownFile || "melwater-ops-report-latest.md";
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(blobUrl);
+      setOpsActionState({ state: "ok", message: "Latest Markdown report 已下载。" });
+    } catch (error) {
+      setOpsActionState({ state: "error", message: `下载失败：${error.message}` });
+    }
+  }
+
   const health = opsStatus?.healthcheck;
   const backup = opsStatus?.backup?.latest;
   const reviewState = opsStatus?.reviewState;
   const incident = opsStatus?.incident;
   const opsReport = opsStatus?.opsReport;
+  const certificate = opsStatus?.certificate || opsReport?.certificate;
   const alertLog = opsStatus?.alertLog?.latest || [];
   const authTone = authStatus.state === "ok" ? "green" : authStatus.state === "loading" ? "amber" : "rose";
   const incidentTone = incident?.status === "open" ? "rose" : incident?.status === "resolved" ? "green" : "muted";
@@ -2035,6 +2101,14 @@ function OpsStatusPage() {
               <small>auth</small>
               <strong>{opsStatus?.auth?.authRequired ? `required · ${opsStatus.auth.role}` : "disabled"}</strong>
             </span>
+            <span>
+              <small>cert expires</small>
+              <strong>{certificate?.daysRemaining !== null && certificate?.daysRemaining !== undefined ? `${certificate.daysRemaining} days` : "unknown"}</strong>
+            </span>
+            <span>
+              <small>cert notAfter</small>
+              <strong>{certificate?.notAfter || "unknown"}</strong>
+            </span>
           </div>
         </section>
       </div>
@@ -2082,10 +2156,24 @@ function OpsStatusPage() {
           <div className="card-header">
             <div>
               <h2>Backup Evidence</h2>
-              <p>最近一次 review-state 备份清单，用于恢复验收和审计取证。</p>
+              <p>最近一次 review-state 备份清单、手动动作和日报下载。</p>
             </div>
-            <IconDatabase size={17} />
+            <div className="header-badges">
+              <button className="tiny-select" disabled={opsActionState.state === "loading"} onClick={() => runOpsAction("backup")} type="button">
+                <IconDatabase size={14} />
+                触发备份
+              </button>
+              <button className="tiny-select" disabled={opsActionState.state === "loading"} onClick={() => runOpsAction("report")} type="button">
+                <IconRefresh size={14} />
+                生成 report
+              </button>
+              <button className="tiny-select" disabled={opsActionState.state === "loading"} onClick={downloadLatestReport} type="button">
+                <IconDownload size={14} />
+                下载 report
+              </button>
+            </div>
           </div>
+          {opsActionState.message && <p className={`ops-action-note ${opsActionState.state}`}>{opsActionState.message}</p>}
           {backup ? (
             <div className="backup-card">
               <strong>{backup.backupFile}</strong>

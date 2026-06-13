@@ -1542,6 +1542,35 @@ h1 {
   line-height: 1.5;
 }
 
+.ops-action-note {
+  margin: 12px 16px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: #6d655f;
+  background: var(--page);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.ops-action-note.ok {
+  color: #17833a;
+  background: rgba(52, 199, 89, 0.08);
+  border-color: rgba(52, 199, 89, 0.18);
+}
+
+.ops-action-note.error {
+  color: var(--primary-dark);
+  background: rgba(194, 91, 110, 0.08);
+  border-color: rgba(194, 91, 110, 0.18);
+}
+
+.tiny-select:disabled {
+  cursor: wait;
+  opacity: 0.58;
+  transform: none;
+}
+
 .ops-health-banner {
   display: flex;
   align-items: flex-start;
