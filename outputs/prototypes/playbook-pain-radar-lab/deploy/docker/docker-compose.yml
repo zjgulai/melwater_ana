@@ -15,8 +15,12 @@ services:
       REVIEW_STATE_TOKENS: ${REVIEW_STATE_TOKENS:?REVIEW_STATE_TOKENS is required}
       REVIEW_STATE_HEALTH_TOKEN: ${REVIEW_STATE_HEALTH_TOKEN:?REVIEW_STATE_HEALTH_TOKEN is required}
       REVIEW_STATE_BACKUP_KEEP: ${REVIEW_STATE_BACKUP_KEEP:-14}
+      MELWATER_RELEASE_REF: ${MELWATER_RELEASE_REF:-unknown}
+      MELWATER_OPS_BACKUP_ROOT: /ops/backups/review-state
+      MELWATER_OPS_LAST_HEALTH_FILE: /ops/backups/last-health.json
     volumes:
       - review_state:/data/review-state
+      - ${MELWATER_BACKUP_HOST_ROOT:-/opt/melwater-ana/backups}:/ops/backups:ro
     networks:
       - internal
       - lighthouse_ai_video_net

@@ -119,6 +119,11 @@ const viewConfig = {
     title: "Review Audit Log",
     subtitle: "查看状态写回、操作者、版本号和事件历史，支持后续生产审计。",
   },
+  ops: {
+    eyebrow: "P4 · Production Ops",
+    title: "Ops Status & Access",
+    subtitle: "配置本机 API token，检查生产健康、发布版本、备份和 review-state replay。",
+  },
 };
 
 const navSections = [
@@ -143,6 +148,12 @@ const navSections = [
       { id: "regions", label: "地域语言", icon: IconUsers },
       { id: "brief", label: "管理层月报", icon: IconBookmark },
       { id: "audit", label: "审计日志", icon: IconDatabase },
+    ],
+  },
+  {
+    label: "系统设置",
+    items: [
+      { id: "ops", label: "Ops 状态", icon: IconShieldCheck },
     ],
   },
 ];
@@ -172,6 +183,23 @@ function score(value) {
 
 function compactNumber(value) {
   return Number(value || 0).toLocaleString();
+}
+
+function formatDateTime(value) {
+  if (!value) return "unknown";
+  return String(value).replace("T", " ").replace("Z", "").slice(0, 19);
+}
+
+function formatBytes(value) {
+  const numeric = Number(value || 0);
+  if (!numeric) return "0 B";
+  const units = ["B", "KB", "MB", "GB"];
+  const exponent = Math.min(Math.floor(Math.log(numeric) / Math.log(1024)), units.length - 1);
+  return `${(numeric / 1024 ** exponent).toFixed(exponent === 0 ? 0 : 1)} ${units[exponent]}`;
+}
+
+function shortHash(value) {
+  return value ? String(value).slice(0, 12) : "unknown";
 }
 
 function signedPct(value, digits = 1) {
@@ -223,10 +251,10 @@ function reviewStateUrl(path = "") {
   return `${reviewStateApiBase}/api/review-state${path}`;
 }
 
-function reviewStateHeaders(extra = {}) {
-  let token = "";
+function reviewStateHeaders(extra = {}, tokenOverride) {
+  let token = tokenOverride;
   try {
-    token = window.localStorage.getItem("melwater:apiToken") || "";
+    if (token === undefined) token = window.localStorage.getItem("melwater:apiToken") || "";
   } catch {
     // Token auth is optional; local fallback still works when storage is unavailable.
   }
@@ -512,6 +540,7 @@ function HomePage({ setActiveView }) {
     ["地域结论可靠吗？", "区分 19 条已知国家与 zz 未知国家", "regions", "guardrail"],
     ["月会先看什么？", "按月份压缩 blocked search 与 ready action", "brief", "review"],
     ["写回是否可审计？", "查看 actor、版本号、事件历史与 CSV 导出", "audit", "ready"],
+    ["生产是否健康？", "检查 Token、健康检查、备份和发布版本", "ops", "ready"],
   ];
 
   return (
@@ -1775,6 +1804,301 @@ function AuditLogPage() {
   );
 }
 
+function OpsStatusPage() {
+  function readStorage(key, fallback = "") {
+    try {
+      return window.localStorage.getItem(key) || fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  const [draftToken, setDraftToken] = useState(() => readStorage("melwater:apiToken"));
+  const [savedToken, setSavedToken] = useState(() => readStorage("melwater:apiToken"));
+  const [reviewer, setReviewer] = useState(() => readStorage("melwater:reviewer", "Analyst"));
+  const [authStatus, setAuthStatus] = useState({ state: "loading", label: "checking token" });
+  const [opsStatus, setOpsStatus] = useState(null);
+  const [opsSyncState, setOpsSyncState] = useState("loading");
+  const [message, setMessage] = useState("");
+
+  const fetchJsonWithToken = useCallback(async (path, token) => {
+    const response = await fetch(reviewStateUrl(path), { headers: reviewStateHeaders({}, token) });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(payload.error || `HTTP ${response.status}`);
+      error.status = response.status;
+      error.payload = payload;
+      throw error;
+    }
+    return payload;
+  }, []);
+
+  const testToken = useCallback(
+    (token) => {
+      const targetToken = String(token || "").trim();
+      setAuthStatus({ state: "loading", label: "checking token" });
+      return fetchJsonWithToken("/health", targetToken)
+        .then((payload) => {
+          setAuthStatus({
+            state: "ok",
+            label: payload.authRequired ? `authorized · ${payload.role}` : "auth disabled",
+            role: payload.role,
+            authRequired: payload.authRequired,
+          });
+          return payload;
+        })
+        .catch((error) => {
+          setAuthStatus({
+            state: "error",
+            label: error.status === 401 ? "token missing or invalid" : error.message,
+          });
+          return null;
+        });
+    },
+    [fetchJsonWithToken],
+  );
+
+  const loadOps = useCallback(
+    (token) => {
+      const targetToken = String(token || "").trim();
+      setOpsSyncState("loading");
+      return fetchJsonWithToken("/ops", targetToken)
+        .then((payload) => {
+          setOpsStatus(payload);
+          setOpsSyncState("api");
+          return payload;
+        })
+        .catch(() => {
+          setOpsStatus(null);
+          setOpsSyncState("local");
+          return null;
+        });
+    },
+    [fetchJsonWithToken],
+  );
+
+  useEffect(() => {
+    testToken(savedToken);
+    loadOps(savedToken);
+  }, [loadOps, savedToken, testToken]);
+
+  function saveToken() {
+    const nextToken = draftToken.trim();
+    if (!nextToken) {
+      setMessage("请先粘贴 viewer/editor/admin token。");
+      return;
+    }
+    try {
+      window.localStorage.setItem("melwater:apiToken", nextToken);
+      window.localStorage.setItem("melwater:reviewer", reviewer.trim() || "Analyst");
+      setSavedToken(nextToken);
+      setMessage("Token 已保存到本机浏览器，可用于当前页面 API 调用。");
+    } catch {
+      setMessage("浏览器 localStorage 不可用，无法保存 token。");
+    }
+  }
+
+  function clearToken() {
+    try {
+      window.localStorage.removeItem("melwater:apiToken");
+    } catch {
+      // Ignore storage failures; the UI state still clears.
+    }
+    setDraftToken("");
+    setSavedToken("");
+    setOpsStatus(null);
+    setMessage("本机 token 已清除。");
+  }
+
+  function saveReviewer() {
+    try {
+      window.localStorage.setItem("melwater:reviewer", reviewer.trim() || "Analyst");
+      setMessage("Reviewer 名称已保存。");
+    } catch {
+      setMessage("浏览器 localStorage 不可用，无法保存 reviewer。");
+    }
+  }
+
+  const health = opsStatus?.healthcheck;
+  const backup = opsStatus?.backup?.latest;
+  const reviewState = opsStatus?.reviewState;
+  const authTone = authStatus.state === "ok" ? "green" : authStatus.state === "loading" ? "amber" : "rose";
+
+  return (
+    <div className="lab-stack">
+      <div className="summary-grid compact">
+        <MetricCard label="API Token" value={authStatus.state === "ok" ? authStatus.role || "ok" : "check"} caption={authStatus.label} tone={authStatus.state === "ok" ? "green" : "amber"} />
+        <MetricCard label="Release" value={shortHash(opsStatus?.release?.ref)} caption="MELWATER_RELEASE_REF" tone="rose" />
+        <MetricCard label="Health" value={health?.ok ? "OK" : "Need check"} caption={formatDateTime(health?.checkedAt)} tone={health?.ok ? "green" : "yellow"} />
+        <MetricCard label="Backup" value={backup ? formatBytes(backup.bytes) : "none"} caption={formatDateTime(backup?.createdAt)} tone={backup ? "amber" : "muted"} />
+      </div>
+
+      <div className="ops-layout">
+        <section className="card ops-card">
+          <div className="card-header">
+            <div>
+              <h2>Access Token</h2>
+              <p>真实飞书/企微还未接入前，先用本机 Token 管理完成生产访问闭环。</p>
+            </div>
+            <span className={`status-badge ${authTone}`}>{authStatus.label}</span>
+          </div>
+          <div className="token-form">
+            <label>
+              <span>API token</span>
+              <input
+                autoComplete="off"
+                onChange={(event) => setDraftToken(event.target.value)}
+                placeholder="Paste viewer/editor/admin token"
+                type="password"
+                value={draftToken}
+              />
+            </label>
+            <label>
+              <span>Reviewer</span>
+              <input
+                autoComplete="off"
+                onChange={(event) => setReviewer(event.target.value)}
+                placeholder="Analyst"
+                type="text"
+                value={reviewer}
+              />
+            </label>
+            <div className="ops-actions">
+              <button className="primary-action compact" onClick={saveToken} type="button">
+                <IconCheck size={16} />
+                保存 token
+              </button>
+              <button className="tiny-select" onClick={() => testToken(draftToken)} type="button">
+                <IconShieldCheck size={15} />
+                测试 token
+              </button>
+              <button className="tiny-select" onClick={saveReviewer} type="button">保存 reviewer</button>
+              <button className="tiny-select" onClick={clearToken} type="button">清除</button>
+            </div>
+            {message && <p className="ops-note">{message}</p>}
+          </div>
+        </section>
+
+        <section className="card ops-card">
+          <div className="card-header">
+            <div>
+              <h2>Production Health</h2>
+              <p>来自服务器 cron healthcheck 的最后一次结果。</p>
+            </div>
+            <div className="header-badges">
+              <SyncBadge state={opsSyncState} />
+              <button className="tiny-select" onClick={() => loadOps(savedToken)} type="button">
+                <IconRefresh size={14} />
+                刷新
+              </button>
+            </div>
+          </div>
+          <div className={`ops-health-banner ${health?.ok ? "pass" : "blocked"}`}>
+            {health?.ok ? <IconCircleCheck size={18} /> : <IconBell size={18} />}
+            <div>
+              <strong>{health?.ok ? "生产健康检查通过" : "未拿到健康检查结果"}</strong>
+              <p>{health?.error || `${health?.publicUrl || "public site"} · HTTP ${health?.homepageStatus || "unknown"}`}</p>
+            </div>
+          </div>
+          <div className="ops-kv-grid">
+            <span>
+              <small>checkedAt</small>
+              <strong>{formatDateTime(health?.checkedAt)}</strong>
+            </span>
+            <span>
+              <small>releaseRef</small>
+              <strong>{shortHash(health?.releaseRef || opsStatus?.release?.ref)}</strong>
+            </span>
+            <span>
+              <small>apiBase</small>
+              <strong>{health?.apiBase || "unknown"}</strong>
+            </span>
+            <span>
+              <small>auth</small>
+              <strong>{opsStatus?.auth?.authRequired ? `required · ${opsStatus.auth.role}` : "disabled"}</strong>
+            </span>
+          </div>
+        </section>
+      </div>
+
+      <div className="ops-layout">
+        <section className="card ops-card">
+          <div className="card-header">
+            <div>
+              <h2>Review State Runtime</h2>
+              <p>写回状态、事件 replay 和 namespace 数量。</p>
+            </div>
+            <span className={`status-badge ${reviewState?.replayOk ? "green" : "rose"}`}>
+              replay {reviewState?.replayOk ? "ok" : "unknown"}
+            </span>
+          </div>
+          <div className="ops-kv-grid">
+            <span>
+              <small>schemaVersion</small>
+              <strong>{reviewState?.schemaVersion || "unknown"}</strong>
+            </span>
+            <span>
+              <small>totalEntries</small>
+              <strong>{reviewState?.totalEntries ?? "unknown"}</strong>
+            </span>
+            <span>
+              <small>eventCount</small>
+              <strong>{reviewState?.eventCount ?? "unknown"}</strong>
+            </span>
+            <span>
+              <small>lastEvent</small>
+              <strong>{formatDateTime(reviewState?.lastEventAt)}</strong>
+            </span>
+          </div>
+          <div className="namespace-list">
+            {Object.entries(reviewState?.entriesByNamespace || {}).map(([namespace, count]) => (
+              <div className="namespace-row" key={namespace}>
+                <span>{namespace}</span>
+                <strong>{count}</strong>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="card ops-card">
+          <div className="card-header">
+            <div>
+              <h2>Backup Evidence</h2>
+              <p>最近一次 review-state 备份清单，用于恢复验收和审计取证。</p>
+            </div>
+            <IconDatabase size={17} />
+          </div>
+          {backup ? (
+            <div className="backup-card">
+              <strong>{backup.backupFile}</strong>
+              <p>{formatDateTime(backup.createdAt)} · {backup.label || "manual"} · {formatBytes(backup.bytes)}</p>
+              <code>{backup.sha256 || "sha256 unavailable"}</code>
+            </div>
+          ) : (
+            <div className="ops-health-banner blocked">
+              <IconBell size={18} />
+              <div>
+                <strong>还没有可读备份清单</strong>
+                <p>等待服务器 daily backup 或手动执行 melwater-backup.sh 后刷新。</p>
+              </div>
+            </div>
+          )}
+          <div className="ops-runbook">
+            <span>
+              <strong>当前降级闭环</strong>
+              <small>页面 token + cron healthcheck + backup manifest，可覆盖外部 webhook 空窗期。</small>
+            </span>
+            <span>
+              <strong>下一步接入</strong>
+              <small>飞书/企微 webhook 申请后，仅需配置 MELWATER_ALERT_WEBHOOK_URL。</small>
+            </span>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+
 function ActionLoopPage() {
   const { values: statusDraft, writeValue: writeActionStatus, syncState } = useWritebackState("actionStatus");
   const actions = vocData.actions.slice(0, 14);
@@ -1872,6 +2196,7 @@ function AppBody({ activeView, category, setCategory, actionCreated, setActionCr
   if (activeView === "regions") return <RegionLanguagePage />;
   if (activeView === "brief") return <ExecutiveMonthlyPage />;
   if (activeView === "audit") return <AuditLogPage />;
+  if (activeView === "ops") return <OpsStatusPage />;
   return <HomePage setActiveView={setActiveView} />;
 }
 

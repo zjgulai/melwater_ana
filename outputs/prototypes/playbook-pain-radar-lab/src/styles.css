@@ -1476,6 +1476,212 @@ h1 {
   line-height: 1.4;
 }
 
+.ops-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.ops-card {
+  overflow: hidden;
+  padding-bottom: 16px;
+}
+
+.token-form {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px 0;
+}
+
+.token-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.token-form label span {
+  color: var(--secondary-text);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.token-form input {
+  width: 100%;
+  min-height: 39px;
+  padding: 0 12px;
+  color: #403935;
+  background: var(--page);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  outline: none;
+}
+
+.token-form input:focus {
+  border-color: rgba(194, 91, 110, 0.36);
+  box-shadow: 0 0 0 3px rgba(194, 91, 110, 0.08);
+}
+
+.ops-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.primary-action.compact {
+  width: auto;
+  min-height: 34px;
+  margin: 0;
+  padding: 0 12px;
+  box-shadow: 0 8px 18px rgba(194, 91, 110, 0.18);
+}
+
+.ops-note {
+  color: #6d655f;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.ops-health-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 14px 16px 0;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+
+.ops-health-banner.pass {
+  color: #17833a;
+  background: rgba(52, 199, 89, 0.08);
+  border-color: rgba(52, 199, 89, 0.18);
+}
+
+.ops-health-banner.blocked {
+  color: var(--primary-dark);
+  background: rgba(194, 91, 110, 0.08);
+  border-color: rgba(194, 91, 110, 0.18);
+}
+
+.ops-health-banner strong {
+  display: block;
+  color: #302b28;
+  font-size: 12px;
+}
+
+.ops-health-banner p {
+  color: #6d655f;
+  font-size: 11px;
+  line-height: 1.45;
+  margin-top: 4px;
+}
+
+.ops-kv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  padding: 14px 16px 0;
+}
+
+.ops-kv-grid span,
+.ops-runbook span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px;
+  background: var(--page);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+}
+
+.ops-kv-grid small,
+.ops-runbook small {
+  color: var(--soft-text);
+  font-size: 9px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.ops-kv-grid strong,
+.ops-runbook strong {
+  overflow: hidden;
+  color: #403935;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.namespace-list {
+  display: grid;
+  gap: 8px;
+  padding: 12px 16px 0;
+}
+
+.namespace-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.namespace-row span {
+  overflow: hidden;
+  color: #5f5753;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.namespace-row strong {
+  color: var(--primary-dark);
+  font-size: 12px;
+  text-align: right;
+}
+
+.backup-card {
+  display: grid;
+  gap: 8px;
+  margin: 14px 16px 0;
+  padding: 13px;
+  background: var(--page);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+
+.backup-card strong {
+  overflow: hidden;
+  color: #302b28;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.backup-card p {
+  color: #6d655f;
+  font-size: 11px;
+}
+
+.backup-card code {
+  overflow-wrap: anywhere;
+  color: var(--primary-dark);
+  background: rgba(194, 91, 110, 0.08);
+  border-radius: 10px;
+  padding: 8px;
+  font-size: 10px;
+}
+
+.ops-runbook {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  padding: 12px 16px 0;
+}
+
 .battlecard-layout,
 .opportunity-layout {
   display: grid;
@@ -2026,6 +2232,7 @@ h1 {
 
   .battlecard-layout,
   .opportunity-layout,
+  .ops-layout,
   .p2-layout {
     grid-template-columns: 1fr;
   }
@@ -2067,7 +2274,9 @@ h1 {
   .battlecard-grid,
   .quote-library-grid,
   .experiment-grid,
-  .runbook-grid {
+  .runbook-grid,
+  .ops-kv-grid,
+  .ops-runbook {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -2131,6 +2340,8 @@ h1 {
   .quote-library-grid,
   .experiment-grid,
   .runbook-grid,
+  .ops-kv-grid,
+  .ops-runbook,
   .severity-grid,
   .trend-grid,
   .insight-panel,

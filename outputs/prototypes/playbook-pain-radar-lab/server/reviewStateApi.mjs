@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createReviewStateStore, schemaVersion } from "./reviewStateStore.mjs";
@@ -9,6 +10,9 @@ export function createReviewStateApi({
   authToken = process.env.REVIEW_STATE_TOKEN || "",
   tokenConfig = process.env.REVIEW_STATE_TOKENS || "",
   allowedOrigin = process.env.REVIEW_STATE_CORS_ORIGIN || "*",
+  releaseRefFile = process.env.MELWATER_RELEASE_REF_FILE || path.join(rootDir, "REVISION"),
+  opsBackupRoot = process.env.MELWATER_OPS_BACKUP_ROOT || path.join(stateDir, "backups"),
+  opsLastHealthFile = process.env.MELWATER_OPS_LAST_HEALTH_FILE || "",
 } = {}) {
   const store = createReviewStateStore({ stateDir });
   store.migrate();
@@ -151,6 +155,110 @@ export function createReviewStateApi({
     return `${lines.join("\n")}\n`;
   }
 
+  function readTextFile(filePath) {
+    if (!filePath) return null;
+    try {
+      return fs.readFileSync(filePath, "utf8").trim() || null;
+    } catch {
+      return null;
+    }
+  }
+
+  function readJsonFile(filePath) {
+    if (!filePath) return null;
+    try {
+      return JSON.parse(fs.readFileSync(filePath, "utf8"));
+    } catch {
+      return null;
+    }
+  }
+
+  function fileStat(filePath) {
+    try {
+      const stat = fs.statSync(filePath);
+      return {
+        bytes: stat.size,
+        modifiedAt: stat.mtime.toISOString(),
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  function latestBackupManifest() {
+    try {
+      const manifests = fs
+        .readdirSync(opsBackupRoot, { withFileTypes: true })
+        .filter((entry) => entry.isFile() && entry.name.endsWith(".tar.gz.json"))
+        .map((entry) => {
+          const manifestPath = path.join(opsBackupRoot, entry.name);
+          const manifest = readJsonFile(manifestPath) || {};
+          const backupFileName = path.basename(manifest.backupFile || entry.name.replace(/\.json$/, ""));
+          const backupPath = path.join(opsBackupRoot, backupFileName);
+          const stat = fileStat(backupPath) || fileStat(manifestPath);
+          return {
+            ok: Boolean(manifest.ok),
+            createdAt: manifest.createdAt || stat?.modifiedAt || null,
+            label: manifest.label || null,
+            backupFile: backupFileName,
+            bytes: Number(manifest.bytes || stat?.bytes || 0),
+            sha256: manifest.sha256 || null,
+            manifestFile: entry.name,
+          };
+        })
+        .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+      return manifests[0] || null;
+    } catch {
+      return null;
+    }
+  }
+
+  function buildOpsStatus(auth) {
+    const metrics = store.buildMetrics();
+    const lastHealth = readJsonFile(opsLastHealthFile);
+    const latestBackup = latestBackupManifest();
+    const releaseRef = process.env.MELWATER_RELEASE_REF || readTextFile(releaseRefFile) || "unknown";
+    return {
+      ok: true,
+      checkedAt: new Date().toISOString(),
+      release: {
+        ref: releaseRef,
+      },
+      auth: {
+        authRequired: auth.authRequired,
+        role: auth.role,
+        actor: auth.actor,
+      },
+      reviewState: {
+        schemaVersion: metrics.schemaVersion,
+        totalEntries: metrics.totalEntries,
+        entriesByNamespace: metrics.entriesByNamespace,
+        eventCount: metrics.eventCount,
+        replayOk: metrics.replayOk,
+        replayedEventCount: metrics.replayedEventCount,
+        baselineCreatedAt: metrics.baselineCreatedAt,
+        lastEventAt: metrics.lastEventAt,
+        lastEventActor: metrics.lastEventActor,
+        lastEventOperation: metrics.lastEventOperation,
+        lastEventNamespace: metrics.lastEventNamespace,
+      },
+      healthcheck: lastHealth
+        ? {
+            ok: Boolean(lastHealth.ok),
+            checkedAt: lastHealth.checkedAt || null,
+            publicUrl: lastHealth.publicUrl || null,
+            homepageStatus: lastHealth.homepageStatus || null,
+            apiBase: lastHealth.apiBase || null,
+            releaseRef: lastHealth.releaseRef || null,
+            error: lastHealth.error || null,
+          }
+        : null,
+      backup: {
+        latest: latestBackup,
+      },
+    };
+  }
+
   async function handle(req, res) {
     const url = new URL(req.url || "/", "http://127.0.0.1");
     const pathname = url.pathname.replace(/^\/api\/review-state/, "") || "/";
@@ -183,6 +291,15 @@ export function createReviewStateApi({
         return;
       }
       sendText(res, 200, metricsText(store.buildMetrics(), auth));
+      return;
+    }
+
+    if (req.method === "GET" && pathname === "/ops") {
+      if (!hasRole(auth, "viewer")) {
+        sendJson(res, 403, { error: "forbidden", requiredRole: "viewer" });
+        return;
+      }
+      sendJson(res, 200, buildOpsStatus(auth));
       return;
     }
 
