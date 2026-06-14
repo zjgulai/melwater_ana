@@ -4,12 +4,19 @@
 
 ## 2026-06-14 当前待办
 
-- 合并或 PR `codex/fix-playbook-deploy-checklist`，让生产运维脚本进入 `origin/main`。
 - 配置真实告警 webhook 后，运行生产 webhook readiness 和 alert drill。
 - 补齐生产资产清单中的负责人、SLO、腾讯云资源 ID、备份恢复证据和告警渠道。
 - 将 action owner 与 action feedback 从示例配置推进到真实业务闭环。
 - 对 blocked search quality gate 执行 query rewrite、重采和 precision 复测。
 - 将大体量数据、发布包、运行状态和私钥移出仓库工作目录，保留 manifest、fixture 和可复现脚本。
+- 可选清理已合并分支 `codex/fix-playbook-deploy-checklist`；该分支已通过 PR #1 合入 `main`。
+
+## 2026-06-14 已关闭事项
+
+- PR #1 已合并到 `main`，release-hardening 运维脚本已进入 `origin/main`。
+- 生产已发布 `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`。
+- 生产 release 已映射到 git commit `7a09e358`。
+- 公网站点、review-state API、Docker health、ops report 和 mock alert drill 已通过。
 
 ## 2026-06-11 补采闭环状态
 

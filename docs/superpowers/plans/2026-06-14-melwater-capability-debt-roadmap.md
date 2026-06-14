@@ -20,7 +20,8 @@ Current verified gates:
 - [x] Frontend `npm run test:webhook-readiness` passed: 3 webhook readiness tests.
 - [x] Frontend `npm run build` passed with Vite production bundle generation.
 - [x] Production containers are running and healthy: `melwater_web` and `melwater_api`.
-- [x] Production `/health` reports `ok: true` for release `playbook-pain-radar-lab-0.0.0-2026-06-13T10-12-36-766Z`.
+- [x] Production `/health` reports `ok: true` for release `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`.
+- [x] Production release is mapped to git commit `7a09e358`; post-release documentation is at `900ca318`.
 - [x] Data mart manifest reports `status: PASS`.
 
 Current data asset truth:
@@ -141,12 +142,12 @@ Scalability limits:
 
 | ID | Area | Diagnosis | Impact | Priority |
 | --- | --- | --- | --- | --- |
-| B-01 | Branching | `origin/codex/fix-playbook-deploy-checklist` is not merged into `origin/main`. | Production operations work can be lost or deployed from a non-main branch. | P0 |
-| B-02 | Branching | Local `main` is ahead of `origin/main` by one commit, while current branch has five additional commits beyond local main. | Release truth is split across local main, remote main, and feature branch. | P0 |
+| B-01 | Branching | PR #1 merged `codex/fix-playbook-deploy-checklist` into `origin/main`; feature branch remains only as historical branch. | Closed; optional branch cleanup only. | Closed |
+| B-02 | Branching | Local `main` and `origin/main` are aligned at `900ca318`; production code release maps to `7a09e358`, with docs commit `900ca318` recording the release. | Closed; future releases should continue explicit release-id to commit mapping. | Closed |
 | O-01 | Production ops | Real alert webhook is not configured; readiness correctly fails with missing `MELWATER_ALERT_WEBHOOK_URL`. | Incident notification proof is incomplete until Feishu or another real webhook exists. | P0 |
-| O-02 | Production ops | Latest alert drill evidence points to an older release than current production health release. | Observability evidence is not fully release-aligned. | P0 |
+| O-02 | Production ops | Latest mock alert drill points to current release `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`. | Closed for mock drill; real webhook delivery remains under O-01. | Closed |
 | O-03 | Production inventory | `config/production.example.json` still contains placeholder owner/resource/SLO fields. | Handoff and incident ownership remain weak. | P0 |
-| D-01 | Documentation | `TODO.md` still claims the pump secondary backfill is blocked, while current README/manifests indicate latest data is complete. | Operators can follow stale backlog instructions. | P0 |
+| D-01 | Documentation | `TODO.md` now marks the pump-secondary quota blocker as historical and closed. | Closed. | Closed |
 | D-02 | Documentation | Older GAP/audit docs are partially stale after later implementation rounds. | Readers can misjudge current maturity and duplicate completed work. | P1 |
 | DATA-01 | Artifact management | Large raw data, output, node modules, release, and state artifacts live inside the workspace, mostly ignored by git. | Backup, search, onboarding, and CI become slow and error-prone. | P1 |
 | DATA-02 | Business data | Playbook branches that require orders, returns, tickets, CRM, review platforms, or SKU data are not fully actionable. | Cannot close revenue, retention, defect, or ROI analysis loops. | P1 |
@@ -165,15 +166,14 @@ Closed or mostly closed:
 - [x] Main playbook branches are represented by marts and frontend data.
 - [x] Tencent Cloud deployment exists and containers are healthy.
 - [x] Release, backup, health, ops, rollback, and alert-drill scripts exist.
+- [x] PR #1 merged release-hardening work into `origin/main`.
+- [x] Production release id maps to git commit `7a09e358`.
+- [x] Stale TODO and documentation index were updated.
 
 Still open:
 
-- [ ] Merge or intentionally retire the unmerged production-ops branch.
-- [ ] Align remote `main`, local `main`, current branch, and production release reference.
 - [ ] Configure a real alert webhook and rerun readiness against production.
-- [ ] Rerun alert drill against the current production release reference.
 - [ ] Replace production placeholder inventory with real owner, resource, domain, SLO, backup, and alert channel data.
-- [ ] Update stale TODO and mark old audit docs as historical when superseded.
 - [ ] Move secrets out of the project root into SSH agent or a secrets directory outside the repo.
 - [ ] Create fixture-based CI for pull requests and full-data validation for scheduled/release jobs.
 - [ ] Add browser-level product acceptance tests for the main analyst workflows.
@@ -185,22 +185,25 @@ Still open:
 
 Current branch:
 
-- `codex/fix-playbook-deploy-checklist`
-- HEAD: `fda8d752 chore: add external webhook readiness gate`
-- Tracking: `origin/codex/fix-playbook-deploy-checklist`
+- `main`
+- HEAD: `900ca318 docs: record melwater production release`
+- Tracking: `origin/main`
 
 Remote state:
 
-- `origin/main`: `b777ef69`
-- `origin/codex/fix-playbook-deploy-checklist`: `fda8d752`
+- `origin/main`: `900ca318`
+- PR #1: merged at merge commit `7a09e358`
+- `origin/codex/fix-playbook-deploy-checklist`: `06e7d01b`, retained as historical merged branch
 
-Local main state:
+Production release state:
 
-- `main`: `d9a755b7 chore: add melwater docker release checklist runbook`
-- Local `main` is ahead of `origin/main` by one commit.
+- Current production release: `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`
+- Code commit deployed: `7a09e358`
+- Post-release docs commit: `900ca318`
 
-Unmerged work relative to `origin/main`:
+Merged release-hardening work:
 
+- `06e7d01b docs: summarize melwater capability debt roadmap`
 - `d9a755b7 chore: add melwater docker release checklist runbook`
 - `8838005d chore: harden melwater deploy orchestrate and token verification flow`
 - `439e48ef chore: close production observability loop`
@@ -210,9 +213,9 @@ Unmerged work relative to `origin/main`:
 
 Recommendation:
 
-- Treat `codex/fix-playbook-deploy-checklist` as the current release-hardening branch.
-- Open or merge it into `main` after rerunning local quality gates and production release-alignment checks.
-- Push `main` only after confirming whether `origin/main` should receive all six commits or whether a PR review step is required.
+- Treat `origin/main` as the source of truth.
+- Keep `codex/fix-playbook-deploy-checklist` only if PR history needs it; otherwise it can be deleted after operator confirmation.
+- For the next production release, keep embedding `g<git-sha>` in `RELEASE_ID`.
 
 ## 9. Optimization Roadmap
 
@@ -220,18 +223,18 @@ Recommendation:
 
 Target: same day.
 
-- [ ] Decide whether current release-hardening branch should merge directly to `main` or go through PR.
-- [ ] Run `git log origin/main..HEAD --oneline` and attach the six unmerged commits to the release note.
-- [ ] Run local gates again before merge: `make quality`, `npm run test:webhook-readiness`, `npm run build`.
-- [ ] Merge or PR `codex/fix-playbook-deploy-checklist`.
+- [x] Decide whether current release-hardening branch should merge directly to `main` or go through PR.
+- [x] Run `git log origin/main..HEAD --oneline` and attach the unmerged commits to the release note.
+- [x] Run local gates again before merge: `make quality`, `npm run test:webhook-readiness`, `npm run build`.
+- [x] Merge or PR `codex/fix-playbook-deploy-checklist`.
 - [ ] Tag the aligned release after merge.
-- [ ] Update deployment notes so production release reference maps to a git commit, not only a package timestamp.
+- [x] Update deployment notes so production release reference maps to a git commit, not only a package timestamp.
 
 Acceptance:
 
-- [ ] `origin/main` or an open PR contains the production ops work.
-- [ ] Production release reference maps to an auditable git commit.
-- [ ] No operator needs to infer release truth from local branches.
+- [x] `origin/main` contains the production ops work.
+- [x] Production release reference maps to an auditable git commit.
+- [x] No operator needs to infer release truth from local branches.
 
 ### Phase 1: Production Operations Closure
 
@@ -239,15 +242,15 @@ Target: 1-2 days after alert channel is available.
 
 - [ ] Configure `MELWATER_ALERT_WEBHOOK_URL` on Tencent Cloud.
 - [ ] Run webhook readiness with the real webhook.
-- [ ] Rerun alert drill after the latest release is deployed.
-- [ ] Confirm ops report references the current release.
+- [x] Rerun mock alert drill after the latest release is deployed.
+- [x] Confirm ops report references the current release.
 - [ ] Confirm backup script writes usable restore artifacts.
 - [ ] Fill production inventory with owner, Tencent resources, public domains, health URLs, SLO, backup cadence, and alert channel.
 
 Acceptance:
 
 - [ ] Webhook readiness returns `ok: true`.
-- [ ] Latest alert drill release reference equals current production release reference.
+- [x] Latest mock alert drill release reference equals current production release reference.
 - [ ] Production inventory has no placeholder owner/resource/SLO fields.
 - [ ] Backup restore drill has dated evidence.
 

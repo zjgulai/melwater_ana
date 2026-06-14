@@ -2,6 +2,20 @@
 
 基于 Meltwater API 的母婴品类 VOC（用户之声）数据采集工具。一键拉取指定品类的原始 mention 数据，输出结构化 Excel。
 
+## 当前产品状态（2026-06-14）
+
+| 维度 | 当前状态 |
+|---|---|
+| 仓库主线 | `main` 已同步 `origin/main`，当前文档提交为 `900ca318 docs: record melwater production release` |
+| 生产版本 | 腾讯云生产环境运行 `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`，对应代码合并提交 `7a09e358` |
+| 生产域名 | `https://melwater.lute-tlz-dddd.top` |
+| 生产服务 | Docker Compose 项目 `melwater_ana`，`melwater_web` 和 `melwater_api` 均已验证 healthy |
+| 数据产品 | 完整 Excel 包 `data/excel_complete_20260611/` 校验 `PASS`，336,435 个唯一文档，已知 source gaps 为 0 |
+| 产品形态 | `outputs/prototypes/playbook-pain-radar-lab`，Melwater Analyst Lab，覆盖 pain radar、action loop、battlecards、content opportunities、quotes、crisis、weekly review 与 ops 页面 |
+| 当前证据 | `docs/audits/2026-06-14-melwater-production-release-qa.md` |
+
+说明：`900ca318` 是发布后的文档证据提交，没有重新部署；生产代码 release 明确映射到 `7a09e358`。
+
 ## 快速重启
 
 ```bash

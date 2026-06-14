@@ -4,11 +4,22 @@
 
 本目录用于区分当前源文档、生产运行文档、历史审计记录和执行计划。后续协作时优先从本文件进入，不要直接以旧审计文档作为当前状态判断。
 
+## 当前三方一致性快照
+
+| 状态面 | 当前值 | 说明 |
+| --- | --- | --- |
+| 仓库文档主线 | `main` / `origin/main` at `900ca318` | 该提交记录了生产发布证据，本身未重新部署 |
+| 生产代码版本 | `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358` | 生产 `REVISION` 和 `MELWATER_RELEASE_REF` 均指向该 release |
+| 代码来源提交 | `7a09e358` | PR #1 merge commit，生产 release id 中的 `g7a09e358` 与此一致 |
+| 生产域名 | `https://melwater.lute-tlz-dddd.top` | 公网站点 HTTP 200，review-state API 验收通过 |
+| 当前生产证据 | `docs/audits/2026-06-14-melwater-production-release-qa.md` | 公网、API、ops report、mock alert drill 均已记录 |
+
 ## 当前源文档
 
 | 主题 | 文档 | 用途 |
 | --- | --- | --- |
 | 项目总览、债务和路线图 | `docs/superpowers/plans/2026-06-14-melwater-capability-debt-roadmap.md` | 当前项目能力、业务价值、扩展性、脆弱点、缺口和优化计划 |
+| Codex 交接摘要 | `docs/handoff/2026-06-14-codex-project-handoff-summary.md` | 下一次开发/执行 Codex 的快速上下文 |
 | 数据业务 Playbook | `docs/playbooks/meltwater-voc-business-insights-playbook.md` | Meltwater VOC 数据如何转为业务洞察和动作 |
 | 质量门禁 | `docs/runbooks/quality-gates.md` | 本地数据、代码、类型和安全扫描验收命令 |
 | Action feedback 闭环 | `docs/runbooks/action-feedback-loop.md` | 动作反馈写回、状态汇总和闭环验收 |
@@ -18,10 +29,10 @@
 
 | 主题 | 文档 | 当前状态 |
 | --- | --- | --- |
-| 腾讯云资产清单 | `docs/production/tencent-cloud-inventory.md` | 已记录当前已知域名、服务器、release 和缺口；负责人/SLO/资源 ID 仍需补齐 |
+| 腾讯云资产清单 | `docs/production/tencent-cloud-inventory.md` | 已记录当前域名、服务器、release、commit 映射和缺口；负责人/SLO/资源 ID 仍需补齐 |
 | Docker 发布清单 | `docs/runbooks/melwater-tencent-docker-release-checklist.md` | 当前发布流程源文档 |
 | 生产可观测性 | `docs/runbooks/melwater-production-observability.md` | 当前健康检查、备份、ops report、告警和 webhook readiness 源文档 |
-| 分支/发布决策包 | `docs/runbooks/melwater-branch-release-decision.md` | 当前 `main`、远端和 release-hardening 分支合并建议 |
+| 分支/发布决策包 | `docs/runbooks/melwater-branch-release-decision.md` | PR #1 合并和生产 release 映射的历史决策证据 |
 
 ## 数据与 Excel 文档
 
@@ -47,10 +58,10 @@
 
 ## 当前已知未完成事项
 
-- `codex/fix-playbook-deploy-checklist` 尚未合并到 `origin/main`。
+- `codex/fix-playbook-deploy-checklist` 已通过 PR #1 合并；本地/远端分支可按需清理。
 - 真实 Feishu/WeCom webhook 未配置，生产 webhook readiness 仍应阻断。
 - `action_feedback_applied` 和 `measuredActions` 当前为 0，需要真实业务动作回流。
-- 生产资产清单仍缺负责人、SLO、腾讯云资源 ID、监控入口和恢复演练记录。
+- 生产资产清单仍缺负责人、SLO、腾讯云资源 ID、监控入口和真实回滚恢复演练记录。
 - 大体量数据、发布包、运行状态和私钥应从仓库工作目录外置。
 
 ## 更新规则
