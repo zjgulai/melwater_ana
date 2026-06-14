@@ -1,6 +1,6 @@
 # 腾讯云生产资产清单
 
-> 状态：部分可验证。当前已知服务器、域名、应用目录、Docker 服务和最近 release；仍缺负责人、SLO、腾讯云资源 ID、监控入口、真实 webhook 和恢复演练证据。
+> 状态：部分可验证。当前已知服务器、域名、应用目录、Docker 服务、最近 release、ops report 和 mock alert drill；仍缺负责人、SLO、腾讯云资源 ID、监控入口、真实 webhook 和真实恢复演练证据。
 
 ## 使用方式
 
@@ -19,7 +19,7 @@
 | 应用目录 | `/opt/melwater-ana/app` | SSH 生产核查 | 待指定 |
 | 业务地域 | 腾讯云轻量应用服务器地域待补充 | 需腾讯云控制台确认 | 待指定 |
 | 腾讯云账号/项目 | 待补充 | 需腾讯云控制台确认 | 待指定 |
-| 当前发布版本 | `playbook-pain-radar-lab-0.0.0-2026-06-13T10-12-36-766Z` | `/health` 与远端 release env | 待指定 |
+| 当前发布版本 | `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358` | `/health`、远端 release env、`REVISION`；对应 git commit `7a09e358` | 待指定 |
 | 数据产物位置 | 本地 `data/`、`exports_20260520/`；云端产物存储待补充 | 本地 manifest 已核查；云端待补充 | 待指定 |
 
 ## 腾讯云资源
@@ -50,7 +50,7 @@
 | 检查项 | 目标 | 当前状态 | 阻塞项 |
 | --- | --- | --- | --- |
 | 公网域名可访问 | 2xx/3xx，延迟在 SLO 内 | 已部署，需持续 smoke | SLO 未定义 |
-| 应用版本可追踪 | 能定位到发布版本或构建号 | release id 可追踪；git commit 映射待补充 | 缺少 release id 到 commit 映射 |
+| 应用版本可追踪 | 能定位到发布版本或构建号 | release id 已映射到 git commit `7a09e358` | 后续每次发布继续记录映射 |
 | 腾讯云资源状态 | 资源运行中，无异常告警 | 服务器和容器可通过 SSH 核查；控制台不可验证 | 缺少资源 ID/只读凭据 |
 | COS 数据产物完整性 | checksum 与发布清单一致 | 本地可验证，云端不可验证 | 缺少 bucket/prefix |
 | 日志可查询 | 最近一次任务有日志 | 服务器本机日志可查；CLS 不可验证 | 缺少 CLS 信息 |
@@ -62,3 +62,4 @@
 | --- | --- | --- | --- |
 | 2026-06-10 | Codex | 本地数据链路通过；腾讯云产品级状态不可验证 | 见 `docs/audits/2026-06-10-debt-and-production-readiness-audit.md` |
 | 2026-06-14 | Codex | 生产域名、服务器、Docker 服务、health、ops report 可核查；真实 webhook、SLO、负责人和控制台资源仍缺 | 见 `docs/runbooks/melwater-branch-release-decision.md` 与 `docs/superpowers/plans/2026-06-14-melwater-capability-debt-roadmap.md` |
+| 2026-06-14 | Codex | 已发布 `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`；公网、review-state API、ops report、mock alert drill 均通过；真实 webhook 仍未配置 | 见 `docs/audits/2026-06-14-melwater-production-release-qa.md` |

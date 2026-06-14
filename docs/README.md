@@ -43,6 +43,7 @@
 - `docs/audits/2026-06-11-playbook-closure-gap-audit.md`：Playbook 分支闭环缺口基线。
 - `docs/audits/2026-06-12-site-playbook-gap-analysis.md`：站点与 Playbook GAP 的早期版本；部分内容已被 P15-P17 和当前路线图更新。
 - `docs/audits/2026-06-13-*`：生产、Ops、Action closed-loop、Weekly review、Meeting snapshot 的最新 QA 证据。
+- `docs/audits/2026-06-14-melwater-production-release-qa.md`：PR #1 合并后生产发布、release 到 git commit 映射、公网站点、API、ops report 和 alert drill 验收证据。
 
 ## 当前已知未完成事项
 
