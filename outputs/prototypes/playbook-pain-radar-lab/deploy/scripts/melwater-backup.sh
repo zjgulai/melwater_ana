@@ -1,6 +1,14 @@
 #!/bin/sh
 set -eu
 
+ENV_FILE="${MELWATER_ENV_FILE:-/opt/melwater-ana/secrets/melwater.env}"
+
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  . "$ENV_FILE"
+  set +a
+fi
+
 APP_DIR="${MELWATER_APP_DIR:-/opt/melwater-ana/app}"
 BACKUP_ROOT="${MELWATER_BACKUP_ROOT:-/opt/melwater-ana/backups/review-state}"
 CONTAINER="${MELWATER_API_CONTAINER:-melwater_api}"

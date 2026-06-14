@@ -1,6 +1,6 @@
 # 腾讯云生产资产清单
 
-> 状态：待补充。当前仓库没有可验证的腾讯云生产资源配置、域名、部署版本或监控入口。本文件用于把生产状态核查从口头信息转为可审计证据。
+> 状态：部分可验证。当前已知服务器、域名、应用目录、Docker 服务和最近 release；仍缺负责人、SLO、腾讯云资源 ID、监控入口、真实 webhook 和恢复演练证据。
 
 ## 使用方式
 
@@ -13,23 +13,26 @@
 
 | 项目 | 当前值 | 证据/链接 | 负责人 |
 | --- | --- | --- | --- |
-| 产品名称 | Unknown | 待补充 | 待补充 |
-| 生产域名 | Unknown | 待补充 | 待补充 |
-| 业务地域 | Unknown | 待补充 | 待补充 |
-| 腾讯云账号/项目 | Unknown | 待补充 | 待补充 |
-| 当前发布版本 | Unknown | 待补充 | 待补充 |
-| 数据产物位置 | 本地 `data/` 与 `exports_20260520/` | 已本地核查 | 待补充 |
+| 产品名称 | Melwater Analyst Lab | 生产页面与 release runbook | 待指定 |
+| 生产域名 | `https://melwater.lute-tlz-dddd.top` | 生产部署记录 | 待指定 |
+| 生产服务器 | `101.34.52.232` / `VM-0-16-ubuntu` | SSH 生产核查 | 待指定 |
+| 应用目录 | `/opt/melwater-ana/app` | SSH 生产核查 | 待指定 |
+| 业务地域 | 腾讯云轻量应用服务器地域待补充 | 需腾讯云控制台确认 | 待指定 |
+| 腾讯云账号/项目 | 待补充 | 需腾讯云控制台确认 | 待指定 |
+| 当前发布版本 | `playbook-pain-radar-lab-0.0.0-2026-06-13T10-12-36-766Z` | `/health` 与远端 release env | 待指定 |
+| 数据产物位置 | 本地 `data/`、`exports_20260520/`；云端产物存储待补充 | 本地 manifest 已核查；云端待补充 | 待指定 |
 
 ## 腾讯云资源
 
 | 资源类型 | 地域 | 资源 ID/名称 | 用途 | 健康核查方式 | 监控链接 | 负责人 |
 | --- | --- | --- | --- | --- | --- | --- |
-| CVM/Lighthouse/容器/函数 | Unknown | Unknown | 应用运行 | 待补充 | 待补充 | 待补充 |
-| COS Bucket | Unknown | Unknown | 数据/产物存储 | 待补充 | 待补充 | 待补充 |
-| CDN/负载均衡 | Unknown | Unknown | 外部访问 | 待补充 | 待补充 | 待补充 |
-| 云数据库/缓存 | Unknown | Unknown | 状态存储 | 待补充 | 待补充 | 待补充 |
-| 日志服务 CLS | Unknown | Unknown | 日志查询 | 待补充 | 待补充 | 待补充 |
-| 监控告警 | Unknown | Unknown | SLO/告警 | 待补充 | 待补充 | 待补充 |
+| Lighthouse | 待控制台确认 | `101.34.52.232` / `VM-0-16-ubuntu` | 应用运行 | SSH、Docker health、HTTP health | 待补充 | 待指定 |
+| Docker Compose | 服务器本机 | `melwater_web`、`melwater_api` | 前端和 review-state API | `docker ps --filter name=melwater` | 服务器本机 | 待指定 |
+| COS Bucket | 待补充 | 待补充 | 数据/产物存储 | 待补充 | 待补充 | 待指定 |
+| CDN/负载均衡/边缘 Nginx | 待补充 | `ai_video_nginx` 共享 edge proxy | 外部访问 | HTTP smoke、必要时重启 edge proxy | 待补充 | 待指定 |
+| 云数据库/缓存 | 未接入 | 当前 review-state 使用应用侧状态与备份 | 状态存储 | review-state health/replay/metrics | 待补充 | 待指定 |
+| 日志服务 CLS | 待补充 | 待补充 | 日志查询 | 待补充 | 待补充 | 待指定 |
+| 监控告警 | 部分本地化 | cron health、ops report、local alert log；真实 webhook 未配置 | SLO/告警 | webhook readiness、alert drill | 待补充 | 待指定 |
 
 ## 必需凭据和权限
 
@@ -46,16 +49,16 @@
 
 | 检查项 | 目标 | 当前状态 | 阻塞项 |
 | --- | --- | --- | --- |
-| 公网域名可访问 | 2xx/3xx，延迟在 SLO 内 | 不可验证 | 缺少域名 |
-| 应用版本可追踪 | 能定位到发布版本或构建号 | 不可验证 | 缺少发布记录 |
-| 腾讯云资源状态 | 资源运行中，无异常告警 | 不可验证 | 缺少资源 ID/只读凭据 |
+| 公网域名可访问 | 2xx/3xx，延迟在 SLO 内 | 已部署，需持续 smoke | SLO 未定义 |
+| 应用版本可追踪 | 能定位到发布版本或构建号 | release id 可追踪；git commit 映射待补充 | 缺少 release id 到 commit 映射 |
+| 腾讯云资源状态 | 资源运行中，无异常告警 | 服务器和容器可通过 SSH 核查；控制台不可验证 | 缺少资源 ID/只读凭据 |
 | COS 数据产物完整性 | checksum 与发布清单一致 | 本地可验证，云端不可验证 | 缺少 bucket/prefix |
-| 日志可查询 | 最近一次任务有日志 | 不可验证 | 缺少 CLS 信息 |
-| 告警可触达 | 告警规则与联系人有效 | 不可验证 | 缺少监控配置 |
+| 日志可查询 | 最近一次任务有日志 | 服务器本机日志可查；CLS 不可验证 | 缺少 CLS 信息 |
+| 告警可触达 | 告警规则与联系人有效 | 本地告警与 mock drill 可用；真实 webhook 未配置 | 缺少 Feishu/WeCom webhook |
 
 ## 核查记录
 
 | 日期 | 核查人 | 结论 | 证据 |
 | --- | --- | --- | --- |
 | 2026-06-10 | Codex | 本地数据链路通过；腾讯云产品级状态不可验证 | 见 `docs/audits/2026-06-10-debt-and-production-readiness-audit.md` |
-
+| 2026-06-14 | Codex | 生产域名、服务器、Docker 服务、health、ops report 可核查；真实 webhook、SLO、负责人和控制台资源仍缺 | 见 `docs/runbooks/melwater-branch-release-decision.md` 与 `docs/superpowers/plans/2026-06-14-melwater-capability-debt-roadmap.md` |

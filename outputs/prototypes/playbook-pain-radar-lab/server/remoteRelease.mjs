@@ -325,6 +325,7 @@ function remoteDeployScript(releaseStageDir, appName) {
       ? []
       : [`if [ -f ${deployPath}/package.json ]; then cd ${deployPath} && ${asApp(`env REVIEW_STATE_DIR=${stateDir} npm run review:backup -- --label=${backupLabel}`)} || true; fi`]),
     sudo(`rsync -a --delete ${q(`${releaseStageDir}/app/`)} ${deployPath}/`),
+    ...releaseRefCommands(release.index.releaseId),
     maybeChown(),
     ...(isDockerMode()
       ? [composeCommand("up -d --build")]
@@ -352,6 +353,7 @@ function remoteRollbackScript(releaseStageDir, rollbackName) {
     ...(isDockerMode() ? [] : [sudo(`systemctl stop ${config.serviceName} || true`)]),
     sudo(`rsync -a --delete ${q(`${releaseStageDir}/rollback/dist/`)} ${deployPath}/dist/`),
     `if [ -d ${q(`${releaseStageDir}/rollback/state`)} ]; then ${sudo(`rsync -a ${q(`${releaseStageDir}/rollback/state/`)} ${stateDir}/`)}; fi`,
+    ...releaseRefCommands(`rollback-${release.index.releaseId}`),
     maybeChown(),
     `cd ${deployPath}`,
     ...(isDockerMode()
@@ -403,6 +405,23 @@ function composeCommand(args) {
     ...(composeEnvFile ? ["--env-file", q(composeEnvFile)] : []),
   ];
   return `cd ${q(config.deployPath)} && docker compose ${optionParts.join(" ")} ${args}`;
+}
+
+function releaseRefCommands(releaseRef) {
+  const revisionPath = path.posix.join(config.deployPath, "REVISION");
+  const commands = [`printf '%s\\n' ${q(releaseRef)} | ${sudo(`tee ${q(revisionPath)} >/dev/null`)}`];
+  const composeEnvFile = isDockerMode() ? resolveComposeEnvFile() : "";
+  if (composeEnvFile) {
+    const envFile = q(composeEnvFile);
+    const sedExpression = q(`s|^MELWATER_RELEASE_REF=.*|MELWATER_RELEASE_REF=${releaseRef}|`);
+    const appendCommand = q(`printf '\\nMELWATER_RELEASE_REF=${releaseRef}\\n' >> ${composeEnvFile}`);
+    commands.push(
+      `if [ -f ${envFile} ]; then if grep -q '^MELWATER_RELEASE_REF=' ${envFile}; then ${sudo(
+        `sed -i ${sedExpression} ${envFile}`,
+      )}; else ${sudo(`sh -c ${appendCommand}`)}; fi; fi`,
+    );
+  }
+  return commands;
 }
 
 function sudo(command) {

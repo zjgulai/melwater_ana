@@ -21,6 +21,7 @@ ALERT_LOG="${MELWATER_HEALTH_ALERT_LOG:-$STATE_DIR/health-alerts.log}"
 INCIDENT_THRESHOLD="${MELWATER_HEALTH_INCIDENT_THRESHOLD:-3}"
 ALERT_WEBHOOK_URL="${MELWATER_ALERT_WEBHOOK_URL:-}"
 ALERT_WEBHOOK_TYPE="${MELWATER_ALERT_WEBHOOK_TYPE:-generic}"
+ALERT_DRY_RUN="${MELWATER_ALERT_DRY_RUN:-0}"
 
 case "$INCIDENT_THRESHOLD" in
   ''|*[!0-9]*) INCIDENT_THRESHOLD=3 ;;
@@ -119,18 +120,27 @@ EOF
 }
 
 send_alert() {
+  event="$1"
+  severity="$2"
+  message="$3"
+  count="${4:-0}"
   [ -n "$ALERT_WEBHOOK_URL" ] || return 0
-  message="$1"
+  [ "$ALERT_DRY_RUN" = "1" ] && return 0
+  checked_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  release_ref="${MELWATER_RELEASE_REF:-}"
+  [ -n "$release_ref" ] || release_ref="$(cat "$APP_DIR/REVISION" 2>/dev/null || echo unknown)"
+  text="Melwater alert | event=$event | severity=$severity | time=$checked_at | release=$release_ref | failures=$count | url=$PUBLIC_URL | api=$API_BASE | detail=$message"
   escaped="$(json_escape "$message")"
+  escaped_text="$(json_escape "$text")"
   case "$ALERT_WEBHOOK_TYPE" in
     feishu)
-      payload="{\"msg_type\":\"text\",\"content\":{\"text\":\"$escaped\"}}"
+      payload="{\"msg_type\":\"text\",\"content\":{\"text\":\"$escaped_text\"}}"
       ;;
     wecom)
-      payload="{\"msgtype\":\"text\",\"text\":{\"content\":\"$escaped\"}}"
+      payload="{\"msgtype\":\"text\",\"text\":{\"content\":\"$escaped_text\"}}"
       ;;
     *)
-      payload="{\"text\":\"$escaped\",\"source\":\"melwater-healthcheck\"}"
+      payload="{\"source\":\"melwater-healthcheck\",\"event\":\"$(json_escape "$event")\",\"severity\":\"$(json_escape "$severity")\",\"timestamp\":\"$checked_at\",\"releaseRef\":\"$(json_escape "$release_ref")\",\"publicUrl\":\"$(json_escape "$PUBLIC_URL")\",\"apiBase\":\"$(json_escape "$API_BASE")\",\"failureCount\":$count,\"message\":\"$escaped\",\"text\":\"$escaped_text\"}"
       ;;
   esac
   curl -fsS --max-time "$TIMEOUT" -H "Content-Type: application/json" -d "$payload" "$ALERT_WEBHOOK_URL" >/dev/null 2>&1 || true
@@ -159,8 +169,10 @@ EOF
   append_alert_log "$checked_at" false "$failure_count" "$error"
   if [ "$failure_count" -ge "$INCIDENT_THRESHOLD" ]; then
     open_incident "$checked_at" "$failure_count" "$error"
+    send_alert "healthcheck_incident_open" "critical" "$error" "$failure_count"
+  else
+    send_alert "healthcheck_failed" "warning" "$error" "$failure_count"
   fi
-  send_alert "Melwater healthcheck failed at $checked_at: $error"
   exit 1
 }
 
@@ -198,13 +210,16 @@ if ! docker ps --filter name=melwater_web --filter health=healthy --format '{{.N
 fi
 
 cd "$APP_DIR"
-release_ref="$(cat "$APP_DIR/REVISION" 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo unknown)"
+release_ref="${MELWATER_RELEASE_REF:-}"
+[ -n "$release_ref" ] || release_ref="$(cat "$APP_DIR/REVISION" 2>/dev/null || git rev-parse --short HEAD 2>/dev/null || echo unknown)"
 checked_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 previous_count="$(read_failure_count)"
 write_failure_count 0
 if [ "$previous_count" -gt 0 ]; then
-  append_alert_log "$checked_at" true 0 "healthcheck recovered after $previous_count failure(s)"
+  recovery_message="healthcheck recovered after $previous_count failure(s)"
+  append_alert_log "$checked_at" true 0 "$recovery_message"
   resolve_incident "$checked_at" "$previous_count"
+  send_alert "healthcheck_recovered" "resolved" "$recovery_message" 0
 fi
 
 result="$(cat <<EOF
