@@ -21,7 +21,7 @@ Current verified gates:
 - [x] Frontend `npm run build` passed with Vite production bundle generation.
 - [x] Production containers are running and healthy: `melwater_web` and `melwater_api`.
 - [x] Production `/health` reports `ok: true` for release `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`.
-- [x] Production release is mapped to git commit `7a09e358`; post-release documentation is at `900ca318`.
+- [x] Production release is mapped to git commit `7a09e358`; release QA was first recorded in docs commit `900ca318`.
 - [x] Data mart manifest reports `status: PASS`.
 
 Current data asset truth:
@@ -143,7 +143,7 @@ Scalability limits:
 | ID | Area | Diagnosis | Impact | Priority |
 | --- | --- | --- | --- | --- |
 | B-01 | Branching | PR #1 merged `codex/fix-playbook-deploy-checklist` into `origin/main`; feature branch remains only as historical branch. | Closed; optional branch cleanup only. | Closed |
-| B-02 | Branching | Local `main` and `origin/main` are aligned at `900ca318`; production code release maps to `7a09e358`, with docs commit `900ca318` recording the release. | Closed; future releases should continue explicit release-id to commit mapping. | Closed |
+| B-02 | Branching | Local `main` and `origin/main` are aligned; production code release maps to `7a09e358`, and release QA was first recorded in docs commit `900ca318`. | Closed; future releases should continue explicit release-id to commit mapping. | Closed |
 | O-01 | Production ops | Real alert webhook is not configured; readiness correctly fails with missing `MELWATER_ALERT_WEBHOOK_URL`. | Incident notification proof is incomplete until Feishu or another real webhook exists. | P0 |
 | O-02 | Production ops | Latest mock alert drill points to current release `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`. | Closed for mock drill; real webhook delivery remains under O-01. | Closed |
 | O-03 | Production inventory | `config/production.example.json` still contains placeholder owner/resource/SLO fields. | Handoff and incident ownership remain weak. | P0 |
@@ -186,12 +186,12 @@ Still open:
 Current branch:
 
 - `main`
-- HEAD: `900ca318 docs: record melwater production release`
+- HEAD: current `main` / `origin/main`; use `git log -1` for the exact docs commit
 - Tracking: `origin/main`
 
 Remote state:
 
-- `origin/main`: `900ca318`
+- `origin/main`: current documentation main
 - PR #1: merged at merge commit `7a09e358`
 - `origin/codex/fix-playbook-deploy-checklist`: `06e7d01b`, retained as historical merged branch
 
@@ -199,7 +199,7 @@ Production release state:
 
 - Current production release: `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`
 - Code commit deployed: `7a09e358`
-- Post-release docs commit: `900ca318`
+- Release QA docs commit: `900ca318`; later handoff/status docs may be newer
 
 Merged release-hardening work:
 

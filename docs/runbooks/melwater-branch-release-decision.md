@@ -24,10 +24,10 @@
 main
 ```
 
-当前文档 HEAD：
+当前文档主线：
 
 ```text
-900ca318 docs: record melwater production release
+main / origin/main（当前 HEAD 以 git log -1 为准）
 ```
 
 远端：
@@ -39,8 +39,8 @@ origin https://github.com/zjgulai/melwater_ana.git
 已观察到的分支关系：
 
 ```text
-origin/main: 900ca318 docs: record melwater production release
-local main: 900ca318 docs: record melwater production release
+origin/main: current documentation main, see git log -1
+local main: current documentation main, see git log -1
 origin/codex/fix-playbook-deploy-checklist: 06e7d01b docs: summarize melwater capability debt roadmap
 ```
 

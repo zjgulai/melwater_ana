@@ -8,9 +8,10 @@
 
 | 状态面 | 当前值 | 说明 |
 | --- | --- | --- |
-| 仓库文档主线 | `main` / `origin/main` at `900ca318` | 该提交记录了生产发布证据，本身未重新部署 |
+| 仓库文档主线 | `main` / `origin/main` | 当前文档 HEAD 以 `git log -1` 为准；文档提交不等同于生产部署 |
 | 生产代码版本 | `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358` | 生产 `REVISION` 和 `MELWATER_RELEASE_REF` 均指向该 release |
 | 代码来源提交 | `7a09e358` | PR #1 merge commit，生产 release id 中的 `g7a09e358` 与此一致 |
+| 发布证据提交 | `900ca318` | 首次记录生产发布 QA 的文档提交；后续交接文档可能位于更新提交 |
 | 生产域名 | `https://melwater.lute-tlz-dddd.top` | 公网站点 HTTP 200，review-state API 验收通过 |
 | 当前生产证据 | `docs/audits/2026-06-14-melwater-production-release-qa.md` | 公网、API、ops report、mock alert drill 均已记录 |
 
