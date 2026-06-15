@@ -48,11 +48,13 @@ function verifyManifest(manifestPath, baseDir) {
 
 const requiredAppPaths = [
   "dist/index.html",
+  "dist/favicon.svg",
   "server/reviewStateServer.mjs",
   "server/reviewStateApi.mjs",
   "server/reviewStateStore.mjs",
   "deploy/nginx/melwater.conf",
   "deploy/systemd/melwater-review-state-api.service",
+  "public/favicon.svg",
   "package.json",
   "package-lock.json",
 ];

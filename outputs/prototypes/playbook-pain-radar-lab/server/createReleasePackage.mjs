@@ -20,6 +20,7 @@ const releaseIncludes = [
   "dist",
   "server",
   "deploy",
+  "public",
   "index.html",
   "src",
   "package.json",
