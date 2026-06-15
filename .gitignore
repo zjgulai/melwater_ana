@@ -36,6 +36,7 @@ exports_*/
 outputs/prototypes/**/node_modules/
 outputs/prototypes/**/.npm-cache/
 outputs/prototypes/**/dist/
+outputs/prototypes/**/output/
 outputs/prototypes/**/qa/
 outputs/prototypes/**/releases/
 outputs/prototypes/**/state/
