@@ -1,6 +1,6 @@
 # Melwater Documentation Index
 
-更新时间：2026-06-14
+更新时间：2026-06-15 UTC
 
 本目录用于区分当前源文档、生产运行文档、历史审计记录和执行计划。后续协作时优先从本文件进入，不要直接以旧审计文档作为当前状态判断。
 
@@ -9,14 +9,14 @@
 | 状态面 | 当前值 | 说明 |
 | --- | --- | --- |
 | 仓库文档主线 | `main` / `origin/main` | 当前文档 HEAD 以 `git log -1` 为准；文档提交不等同于生产部署 |
-| 生产代码版本 | `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358` | 生产 `REVISION` 和 `MELWATER_RELEASE_REF` 均指向该 release |
-| 代码来源提交 | `7a09e358` | PR #1 merge commit，生产 release id 中的 `g7a09e358` 与此一致 |
+| 生产代码版本 | `playbook-pain-radar-lab-0.0.0-2026-06-15T04-08-20-775Z` | 生产 `REVISION`、`MELWATER_RELEASE_REF` 和 healthcheck `releaseRef` 均指向该 release |
+| 代码来源提交 | `4de64a9d` | release manifest `gitSha=4de64a9d`；包含中文生产发布、favicon 资产修复和 healthcheck 中文 marker 修复 |
 | 本地静态分析索引 | 已执行，未持久化 | 本次会话已完成 `codegraph init`（67 文件，1,445 nodes，3,270 edges）；当前 `.codegraph/` 不在工作区 |
 | 发布证据提交 | `900ca318` | 首次记录生产发布 QA 的文档提交；后续交接文档可能位于更新提交 |
 | 生产域名 | `https://melwater.lute-tlz-dddd.top` | 公网站点 HTTP 200，review-state API 验收通过 |
-| 当前生产证据 | `docs/audits/2026-06-14-melwater-production-release-qa.md` | 公网、API、ops report、mock alert drill 均已记录 |
-| 本地产品体验 | 中文 Melwater VOC 决策工作台 | 已完成中文导航、今日决策台、页面闭环面板、UI 文案守卫、6 条 Playwright 抽样路径和桌面/移动截图 QA；尚未部署生产 |
-| 本地发布候选 | `playbook-pain-radar-lab-0.0.0-2026-06-15T02-51-50-613Z` | 本轮改动已提交并推送到 `origin/main`，commit `f0d52ca0`；candidate manifest `gitSha=f0d52ca0`，`release:verify` 与腾讯云只读 `deploy:preflight --execute --check-ssh` 通过 |
+| 当前生产证据 | `docs/audits/2026-06-15-melwater-production-e2e-qa.md` | 公网、API、favicon、healthcheck、incident resolved、14 页真实浏览器 E2E 均已记录 |
+| 生产产品体验 | 中文 Melwater VOC 决策工作台 | 14 个页面已在公网逐页验收，页面均含 `业务闭环路径` 和 `页面业务闭环`，且可见文案不含 `Playbook` |
+| E2E 截图证据 | `outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-melwater-production-e2e/` | 14 张页面截图和 `e2e-report.json`；本目录为本地验收产物，不作为源码发布物 |
 
 ## 当前源文档
 
@@ -61,14 +61,14 @@
 - `docs/audits/2026-06-13-*`：生产、Ops、Action closed-loop、Weekly review、Meeting snapshot 的最新 QA 证据。
 - `docs/audits/2026-06-14-melwater-production-release-qa.md`：PR #1 合并后生产发布、release 到 git commit 映射、公网站点、API、ops report 和 alert drill 验收证据。
 - `docs/audits/2026-06-14-melwater-cn-business-loop-audit.md`：中文业务闭环产品审计、重构计划和 Phase 1-3 本地执行记录。
+- `docs/audits/2026-06-15-melwater-production-e2e-qa.md`：中文工作台真实部署、公网 smoke、API、healthcheck 和 14 页浏览器 E2E 验收证据。
 
 ## 当前已知未完成事项
 
 - `codex/fix-playbook-deploy-checklist` 已通过 PR #1 合并；本地/远端分支可按需清理。
 - 真实 Feishu/WeCom webhook 未配置，生产 webhook readiness 仍应阻断。
 - `action_feedback_applied` 和 `measuredActions` 当前为 0，需要真实业务动作回流。
-- 本地网站已重构为中文业务决策工作台；生产站仍未发布本轮本地中文化改动。
-- 仍需执行真实生产部署和发布后公网截图回归。
+- 中文业务决策工作台已发布到生产并完成 14 页公网 E2E；后续变更仍需重复 release + E2E 流程。
 - 生产资产清单仍缺负责人、SLO、腾讯云资源 ID、监控入口和真实回滚恢复演练记录。
 - 大体量数据、发布包、运行状态和私钥应从仓库工作目录外置。
 

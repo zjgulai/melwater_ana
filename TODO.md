@@ -2,7 +2,7 @@
 
 > 状态更新：本文件保留历史 API 补采记录，但 2026-06-11 后不再把“吸奶器次要 2 搜索额度阻断”视为当前阻塞项。当前项目级待办以 `docs/superpowers/plans/2026-06-14-melwater-capability-debt-roadmap.md` 为准。
 
-## 2026-06-14 当前待办
+## 2026-06-15 当前待办
 
 - 已完成 `codegraph init`：扫描 67 个文件（1,445 nodes，3,270 edges）；当前 `.codegraph/` 未持久保留，如需使用需重新初始化。
 
@@ -11,7 +11,7 @@
 - 中文业务闭环网站第三轮已执行：新增 UI 文案守卫 `npm run check:ui-copy`，补齐 favicon，修复系统运维页 token 表单语义，并用 Playwright 抽样验证今日决策台、数据可信度、产品痛点、行动闭环、经营复盘和系统运维。
 - 中文业务闭环网站第四轮已执行：完成桌面首页、移动首页、移动系统运维截图级 QA，证据位于 `output/playwright/2026-06-14-melwater-cn-business-loop/`；下一轮进入生产发布准备。
 - 中文业务闭环网站第五轮已执行：生成本地 release candidate `playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z`，`release:verify` 通过，腾讯云只读 `deploy:preflight --execute --check-ssh` 通过。
-- 当前阻断点已修复：本轮中文化与 QA 改动已提交并推送到 `origin/main`（commit `f0d52ca0`），随后重新生成可追溯 release candidate `playbook-pain-radar-lab-0.0.0-2026-06-15T02-51-50-613Z`，manifest `gitSha=f0d52ca0`，`release:verify` 和腾讯云只读 preflight 均通过。下一步可进入真实部署与公网回归。
+- 中文业务闭环网站第六轮已执行：真实部署到腾讯云生产 `playbook-pain-radar-lab-0.0.0-2026-06-15T04-08-20-775Z`，对应 commit `4de64a9d`；公网 smoke、favicon、review-state API、Docker health、healthcheck recovery 和 14 页真实浏览器 E2E 均通过，证据见 `docs/audits/2026-06-15-melwater-production-e2e-qa.md`。
 - 配置真实告警 webhook 后，运行生产 webhook readiness 和 alert drill。
 - 补齐生产资产清单中的负责人、SLO、腾讯云资源 ID、备份恢复证据和告警渠道。
 - 将 action owner 与 action feedback 从示例配置推进到真实业务闭环。
@@ -19,12 +19,14 @@
 - 将大体量数据、发布包、运行状态和私钥移出仓库工作目录，保留 manifest、fixture 和可复现脚本。
 - 可选清理已合并分支 `codex/fix-playbook-deploy-checklist`；该分支已通过 PR #1 合入 `main`。
 
-## 2026-06-14 已关闭事项
+## 2026-06-15 已关闭事项
 
 - PR #1 已合并到 `main`，release-hardening 运维脚本已进入 `origin/main`。
-- 生产已发布 `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`。
-- 生产 release 已映射到 git commit `7a09e358`。
-- 公网站点、review-state API、Docker health、ops report 和 mock alert drill 已通过。
+- 历史生产 release `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358` 已由新中文工作台 release 取代。
+- 当前生产已发布 `playbook-pain-radar-lab-0.0.0-2026-06-15T04-08-20-775Z`。
+- 当前生产 release 已映射到 git commit `4de64a9d`。
+- 公网站点、review-state API、Docker health、healthcheck recovery、ops 状态页和 14 页真实浏览器 E2E 已通过。
+- 发布过程中发现并修复 `/favicon.svg` 404 和 healthcheck 旧首页 marker 两个生产回归问题。
 
 ## 2026-06-11 补采闭环状态
 

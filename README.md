@@ -2,21 +2,21 @@
 
 基于 Meltwater API 的母婴品类 VOC（用户之声）数据采集工具。一键拉取指定品类的原始 mention 数据，输出结构化 Excel。
 
-## 当前产品状态（2026-06-14）
+## 当前产品状态（2026-06-15 UTC）
 
 | 维度 | 当前状态 |
 |---|---|
 | 仓库主线 | `main` 已同步 `origin/main`；当前文档 HEAD 以 `git log -1` 为准 |
-| 生产版本 | 腾讯云生产环境运行 `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`，对应代码合并提交 `7a09e358` |
+| 生产版本 | 腾讯云生产环境运行 `playbook-pain-radar-lab-0.0.0-2026-06-15T04-08-20-775Z`，对应代码提交 `4de64a9d` |
 | 静态分析索引 | 已执行 `codegraph init`（67 个文件，1,445 nodes，3,270 edges）；本地 `.codegraph/` 未持久保留 |
 | 生产域名 | `https://melwater.lute-tlz-dddd.top` |
 | 生产服务 | Docker Compose 项目 `melwater_ana`，`melwater_web` 和 `melwater_api` 均已验证 healthy |
 | 数据产品 | 完整 Excel 包 `data/excel_complete_20260611/` 校验 `PASS`，336,435 个唯一文档，已知 source gaps 为 0 |
-| 产品形态 | `outputs/prototypes/playbook-pain-radar-lab`，本地已推进为中文 Melwater VOC 决策工作台，覆盖今日决策台、数据可信度、产品痛点、行动闭环、竞品证据、内容机会、用户原话、经营复盘和系统运维页面；生产尚未发布本轮中文化改动 |
-| 当前证据 | `docs/audits/2026-06-14-melwater-production-release-qa.md` |
-| 本地发布候选 | 阻断点已修复：本轮中文化改动已提交并推送，commit `f0d52ca0`；随后生成的可追溯候选 `playbook-pain-radar-lab-0.0.0-2026-06-15T02-51-50-613Z` 已通过 `release:verify` 和腾讯云 `deploy:preflight --execute --check-ssh` |
+| 产品形态 | `outputs/prototypes/playbook-pain-radar-lab`，生产已发布中文 Melwater VOC 决策工作台，覆盖今日决策台、数据可信度、产品痛点、行动闭环、竞品证据、内容机会、用户原话、概念验证、风险预警、区域语言、经营复盘、数据红线、操作留痕和系统运维 |
+| 当前证据 | `docs/audits/2026-06-15-melwater-production-e2e-qa.md` |
+| 公网 E2E | 14 个页面逐页 Playwright 真实浏览器验收通过；0 console error、0 4xx/5xx、0 failed request；截图位于 `outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-melwater-production-e2e/` |
 
-说明：生产代码 release 明确映射到 `7a09e358`；后续文档和本地前端改动不会自动触发生产部署。
+说明：生产代码 release 明确映射到 `4de64a9d`；后续文档提交不等同于生产部署，新增生产变更仍需重新生成 release 并执行公网回归。
 
 ## 快速重启
 
