@@ -9,14 +9,14 @@
 | 状态面 | 当前值 | 说明 |
 | --- | --- | --- |
 | 仓库文档主线 | `main` / `origin/main` | 当前文档 HEAD 以 `git log -1` 为准；文档提交不等同于生产部署 |
-| 生产代码版本 | `playbook-pain-radar-lab-0.0.0-2026-06-15T04-08-20-775Z` | 生产 `REVISION`、`MELWATER_RELEASE_REF` 和 healthcheck `releaseRef` 均指向该 release |
-| 代码来源提交 | `4de64a9d` | release manifest `gitSha=4de64a9d`；包含中文生产发布、favicon 资产修复和 healthcheck 中文 marker 修复 |
+| 生产代码版本 | `playbook-pain-radar-lab-0.0.0-2026-06-15T10-35-31-110Z` | 生产 `REVISION`、`MELWATER_RELEASE_REF` 和 healthcheck `releaseRef` 均指向该 release；前端展示层已按 Melwater 口径脱敏 |
+| 代码来源提交 | `ded0900d` | release manifest `gitSha=ded0900d`；包含页面使用说明、中文化、字体层级、移动端布局和公网 E2E 修复 |
 | 本地静态分析索引 | 已执行，未持久化 | 本次会话已完成 `codegraph init`（67 文件，1,445 nodes，3,270 edges）；当前 `.codegraph/` 不在工作区 |
 | 发布证据提交 | `900ca318` | 首次记录生产发布 QA 的文档提交；后续交接文档可能位于更新提交 |
 | 生产域名 | `https://melwater.lute-tlz-dddd.top` | 公网站点 HTTP 200，review-state API 验收通过 |
-| 当前生产证据 | `docs/audits/2026-06-15-melwater-production-e2e-qa.md` | 公网、API、favicon、healthcheck、incident resolved、14 页真实浏览器 E2E 均已记录 |
-| 生产产品体验 | 中文 Melwater VOC 决策工作台 | 14 个页面已在公网逐页验收，页面均含 `业务闭环路径` 和 `页面业务闭环`，且可见文案不含 `Playbook` |
-| E2E 截图证据 | `outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-melwater-production-e2e/` | 14 张页面截图和 `e2e-report.json`；本目录为本地验收产物，不作为源码发布物 |
+| 当前生产证据 | `docs/audits/2026-06-15-melwater-page-function-usage-qa.md` | 公网页面说明、筛选/搜索/写回/导出/Ops 入口、桌面/移动端 14 页真实浏览器 E2E 均已记录 |
+| 生产产品体验 | 中文 Melwater VOC 决策工作台 | 14 个页面已在公网逐页验收，页面均含 `业务闭环路径`、`页面业务闭环` 和 `当前页面使用说明`，且可见文案不含 `Playbook` |
+| E2E 截图证据 | `outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-production-deep-check/production-final-v2/` | 28 张桌面/移动端页面截图和 `production-final-v2-e2e.json`；本目录为本地验收产物，不作为源码发布物 |
 
 ## 当前源文档
 
@@ -62,6 +62,7 @@
 - `docs/audits/2026-06-14-melwater-production-release-qa.md`：PR #1 合并后生产发布、release 到 git commit 映射、公网站点、API、ops report 和 alert drill 验收证据。
 - `docs/audits/2026-06-14-melwater-cn-business-loop-audit.md`：中文业务闭环产品审计、重构计划和 Phase 1-3 本地执行记录。
 - `docs/audits/2026-06-15-melwater-production-e2e-qa.md`：中文工作台真实部署、公网 smoke、API、healthcheck 和 14 页浏览器 E2E 验收证据。
+- `docs/audits/2026-06-15-melwater-page-function-usage-qa.md`：页面使用说明、筛选/搜索/写回/导出/Ops 入口、字体字号、移动端布局和公网 E2E 验收证据。
 
 ## 当前已知未完成事项
 

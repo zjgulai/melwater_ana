@@ -170,17 +170,17 @@ const closureGuides = {
   },
   search: {
     judge: "2 个搜索仍被阻断，被阻断品类只能输出治理动作。",
-    evidence: "搜索可信度表和噪声样本队列用于判断 query precision。",
+    evidence: "搜索可信度表和噪声样本队列用于判断搜索准确率。",
     guardrail: "未通过 precision 前，声量、负向率和高频词不能写进业务结论。",
-    action: "复核样本，重写 query，完成后重采并重建 marts。",
-    metric: "precision 达到阈值，blocked gate 关闭或保留业务例外。",
+    action: "复核样本，重写搜索词，完成后重采并重建数据集。",
+    metric: "准确率达到阈值，阻断门禁关闭或保留业务例外。",
   },
   pain: {
     judge: "吸奶器已有可行动痛点，适合进入产品、CX 和内容分派。",
-    evidence: "痛点卡包含负向率、证据数、代表样本和推荐 owner domain。",
+    evidence: "痛点卡包含负向率、证据数、代表样本和推荐负责人域。",
     guardrail: "证据弱或搜索阻断的痛点只能作为假设，不能直接承诺产品路线。",
     action: "把 P0/P1 痛点转成产品待办、客服话术或内容解释。",
-    metric: "跟踪 owner 落位、动作上线、同类负向样本变化。",
+    metric: "跟踪负责人落位、动作上线、同类负向样本变化。",
   },
   actions: {
     judge: "当前系统有行动登记能力，但真实 measured actions 仍为 0。",
@@ -191,7 +191,7 @@ const closureGuides = {
   },
   quality: {
     judge: "当前数据口径可复核，但需要持续显示解释红线。",
-    evidence: "manifest、source inventory、document/occurrence 口径和情感字段。",
+    evidence: "manifest、来源清单、document/occurrence 口径和情感字段。",
     guardrail: "document_id、occurrence_id、sentiment、zz 国家码不能混用。",
     action: "把红线规则挂到所有业务页和导出材料。",
     metric: "进入会议的洞察必须带口径说明和样本复核记录。",
@@ -200,19 +200,19 @@ const closureGuides = {
     judge: "竞品证据可用于话术和内容素材，但不能当市场份额。",
     evidence: "18 张竞品卡，按品牌、品类、负向率和 readiness 排序。",
     guardrail: "搜索配置偏向 Momcozy，不能直接比较总声量。",
-    action: "把 ready 卡片转为销售 objection、内容角度或产品差异说明。",
+    action: "把可复核卡片转为销售异议处理、内容角度或产品差异说明。",
     metric: "每张输出卡至少有样本、结论、负责人和使用场景。",
   },
   content: {
     judge: "内容机会可转为 brief，但被阻断品类要先回到搜索治理。",
-    evidence: "30 条内容机会、10 条 ready brief、120 条原话候选。",
+    evidence: "30 条内容机会、10 条可复核简报、120 条原话候选。",
     guardrail: "用户原话不能未经人工复核就外发。",
     action: "生成主题简报、原话短名单和发布渠道建议。",
     metric: "每周沉淀 brief 数、通过审核原话数、上线后互动指标。",
   },
   quotes: {
     judge: "原话库可支撑内容和产品论证，但当前仍是候选素材。",
-    evidence: "原话包含 sentiment、topic、documentId 和 source URL。",
+    evidence: "原话包含情感、主题、documentId 和来源 URL。",
     guardrail: "原话外发前必须确认授权、语境和合规风险。",
     action: "将原话标记为可用、需法务复核或不可用。",
     metric: "审核通过率、被内容 brief 采用数量、引用后表现。",
@@ -233,14 +233,14 @@ const closureGuides = {
   },
   regions: {
     judge: "区域语言页优先指导内容本地化，不直接判断市场需求。",
-    evidence: "language、country_known、mentions 和 country zz 风险。",
+    evidence: "语言、country_known、提及量和 country=zz 风险。",
     guardrail: "zz 是未知国家，不能当作地域市场。",
     action: "先按语言抽样，再与销售地区和客服语言对齐。",
     metric: "重点语言样本通过率、本地化内容产出和后续反馈。",
   },
   brief: {
     judge: "经营复盘页应收口为管理层要决策和追责的事项。",
-    evidence: "月度 VOC、阻断搜索、ready actions、内容机会。",
+    evidence: "月度 VOC、阻断搜索、可行动事项、内容机会。",
     guardrail: "只汇报可解释数据；被阻断品类只汇报治理进度。",
     action: "月会明确本周决定、负责人、截止日和复盘指标。",
     metric: "会议后关闭动作数、逾期动作数、阻断搜索下降数。",
@@ -258,6 +258,93 @@ const closureGuides = {
     guardrail: "mock alert drill 不证明飞书/企微真实送达。",
     action: "配置真实 webhook、补齐 SLO/负责人、执行恢复演练。",
     metric: "webhook readiness、恢复演练证据、SLO 达标率。",
+  },
+};
+
+const pageUsageGuides = {
+  home: {
+    purpose: "作为进入全站的业务总控台，先判断今天应该处理数据可信度、产品痛点、行动闭环还是经营复盘。",
+    use: "从上方四张决策卡或下方问题卡进入对应页面；不要直接从总量数字推出业务结论。",
+    filter: "本页不提供复杂筛选，主要用于把不同角色导向正确工作区。",
+    output: "输出今天的处理顺序：先治理阻断搜索，再分派高优先级动作，最后进入周会复盘。",
+  },
+  search: {
+    purpose: "判断搜索词是否足够可信，决定某个品类能不能进入业务解释。",
+    use: "先看通过/阻断数量，再逐条复核噪声样本，把样本标为真产品、噪声或不确定。",
+    filter: "复核按钮会写入 review-state；没有通过门禁的品类只允许输出搜索治理动作。",
+    output: "输出搜索词重写清单、阻断原因和重新采集/重建数据集的验收条件。",
+  },
+  pain: {
+    purpose: "把用户反馈中的产品痛点转成可排序、可分派、可追踪的优先级队列。",
+    use: "先看可信度门禁，再用筛选切换品类，点击痛点行查看右侧证据和推荐动作。",
+    filter: "筛选按钮切换全部品类/吸奶器；明细行会联动雷达、证据覆盖和行动卡。",
+    output: "输出产品、CX、内容团队的优先处理痛点、证据样本和行动卡草案。",
+  },
+  actions: {
+    purpose: "把洞察变成负责人、优先级、状态、证据链和复盘指标，形成闭环执行表。",
+    use: "先看每周行动复盘，再按负责人、状态、优先级、证据和关键词筛选动作。",
+    filter: "下拉筛选只改变当前列表；状态、负责人、优先级和业务影响字段会写回 review-state。",
+    output: "输出周会决策队列、CSV 动作清单和可归档的会议快照 JSON。",
+  },
+  quality: {
+    purpose: "统一解释数据口径和红线，避免把声量、自动情感或未知国家误读成业务结论。",
+    use: "在进入任何业务页面前先阅读本页，确认 document、occurrence、sentiment、country 的边界。",
+    filter: "本页是规则页，不提供筛选；规则应被带入所有导出和会议材料。",
+    output: "输出可复用的解释护栏，作为报告、会议和外发材料的口径检查表。",
+  },
+  competitor: {
+    purpose: "把自有品牌和竞品的 VOC 证据转成可复核的对比素材。",
+    use: "先看可复核卡片数量，再点击左侧品牌卡，右侧查看竞品信号和解释边界。",
+    filter: "卡片按提及量排序；被阻断品类只能用于搜索治理，不能做竞品结论。",
+    output: "输出销售异议、内容对比角度、产品差异假设和需复核证据。",
+  },
+  content: {
+    purpose: "从正向证据和用户原话中生成内容选题、平台角度和简报候选。",
+    use: "先用来源类型标签筛选，再点击机会行，右侧查看建议角度和原话预览。",
+    filter: "来源标签会筛选机会列表；“打开用户原话库”用于进入更完整的引用复核。",
+    output: "输出内容 brief 候选、用户原话短名单和需要人工审核的引用素材。",
+  },
+  quotes: {
+    purpose: "集中管理可用于内容、产品论证和客服话术的用户原话候选。",
+    use: "按情感标签筛选原话，查看主题、document_id 和 occurrence_id，必要时打开来源链接。",
+    filter: "通过/法务复核是写回动作；外发前必须确认授权、语境和合规风险。",
+    output: "输出已审核引用、需法务复核引用和不可外发风险素材。",
+  },
+  concept: {
+    purpose: "把痛点和证据反推为产品概念候选，用于小样本验证而不是直接立项。",
+    use: "先看可复核/被阻断数量，再点击概念行，右侧查看验证假设、实验步骤和原话证据。",
+    filter: "测试/暂缓/拒绝是写回决策；被阻断概念要先回到搜索质量治理。",
+    output: "输出概念验证队列、负责人建议、反证记录和是否进入 roadmap 的依据。",
+  },
+  crisis: {
+    purpose: "把负向集中、周度变化和数据质量告警转成 PR/CX/数据治理分诊。",
+    use: "用品类标签筛选风险队列，查看右侧 runbook，判断是业务危机、搜索污染还是采集异常。",
+    filter: "triage 按钮会写回 acknowledged/escalated 状态；未抽样复核前不对外升级。",
+    output: "输出 24 小时分诊状态、响应口径、误报原因和 72 小时复盘输入。",
+  },
+  regions: {
+    purpose: "区分语言机会和真实地域机会，避免把未知国家 zz 当作市场需求。",
+    use: "先切换全部线索/仅已知国家，再点击语言国家行查看是否能进入市场优先级判断。",
+    filter: "仅已知国家会过滤 country_known=no；未知 zz 只能指导语言内容和归因治理。",
+    output: "输出语言本地化优先级、地域验证假设和需要补齐的归因数据。",
+  },
+  brief: {
+    purpose: "把月度 VOC 压缩为管理层需要决策、追责和复盘的事项。",
+    use: "切换月份后点击品类行，右侧生成会议叙事、可信度边界和行动要求。",
+    filter: "月份标签切换复盘窗口；品类行决定右侧会议叙事和可复核简报预览。",
+    output: "输出月会讲法、负责人追踪项、阻断搜索治理进度和下次复盘指标。",
+  },
+  audit: {
+    purpose: "查看所有状态写回事件，用于生产审计、冲突排查和自动化 replay。",
+    use: "点击刷新拉取最新事件，按 namespace、operation、actor、版本和 meta 追踪变更。",
+    filter: "本页当前以最新 100 条事件为主，不做业务筛选；异常排查时配合 ops 页使用。",
+    output: "输出可追溯事件链、冲突定位线索和状态回放依据。",
+  },
+  ops: {
+    purpose: "检查生产可用性、发布版本、备份、运维报告和 review-state 运行状态。",
+    use: "先保存/测试 token，再刷新生产健康；需要管理员权限时再执行备份或 report。",
+    filter: "下载 report 是只读动作；触发备份和生成 report 会在服务器产生新运维文件。",
+    output: "输出生产健康证据、事故状态、备份校验、证书状态和 webhook 接入前的降级闭环。",
   },
 };
 
@@ -302,7 +389,8 @@ function formatBytes(value) {
 }
 
 function shortHash(value) {
-  return value ? String(value).slice(0, 12) : "unknown";
+  if (!value) return "未知";
+  return String(value).replace(/playbook-pain-radar-lab/gi, "melwater-voc-lab").slice(0, 12);
 }
 
 function signedPct(value, digits = 1) {
@@ -366,6 +454,15 @@ function sentimentLabel(value) {
   return labels[value] || value;
 }
 
+function verdictLabel(value) {
+  const labels = {
+    true_product_match: "真产品",
+    noise: "噪声",
+    unclear: "不确定",
+  };
+  return labels[value] || String(value || "").replaceAll("_", " ");
+}
+
 function decisionLaneLabel(value) {
   const labels = {
     Archive: "归档",
@@ -396,16 +493,16 @@ const actionStatuses = ["Proposed", "Accepted", "In Progress", "Shipped", "Measu
 const actionPriorities = ["P0", "P1", "P2", "P3"];
 const actionPriorityRank = { P0: 0, P1: 1, P2: 2, P3: 3 };
 const actionOwnerHints = {
-  CX: "CX lead",
-  "Content/Marketing": "Content lead",
-  Data: "Data owner",
-  "Data/Business Leads": "Data + BU lead",
-  "Marketing/Data": "Growth analyst",
-  "PR/CX": "PR/CX duty owner",
-  Product: "PM owner",
-  "Product/CX": "PM + CX lead",
-  "Product/Content": "PM + Content lead",
-  "Product/Research": "Research owner",
+  CX: "CX 负责人",
+  "Content/Marketing": "内容负责人",
+  Data: "数据负责人",
+  "Data/Business Leads": "数据 + 业务负责人",
+  "Marketing/Data": "增长分析负责人",
+  "PR/CX": "PR/CX 值班负责人",
+  Product: "产品负责人",
+  "Product/CX": "产品 + CX 负责人",
+  "Product/Content": "产品 + 内容负责人",
+  "Product/Research": "研究负责人",
 };
 
 function actionTopicId(action) {
@@ -443,14 +540,14 @@ function derivedPriority(action, card) {
 
 function derivedBusinessImpact(action, card) {
   if (action.action_type === "query_update") {
-    return "恢复 blocked 品类的业务解释权限；precision >= 80% 后重开洞察链路";
+    return "恢复被阻断品类的业务解释权限；准确率达到 80% 后重开洞察链路";
   }
   if (card) {
     return `${actionCategory(action)} · ${displayTopic(card)} 负向率 ${pct(card.negativeRate, 1)}，证据 ${card.evidenceCount} 条`;
   }
-  if (action.action_type.includes("content")) return "把高置信原话转成内容 brief，并回看互动/转化信号";
+  if (action.action_type.includes("content")) return "把高置信原话转成内容简报，并回看互动/转化信号";
   if (action.owner_domain?.includes("PR")) return "缩短负向聚集的响应时间，降低事件扩散风险";
-  return action.expected_metric || "需要 owner 补齐业务指标和验收口径";
+  return action.expected_metric || "需要负责人补齐业务指标和验收口径";
 }
 
 function actionOwnerHint(action) {
@@ -966,6 +1063,35 @@ function BusinessClosurePanel({ activeView }) {
   );
 }
 
+function PageUsageGuide({ activeView }) {
+  const guide = pageUsageGuides[activeView] || pageUsageGuides.home;
+  const items = [
+    ["页面用途", guide.purpose, IconTargetArrow],
+    ["怎么使用", guide.use, IconListDetails],
+    ["筛选与交互", guide.filter, IconFilter],
+    ["输出动作", guide.output, IconClipboardCheck],
+  ];
+  return (
+    <section className="usage-guide" aria-label="当前页面使用说明">
+      <div className="usage-guide-heading">
+        <span>使用说明</span>
+        <strong>按这个顺序阅读和操作当前页面</strong>
+      </div>
+      <div className="usage-guide-grid">
+        {items.map(([label, body, Icon]) => (
+          <article className="usage-guide-item" key={label}>
+            <Icon size={15} />
+            <div>
+              <strong>{label}</strong>
+              <p>{body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function SelectPill({ icon: Icon, label, value }) {
   return (
     <button className="select-pill" type="button">
@@ -1027,7 +1153,7 @@ function QualityGateBanner({ category }) {
         <IconCircleCheck size={18} />
         <div>
           <strong>可信度通过</strong>
-          <p>当前筛选下没有 query-blocked 搜索，可进入业务解释，但仍需证据复核。</p>
+          <p>当前筛选下没有被搜索阻断的品类，可进入业务解释，但仍需证据复核。</p>
         </div>
       </section>
     );
@@ -1036,7 +1162,7 @@ function QualityGateBanner({ category }) {
     <section className="quality-banner blocked">
       <IconShieldCheck size={18} />
       <div>
-        <strong>{currentBlocked.map((item) => item.category).join(" / ")} 被 query noise 阻断</strong>
+        <strong>{currentBlocked.map((item) => item.category).join(" / ")} 被搜索噪声阻断</strong>
         <p>只能输出治理动作，不能把声量、负面率或高频词解释为真实业务结论。</p>
       </div>
     </section>
@@ -1054,7 +1180,7 @@ function HomePage({ setActiveView }) {
     ["本周月会要决策什么？", "先看阻断搜索、待分派动作、风险预警和未复盘事项。", "brief", "待复盘", "amber"],
   ];
   const decisionCards = [
-    ["数据可信", `${vocData.summaries.blockedSearches} 个搜索阻断`, "先治理 query，再开放业务解释。", "search", "rose"],
+    ["数据可信", `${vocData.summaries.blockedSearches} 个搜索阻断`, "先治理搜索词，再开放业务解释。", "search", "rose"],
     ["产品优先级", `${vocData.painCards.length} 张痛点卡`, "按证据深度和负向率进入产品/CX 队列。", "pain", "amber"],
     ["行动闭环", `${vocData.summaries.proposedActions} 条待确认`, "必须明确负责人、截止日和复盘指标。", "actions", "yellow"],
     ["经营复盘", `${vocData.executiveMonthly.length} 条月度记录`, "压缩为管理层需要决策和追责的事项。", "brief", "green"],
@@ -1112,7 +1238,7 @@ function SearchQualityPage() {
     <div className="lab-stack">
       <div className="summary-grid compact">
         <MetricCard label="通过搜索" value={pass.length} caption="可进入业务解释" tone="green" />
-        <MetricCard label="阻断搜索" value={blocked.length} caption="只能治理 query" tone="rose" />
+        <MetricCard label="阻断搜索" value={blocked.length} caption="只能治理搜索" tone="rose" />
         <MetricCard label="复核样本" value={vocData.querySamples.length} caption="前端快照样本" tone="amber" />
         <MetricCard label="最低准确率" value={pct(Math.min(...vocData.searchQuality.map((item) => item.precision)), 1)} caption="Bottle Warmer" tone="muted" />
       </div>
@@ -1121,7 +1247,7 @@ function SearchQualityPage() {
         <div className="card-header">
           <div>
             <h2>搜索可信度门禁</h2>
-            <p>blocked 的品类会在下游页面显示业务解释风险。</p>
+            <p>被阻断的品类会在下游页面显示业务解释风险。</p>
           </div>
         </div>
         <div className="quality-table">
@@ -1143,7 +1269,7 @@ function SearchQualityPage() {
         <div className="card-header">
           <div>
             <h2>噪声样本复核队列</h2>
-            <p>先把样本标记为真产品、噪声或不确定，再重写 query。</p>
+            <p>先把样本标记为真产品、噪声或不确定，再重写搜索词。</p>
           </div>
           <SyncBadge state={syncState} />
         </div>
@@ -1167,7 +1293,7 @@ function SearchQualityPage() {
                     })}
                     type="button"
                   >
-                    {verdict.replaceAll("_", " ")}
+                    {verdictLabel(verdict)}
                   </button>
                 ))}
               </div>
@@ -1191,9 +1317,9 @@ function RadarPanel({ painCards, selectedCard }) {
       <div className="card-header">
         <div>
           <h2>痛点雷达图</h2>
-          <p>真实 priority score 叠加 category negative baseline。</p>
+          <p>真实优先级分数叠加品类负向基线。</p>
         </div>
-        <span className="status-badge rose">mart data</span>
+        <span className="status-badge rose">数据集</span>
       </div>
       <div className="radar-layout">
         <div className="radar-wrap">
@@ -1229,19 +1355,19 @@ function MetricMini({ label, value, caption, tone }) {
 
 function SeverityDistribution({ painCards }) {
   const groups = [
-    ["高优先级", painCards.filter((item) => item.priorityScore >= 0.62).length, "score ≥ 62", "rose"],
-    ["待复核", painCards.filter((item) => item.readiness === "ready_for_review").length, "ready review", "amber"],
-    ["被阻断", painCards.filter((item) => item.readiness === "blocked_by_query_noise").length, "query blocked", "yellow"],
-    ["弱信号", painCards.filter((item) => item.readiness === "weak_signal").length, "weak signal", "muted"],
+    ["高优先级", painCards.filter((item) => item.priorityScore >= 0.62).length, "分数 ≥ 62", "rose"],
+    ["待复核", painCards.filter((item) => item.readiness === "ready_for_review").length, "可进入复核", "amber"],
+    ["被阻断", painCards.filter((item) => item.readiness === "blocked_by_query_noise").length, "搜索阻断", "yellow"],
+    ["弱信号", painCards.filter((item) => item.readiness === "weak_signal").length, "证据弱", "muted"],
   ];
   return (
     <section className="card severity-panel">
       <div className="card-header compact">
         <div>
           <h2>痛点严重度分布</h2>
-          <p>按 priority/readiness 聚合</p>
+          <p>按优先级和可行动状态聚合</p>
         </div>
-        <button className="tiny-select" type="button">真实 mart <IconChevronDown size={13} /></button>
+        <button className="tiny-select" type="button">真实数据 <IconChevronDown size={13} /></button>
       </div>
       <div className="severity-grid">
         {groups.map(([label, value, caption, tone]) => (
@@ -1274,7 +1400,7 @@ function TrendCards() {
       <div className="card-header compact">
         <div>
           <h2>闭环趋势（示意）</h2>
-          <p>下一轮接入 weekly_change_points</p>
+          <p>下一轮接入周度变化点</p>
         </div>
         <button className="tiny-select" type="button">近 12 周 <IconChevronDown size={13} /></button>
       </div>
@@ -1365,7 +1491,7 @@ function InsightPanel({ card, actionCreated, setActionCreated, setDrawerOpen }) 
             <IconSparkles size={16} />
             <p>
               {card.readiness === "blocked_by_query_noise"
-                ? "当前品类被 query noise 阻断，先进入搜索治理，不输出业务结论。"
+                ? "当前品类被搜索噪声阻断，先进入搜索治理，不输出业务结论。"
                 : `负向率 ${pct(card.negativeRate, 1)}，优先级 ${score(card.priorityScore)}，建议进入 ${card.ownerDomain} 复核。`}
             </p>
           </div>
@@ -1548,7 +1674,7 @@ function CompetitorPage() {
           <div className="card-header">
             <div>
               <h2>竞品证据队列</h2>
-              <p>优先看 ready_for_review；blocked 品类只用于搜索治理，不做竞品结论。</p>
+              <p>优先看待复核卡片；被阻断品类只用于搜索治理，不做竞品结论。</p>
             </div>
             <span className="status-badge rose">VOC 提及</span>
           </div>
@@ -1569,11 +1695,11 @@ function CompetitorPage() {
                   </div>
                   <div className="battlecard-metrics">
                     <span>
-                      <small>mentions</small>
+                      <small>提及量</small>
                       <b>{compactNumber(item.mentions)}</b>
                     </span>
                     <span>
-                      <small>negative</small>
+                      <small>负向率</small>
                       <b>{pct(item.negativeRate, 1)}</b>
                     </span>
                   </div>
@@ -1588,32 +1714,32 @@ function CompetitorPage() {
           <div className="side-header">
             <div>
               <h2>{selected.brand} · {selected.category}</h2>
-              <p>Battlecard diagnosis</p>
+              <p>竞品证据诊断</p>
             </div>
             <IconTargetArrow size={17} />
           </div>
           <div className="detail-stack">
             <div className="battlecard-diagnosis">
-              <strong>{selected.role === "owned" ? "Owned baseline" : "Competitive signal"}</strong>
+              <strong>{selected.role === "owned" ? "自有基准" : "竞品信号"}</strong>
               <p>
                 {selected.readiness === "blocked_by_query_noise"
-                  ? "该品类被 query noise 阻断，当前只能进入搜索词治理与样本复核。"
+                  ? "该品类被搜索噪声阻断，当前只能进入搜索词治理与样本复核。"
                   : selected.role === "owned"
                     ? "作为同品类基准，用于衡量竞品负向率、声量和可传播卖点差异。"
                     : negativeGap > 0
-                      ? `竞品负向率高出 owned baseline ${pct(negativeGap, 1)}，适合提炼对比型内容和产品改进假设。`
-                      : `竞品负向率低于 owned baseline ${pct(Math.abs(negativeGap), 1)}，需要回看 quote 找到优势叙事和风险点。`}
+                      ? `竞品负向率高出自有基准 ${pct(negativeGap, 1)}，适合提炼对比型内容和产品改进假设。`
+                      : `竞品负向率低于自有基准 ${pct(Math.abs(negativeGap), 1)}，需要回看原话找到优势叙事和风险点。`}
               </p>
             </div>
             <div className="meter-row">
-              <span>VOC mentions</span>
+              <span>VOC 提及量</span>
               <div className="meter-track">
                 <i style={{ width: `${Math.min(100, Math.max(8, (selected.mentions / cards[0].mentions) * 100))}%` }} />
               </div>
               <strong>{compactNumber(selected.mentions)}</strong>
             </div>
             <div className="meter-row">
-              <span>Negative rate</span>
+              <span>负向率</span>
               <div className="meter-track warning">
                 <i style={{ width: `${Math.min(100, score(selected.negativeRate) * 2)}%` }} />
               </div>
@@ -1623,7 +1749,7 @@ function CompetitorPage() {
               <IconShieldCheck size={17} />
               <div>
                 <strong>解释边界</strong>
-                <p>mentions 不是市场份额；battlecard 只表达 VOC 讨论强度和可复核证据方向。</p>
+                <p>提及量不是市场份额；竞品卡只表达 VOC 讨论强度和可复核证据方向。</p>
               </div>
             </div>
           </div>
@@ -1667,7 +1793,7 @@ function ContentOpportunityPage({ setActiveView }) {
               }}
               type="button"
             >
-              {source}
+              {source === "all" ? "全部来源" : source}
             </button>
           ))}
         </div>
@@ -1720,7 +1846,7 @@ function ContentOpportunityPage({ setActiveView }) {
               <strong>内容建议</strong>
               <p>
                 {selected.readiness === "blocked_by_query_noise"
-                  ? "当前机会来自 blocked 品类，先把 query 样本复核完成，再决定是否进入内容生产。"
+                  ? "当前机会来自被阻断品类，先把搜索样本复核完成，再决定是否进入内容生产。"
                   : `该主题有 ${compactNumber(selected.positive)} 条正向证据，正向率 ${pct(selected.positiveRate, 1)}，可进入内容角度拆解。`}
               </p>
             </div>
@@ -1801,7 +1927,7 @@ function QuoteLibraryPage() {
                 })}
                 type="button"
               >
-                approve
+                通过
               </button>
               <button
                 className={reviewed[quote.quoteId] === "needs_legal" ? "active muted" : ""}
@@ -1814,11 +1940,11 @@ function QuoteLibraryPage() {
                 })}
                 type="button"
               >
-                legal
+                法务
               </button>
               {quote.url && (
                 <a href={quote.url} target="_blank" rel="noreferrer">
-                  source <IconExternalLink size={12} />
+                  来源 <IconExternalLink size={12} />
                 </a>
               )}
             </div>
@@ -1845,21 +1971,21 @@ function ConceptCandidatePage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Concepts" value={candidates.length} caption="concept_candidates" tone="rose" />
-        <MetricCard label="Ready" value={vocData.summaries.readyConcepts} caption="可进入复核" tone="green" />
-        <MetricCard label="Blocked" value={blocked.length} caption="先治理 query" tone="amber" />
-        <MetricCard label="Decisions" value={Object.keys(decisions).length} caption="前端临时状态" tone="muted" />
+        <MetricCard label="概念候选" value={candidates.length} caption="概念候选池" tone="rose" />
+        <MetricCard label="可复核" value={vocData.summaries.readyConcepts} caption="可进入复核" tone="green" />
+        <MetricCard label="被阻断" value={blocked.length} caption="先治理搜索" tone="amber" />
+        <MetricCard label="决策记录" value={Object.keys(decisions).length} caption="前端临时状态" tone="muted" />
       </div>
 
       <div className="p2-layout">
         <section className="card p2-board">
           <div className="card-header">
             <div>
-              <h2>Concept Candidate Queue</h2>
-              <p>优先处理 ready_for_review；blocked 概念先回到搜索质量治理。</p>
+              <h2>概念候选队列</h2>
+              <p>优先处理待复核概念；被阻断概念先回到搜索质量治理。</p>
             </div>
             <div className="header-badges">
-              <span className="status-badge rose">{ready.length} ready</span>
+              <span className="status-badge rose">{ready.length} 可复核</span>
               <SyncBadge state={syncState} />
             </div>
           </div>
@@ -1870,7 +1996,7 @@ function ConceptCandidatePage() {
                 <button className={key === selectedKey ? "signal-row selected" : "signal-row"} key={key} onClick={() => setSelectedKey(key)} type="button">
                   <div>
                     <strong>{item.conceptTheme}</strong>
-                    <small>{item.category} · owner: {ownerForTheme(item.conceptTheme)}</small>
+                    <small>{item.category} · 负责人：{ownerForTheme(item.conceptTheme)}</small>
                   </div>
                   <b>{compactNumber(item.evidence)}</b>
                   <span>{compactNumber(item.negative)}</span>
@@ -1892,15 +2018,15 @@ function ConceptCandidatePage() {
           </div>
           <div className="detail-stack">
             <div className="battlecard-diagnosis">
-              <strong>Validation hypothesis</strong>
+              <strong>验证假设</strong>
               <p>
                 {selected.readiness === "blocked_by_query_noise"
-                  ? "概念信号来自 query-blocked 品类，暂不进入产品立项，只进入样本复核和 query rewrite。"
+                  ? "概念信号来自搜索阻断品类，暂不进入产品立项，只进入样本复核和搜索词重写。"
                   : `${selected.conceptTheme} 有 ${compactNumber(selected.evidence)} 条证据和 ${compactNumber(selected.negative)} 条负向触点，可进入小样本概念验证。`}
               </p>
             </div>
             <div className="experiment-grid">
-              {["证据复核 20 条", "PDP claim A/B", "客服话术验证", "产品 owner 评审"].map((item) => (
+              {["证据复核 20 条", "PDP 卖点 A/B", "客服话术验证", "产品负责人评审"].map((item) => (
                 <span key={item}>
                   <IconCheck size={14} />
                   {item}
@@ -1929,7 +2055,7 @@ function ConceptCandidatePage() {
                   })}
                   type="button"
                 >
-                  {decision}
+                  {{ test: "测试", hold: "暂缓", reject: "拒绝" }[decision]}
                 </button>
               ))}
             </div>
@@ -1952,17 +2078,17 @@ function CrisisWatchPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Daily alerts" value={vocData.summaries.crisisAlerts} caption="non-green events" tone="rose" />
-        <MetricCard label="Top negative" value={compactNumber(selected.negative)} caption={selected.day} tone="amber" />
-        <MetricCard label="Change points" value={vocData.weeklyChangePoints.length} caption="weekly_voc" tone="yellow" />
-        <MetricCard label="Triaged now" value={Object.keys(status).length} caption="前端临时状态" tone="green" />
+        <MetricCard label="每日告警" value={vocData.summaries.crisisAlerts} caption="非绿色事件" tone="rose" />
+        <MetricCard label="最高负向" value={compactNumber(selected.negative)} caption={selected.day} tone="amber" />
+        <MetricCard label="变化点" value={vocData.weeklyChangePoints.length} caption="周度 VOC" tone="yellow" />
+        <MetricCard label="已分诊" value={Object.keys(status).length} caption="前端临时状态" tone="green" />
       </div>
 
       <section className="card tab-card">
         <div className="tab-row">
           {categories.map((item) => (
             <button className={category === item ? "active" : ""} key={item} onClick={() => setCategory(item)} type="button">
-              {item}
+              {item === "all" ? "全部品类" : item}
             </button>
           ))}
         </div>
@@ -1972,11 +2098,11 @@ function CrisisWatchPage() {
         <section className="card p2-board">
           <div className="card-header">
             <div>
-              <h2>Crisis Daily Queue</h2>
+              <h2>每日风险队列</h2>
               <p>data_quality_alert 需要先判断是业务危机、搜索污染，还是采集异常。</p>
             </div>
             <div className="header-badges">
-              <span className="status-badge rose">PR/CX triage</span>
+              <span className="status-badge rose">PR/CX 分诊</span>
               <SyncBadge state={syncState} />
             </div>
           </div>
@@ -2003,7 +2129,7 @@ function CrisisWatchPage() {
                     })}
                     type="button"
                   >
-                    {status[key] || "triage"}
+                    {status[key] ? { escalated: "已升级", acknowledged: "已确认" }[status[key]] || status[key] : "分诊"}
                   </button>
                 </article>
               );
@@ -2014,8 +2140,8 @@ function CrisisWatchPage() {
         <aside className="card p2-detail">
           <div className="side-header">
             <div>
-              <h2>Runbook · {selected.category}</h2>
-              <p>{selected.day} · negative rate {pct(selected.negativeRate, 1)}</p>
+              <h2>处理手册 · {selected.category}</h2>
+              <p>{selected.day} · 负向率 {pct(selected.negativeRate, 1)}</p>
             </div>
             <IconBell size={17} />
           </div>
@@ -2029,7 +2155,7 @@ function CrisisWatchPage() {
             </div>
             <div className="runbook-grid">
               {[
-                ["数据复核", "确认 query、source、重复内容和情感标签"],
+                ["数据复核", "确认搜索词、来源、重复内容和情感标签"],
                 ["CX", "抽样 20 条原话，判断是否为真实投诉"],
                 ["PR", "如真实负面集中，准备 FAQ 和响应口径"],
                 ["负责人", "24h 内标记 acknowledged / escalated"],
@@ -2098,7 +2224,7 @@ function RegionLanguagePage() {
                 <button className={key === selectedKey ? "signal-row selected" : "signal-row"} key={key} onClick={() => setSelectedKey(key)} type="button">
                   <div>
                     <strong>{item.language} · {item.country.toUpperCase()}</strong>
-                    <small>{item.category} · country_known={item.countryKnown}</small>
+                    <small>{item.category} · 国家已知={item.countryKnown}</small>
                   </div>
                   <b>{compactNumber(item.mentions)}</b>
                   <span>{pct(item.negativeRate, 1)}</span>
@@ -2114,13 +2240,13 @@ function RegionLanguagePage() {
           <div className="side-header">
             <div>
               <h2>{selected.language} / {selected.country.toUpperCase()}</h2>
-              <p>{selected.category} · mentions {compactNumber(selected.mentions)}</p>
+              <p>{selected.category} · 提及量 {compactNumber(selected.mentions)}</p>
             </div>
             <IconUsers size={17} />
           </div>
           <div className="detail-stack">
             <div className="battlecard-diagnosis">
-              <strong>{selected.countryKnown === "yes" ? "Market-priority candidate" : "Language-only signal"}</strong>
+              <strong>{selected.countryKnown === "yes" ? "市场优先级候选" : "仅语言线索"}</strong>
               <p>
                 {selected.countryKnown === "yes"
                   ? `该行可以作为 ${selected.country.toUpperCase()} 市场的 VOC 优先级输入，但仍需结合销售、广告和客服数据。`
@@ -2128,14 +2254,14 @@ function RegionLanguagePage() {
               </p>
             </div>
             <div className="meter-row">
-              <span>Mentions</span>
+              <span>提及量</span>
               <div className="meter-track">
                 <i style={{ width: `${Math.max(8, (selected.mentions / rows[0].mentions) * 100)}%` }} />
               </div>
               <strong>{compactNumber(selected.mentions)}</strong>
             </div>
             <div className="meter-row">
-              <span>Negative</span>
+              <span>负向率</span>
               <div className="meter-track warning">
                 <i style={{ width: `${Math.min(100, score(selected.negativeRate) * 3)}%` }} />
               </div>
@@ -2177,10 +2303,10 @@ function ExecutiveMonthlyPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Month" value={month} caption="executive_monthly_brief" tone="rose" />
-        <MetricCard label="Occurrences" value={compactNumber(totals.occurrences)} caption="monthly VOC" tone="amber" />
-        <MetricCard label="Avg negative" value={pct(avgNegative, 1)} caption="weighted" tone="yellow" />
-        <MetricCard label="Ready actions" value={totals.ready} caption="owner follow-up" tone="green" />
+        <MetricCard label="月份" value={month} caption="管理层月报" tone="rose" />
+        <MetricCard label="触点量" value={compactNumber(totals.occurrences)} caption="月度 VOC" tone="amber" />
+        <MetricCard label="平均负向率" value={pct(avgNegative, 1)} caption="加权口径" tone="yellow" />
+        <MetricCard label="可行动事项" value={totals.ready} caption="负责人跟进" tone="green" />
       </div>
 
       <section className="card tab-card">
@@ -2374,7 +2500,7 @@ function OpsStatusPage() {
         .then((payload) => {
           setAuthStatus({
             state: "ok",
-            label: payload.authRequired ? `authorized · ${payload.role}` : "auth disabled",
+            label: payload.authRequired ? `已授权 · ${payload.role}` : "鉴权未启用",
             role: payload.role,
             authRequired: payload.authRequired,
           });
@@ -2383,7 +2509,7 @@ function OpsStatusPage() {
         .catch((error) => {
           setAuthStatus({
             state: "error",
-            label: error.status === 401 ? "token missing or invalid" : error.message,
+            label: error.status === 401 ? "token 缺失或无效" : error.message,
           });
           return null;
         });
@@ -2476,7 +2602,7 @@ function OpsStatusPage() {
         state: "ok",
         message: action === "backup"
           ? `API 备份完成：${payload.backup?.label || body.label}`
-          : `运维报告已生成：${payload.reportFiles?.markdown || "latest markdown"}`,
+          : `运维报告已生成：${payload.reportFiles?.markdown || "最新 Markdown"}`,
       });
     } catch (error) {
       setOpsActionState({
@@ -2492,7 +2618,7 @@ function OpsStatusPage() {
       setOpsActionState({ state: "error", message: "请先保存 token，再下载 latest report。" });
       return;
     }
-    setOpsActionState({ state: "loading", message: "正在下载 latest Markdown report..." });
+      setOpsActionState({ state: "loading", message: "正在下载最新 Markdown report..." });
     try {
       const response = await fetch(reviewStateUrl("/ops/report/latest.md"), {
         headers: reviewStateHeaders({}, token),
@@ -2507,7 +2633,7 @@ function OpsStatusPage() {
       anchor.click();
       anchor.remove();
       URL.revokeObjectURL(blobUrl);
-      setOpsActionState({ state: "ok", message: "Latest Markdown report 已下载。" });
+      setOpsActionState({ state: "ok", message: "最新 Markdown report 已下载。" });
     } catch (error) {
       setOpsActionState({ state: "error", message: `下载失败：${error.message}` });
     }
@@ -2538,7 +2664,7 @@ function OpsStatusPage() {
           <div className="card-header">
             <div>
               <h2>访问令牌</h2>
-              <p>真实飞书/企微还未接入前，先用本机 Token 管理完成生产访问闭环。</p>
+              <p>真实飞书/企微还未接入前，先用本机 token 管理完成生产访问闭环。</p>
             </div>
             <span className={`status-badge ${authTone}`}>{authStatus.label}</span>
           </div>
@@ -2613,36 +2739,36 @@ function OpsStatusPage() {
                 <strong>事故：{incident.status}</strong>
                 <p>
                   {incident.status === "open"
-                    ? `${incident.failureCount || 0}/${incident.threshold || 0} consecutive failures · ${incident.error || "unknown error"}`
-                    : `resolved at ${formatDateTime(incident.resolvedAt)} after ${incident.failureCount || 0} failure(s)`}
+                    ? `${incident.failureCount || 0}/${incident.threshold || 0} 次连续失败 · ${incident.error || "未知错误"}`
+                    : `${formatDateTime(incident.resolvedAt)} 已恢复，累计 ${incident.failureCount || 0} 次失败`}
                 </p>
               </div>
             </div>
           )}
           <div className="ops-kv-grid">
             <span>
-              <small>checkedAt</small>
+              <small>检查时间</small>
               <strong>{formatDateTime(health?.checkedAt)}</strong>
             </span>
             <span>
-              <small>releaseRef</small>
+              <small>发布版本</small>
               <strong>{shortHash(health?.releaseRef || opsStatus?.release?.ref)}</strong>
             </span>
             <span>
-              <small>apiBase</small>
+              <small>API 地址</small>
               <strong>{health?.apiBase || "unknown"}</strong>
             </span>
             <span>
-              <small>auth</small>
-              <strong>{opsStatus?.auth?.authRequired ? `required · ${opsStatus.auth.role}` : "disabled"}</strong>
+              <small>鉴权</small>
+              <strong>{opsStatus?.auth?.authRequired ? `需要 · ${opsStatus.auth.role}` : "未启用"}</strong>
             </span>
             <span>
-              <small>cert expires</small>
-              <strong>{certificate?.daysRemaining !== null && certificate?.daysRemaining !== undefined ? `${certificate.daysRemaining} days` : "unknown"}</strong>
+              <small>证书剩余</small>
+              <strong>{certificate?.daysRemaining !== null && certificate?.daysRemaining !== undefined ? `${certificate.daysRemaining} 天` : "未知"}</strong>
             </span>
             <span>
-              <small>cert notAfter</small>
-              <strong>{certificate?.notAfter || "unknown"}</strong>
+              <small>证书到期</small>
+              <strong>{certificate?.notAfter || "未知"}</strong>
             </span>
           </div>
         </section>
@@ -2653,27 +2779,27 @@ function OpsStatusPage() {
           <div className="card-header">
             <div>
               <h2>写回状态运行时</h2>
-              <p>写回状态、事件 replay 和 namespace 数量。</p>
+              <p>写回状态、事件回放和 namespace 数量。</p>
             </div>
             <span className={`status-badge ${reviewState?.replayOk ? "green" : "rose"}`}>
-              replay {reviewState?.replayOk ? "ok" : "unknown"}
+              回放 {reviewState?.replayOk ? "正常" : "未知"}
             </span>
           </div>
           <div className="ops-kv-grid">
             <span>
-              <small>schemaVersion</small>
+              <small>结构版本</small>
               <strong>{reviewState?.schemaVersion || "unknown"}</strong>
             </span>
             <span>
-              <small>totalEntries</small>
+              <small>总条目</small>
               <strong>{reviewState?.totalEntries ?? "unknown"}</strong>
             </span>
             <span>
-              <small>eventCount</small>
+              <small>事件数</small>
               <strong>{reviewState?.eventCount ?? "unknown"}</strong>
             </span>
             <span>
-              <small>lastEvent</small>
+              <small>最近事件</small>
               <strong>{formatDateTime(reviewState?.lastEventAt)}</strong>
             </span>
           </div>
@@ -2690,7 +2816,7 @@ function OpsStatusPage() {
         <section className="card ops-card">
           <div className="card-header">
             <div>
-              <h2>Backup Evidence</h2>
+              <h2>备份证据</h2>
               <p>最近一次 review-state 备份清单、手动动作和日报下载。</p>
             </div>
             <div className="header-badges">
@@ -2896,7 +3022,7 @@ function WeeklyActionReview({
         <aside className="weekly-owner-panel">
           <div>
             <h3>负责人负载</h3>
-            <p>先解决 owner 未落位，再承诺交付节奏。</p>
+            <p>先解决负责人未落位，再承诺交付节奏。</p>
           </div>
           <div className="owner-load-list">
             {review.ownerSummary.slice(0, 7).map((owner) => (
@@ -2911,7 +3037,7 @@ function WeeklyActionReview({
           </div>
           <div className="weekly-decision-note">
             <strong>会议规则</strong>
-            <p>P0/P1 必须在会中明确 owner、状态和验收指标；证据不足的 action 不能直接承诺上线，只能进入 evidence request。</p>
+            <p>P0/P1 必须在会中明确负责人、状态和验收指标；证据不足的动作不能直接承诺上线，只能进入补齐证据。</p>
           </div>
         </aside>
       </div>
@@ -3074,7 +3200,7 @@ function ActionLoopPage() {
                     </a>
                   ))}
                   {action.evidenceCount === 0 && action.quotes.length === 0 && (
-                    <span className="action-proof-empty">等待 query 治理后补齐 evidence / quote 链接</span>
+                    <span className="action-proof-empty">等待搜索治理后补齐证据 / 原话链接</span>
                   )}
                 </div>
               </div>
@@ -3138,16 +3264,16 @@ function DataQualityPage() {
     ["document_id vs occurrence_id", "唯一内容分析用 document_id，触点/搜索命中分析用 occurrence_id。"],
     ["sentiment", "自动情感只能做筛选和趋势，不能直接当投诉率。"],
     ["country zz", "zz 是未知/不可归属，不能做地域市场结论。"],
-    ["query blocked", "暖奶器和消毒器必须先做 query 治理。"],
+    ["搜索阻断", "暖奶器和消毒器必须先做搜索治理。"],
     ["raw quote", "用户原话只是候选素材，外发前必须人工复核。"],
   ];
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Source count" value={vocData.manifest.source_count} caption="source_inventory" tone="rose" />
-        <MetricCard label="Documents" value={vocData.manifest.document_count.toLocaleString()} caption="raw occurrences" tone="amber" />
-        <MetricCard label="Known gaps" value="0" caption="manifest pass" tone="green" />
-        <MetricCard label="Taxonomy" value="v1" caption="topics / brands / noise" tone="muted" />
+        <MetricCard label="来源数量" value={vocData.manifest.source_count} caption="来源清单" tone="rose" />
+        <MetricCard label="文档数" value={vocData.manifest.document_count.toLocaleString()} caption="原始触点" tone="amber" />
+        <MetricCard label="已知缺口" value="0" caption="manifest 通过" tone="green" />
+        <MetricCard label="分类体系" value="v1" caption="主题 / 品牌 / 噪声" tone="muted" />
       </div>
       <section className="card guardrail-card">
         <div className="card-header">
@@ -3199,6 +3325,7 @@ export function App() {
         <Header activeView={activeView} actionCreated={actionCreated} />
         <BusinessLoopStrip activeView={activeView} />
         <BusinessClosurePanel activeView={activeView} />
+        <PageUsageGuide activeView={activeView} />
         <AppBody
           activeView={activeView}
           category={category}
