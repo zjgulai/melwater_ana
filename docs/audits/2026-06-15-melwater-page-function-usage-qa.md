@@ -3,7 +3,8 @@
 日期：2026-06-15 UTC  
 执行人：Codex  
 生产域名：`https://melwater.lute-tlz-dddd.top/`  
-最终生产 release：`playbook-pain-radar-lab-0.0.0-2026-06-15T10-35-31-110Z`
+最终生产 release：`playbook-pain-radar-lab-0.0.0-2026-06-15T10-40-14-650Z`
+生产代码提交：`6aa6364e`
 
 ## 1. 结论
 
@@ -99,7 +100,8 @@ outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-producti
 outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-production-deep-check/local-target-pain/mobile-pain-target.json
 outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-production-deep-check/local-target-actions/actions-target.json
 outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-production-deep-check/production-final-v2/production-final-v2-e2e.json
-outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-production-deep-check/production-final-v2/
+outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-production-deep-check/production-final-v3-auth-readonly/production-final-v3-auth-readonly.json
+outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-production-deep-check/production-final-v3-auth-readonly/
 ```
 
 ## 5. 仍需保留的边界
@@ -108,4 +110,3 @@ outputs/prototypes/playbook-pain-radar-lab/output/playwright/2026-06-15-producti
 - 本轮生产 E2E 使用了受控写回，actor 为 `Codex production E2E 2026-06-15`；后续业务数据上线前应保留测试事件可追溯性。
 - 内部 package/release id 仍沿用历史包名；前端展示已脱敏，但后续可单独做包名迁移，避免运维层语义债继续积累。
 - 本轮未执行生产 rollback 恢复演练。
-
