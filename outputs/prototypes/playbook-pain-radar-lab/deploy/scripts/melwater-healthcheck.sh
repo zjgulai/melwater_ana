@@ -12,6 +12,7 @@ fi
 APP_DIR="${MELWATER_APP_DIR:-/opt/melwater-ana/app}"
 PUBLIC_URL="${MELWATER_PUBLIC_URL:-https://melwater.lute-tlz-dddd.top}"
 API_BASE="${MELWATER_API_BASE:-$PUBLIC_URL/api/review-state}"
+HOME_MARKER="${MELWATER_HEALTH_HOME_MARKER:-Melwater VOC 决策工作台}"
 TIMEOUT="${MELWATER_HEALTH_TIMEOUT:-15}"
 RESULT_FILE="${MELWATER_HEALTH_RESULT_FILE:-/opt/melwater-ana/backups/last-health.json}"
 STATE_DIR="${MELWATER_HEALTH_STATE_DIR:-$(dirname "$RESULT_FILE")}"
@@ -189,8 +190,8 @@ if [ "$homepage_status" != "200" ]; then
   fail "homepage returned HTTP $homepage_status"
 fi
 
-if ! grep -q "Melwater Analyst Lab" /tmp/melwater-health-home.html; then
-  fail "homepage title marker missing"
+if ! grep -Fq "$HOME_MARKER" /tmp/melwater-health-home.html; then
+  fail "homepage title marker missing: $HOME_MARKER"
 fi
 
 if ! printf '%s' "$api_health" | grep -q '"ok":true'; then
