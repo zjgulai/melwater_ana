@@ -8,13 +8,15 @@
 |---|---|
 | 仓库主线 | `main` 已同步 `origin/main`；当前文档 HEAD 以 `git log -1` 为准 |
 | 生产版本 | 腾讯云生产环境运行 `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`，对应代码合并提交 `7a09e358` |
+| 静态分析索引 | 已执行 `codegraph init`（67 个文件，1,445 nodes，3,270 edges）；本地 `.codegraph/` 未持久保留 |
 | 生产域名 | `https://melwater.lute-tlz-dddd.top` |
 | 生产服务 | Docker Compose 项目 `melwater_ana`，`melwater_web` 和 `melwater_api` 均已验证 healthy |
 | 数据产品 | 完整 Excel 包 `data/excel_complete_20260611/` 校验 `PASS`，336,435 个唯一文档，已知 source gaps 为 0 |
-| 产品形态 | `outputs/prototypes/playbook-pain-radar-lab`，Melwater Analyst Lab，覆盖 pain radar、action loop、battlecards、content opportunities、quotes、crisis、weekly review 与 ops 页面 |
+| 产品形态 | `outputs/prototypes/playbook-pain-radar-lab`，本地已推进为中文 Melwater VOC 决策工作台，覆盖今日决策台、数据可信度、产品痛点、行动闭环、竞品证据、内容机会、用户原话、经营复盘和系统运维页面；生产尚未发布本轮中文化改动 |
 | 当前证据 | `docs/audits/2026-06-14-melwater-production-release-qa.md` |
+| 本地发布候选 | `playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z` 已通过 `release:verify` 和腾讯云 `deploy:preflight --execute --check-ssh`；因当前工作区未提交，暂不应直接部署生产 |
 
-说明：生产代码 release 明确映射到 `7a09e358`；后续文档提交不会自动触发生产部署。
+说明：生产代码 release 明确映射到 `7a09e358`；后续文档和本地前端改动不会自动触发生产部署。
 
 ## 快速重启
 

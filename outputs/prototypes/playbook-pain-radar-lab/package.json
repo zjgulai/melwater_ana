@@ -28,6 +28,7 @@
     "ops:alert-webhook-readiness": "node deploy/scripts/melwater-alert-webhook-readiness.mjs",
     "test:webhook-readiness": "node --test deploy/scripts/melwater-alert-webhook-readiness.test.mjs",
     "build": "vite build",
+    "check:ui-copy": "node scripts/checkUiCopy.mjs",
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {

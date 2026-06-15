@@ -269,6 +269,97 @@ h1 {
   flex-wrap: wrap;
 }
 
+.loop-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 0.5px 1px rgba(30, 20, 16, 0.03);
+}
+
+.loop-strip span {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #706863;
+  background: var(--muted);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.loop-strip b {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  color: #8f827b;
+  background: #ffffff;
+  border-radius: 999px;
+  font-size: 10px;
+}
+
+.loop-strip span.active {
+  color: var(--primary-dark);
+  background: rgba(194, 91, 110, 0.08);
+  border-color: rgba(194, 91, 110, 0.14);
+}
+
+.loop-strip span.active b {
+  color: #ffffff;
+  background: var(--primary);
+}
+
+.closure-panel {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.closure-item {
+  min-height: 118px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 8px;
+  align-content: start;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 0.5px 1px rgba(30, 20, 16, 0.03);
+}
+
+.closure-item svg {
+  width: 22px;
+  height: 22px;
+  padding: 4px;
+  color: var(--primary-dark);
+  background: rgba(194, 91, 110, 0.09);
+  border-radius: 999px;
+}
+
+.closure-item strong {
+  display: block;
+  color: #2d2826;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.closure-item p {
+  color: #6d655f;
+  font-size: 10.5px;
+  line-height: 1.45;
+  margin-top: 5px;
+}
+
 .date-button,
 .icon-button,
 .profile-pill,
@@ -1119,6 +1210,109 @@ h1 {
   justify-content: space-between;
   gap: 18px;
   padding: 22px;
+}
+
+.decision-hero {
+  min-height: 148px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(194, 91, 110, 0.09), rgba(255, 255, 255, 0.94) 46%),
+    #ffffff;
+}
+
+.hero-kicker {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 24px;
+  align-items: center;
+  padding: 0 9px;
+  color: var(--primary-dark);
+  background: rgba(194, 91, 110, 0.1);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.decision-hero h2 {
+  margin-top: 12px;
+  color: #2d2826;
+  font-size: 22px;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+}
+
+.decision-hero p {
+  max-width: 720px;
+  color: #6d655f;
+  font-size: 13px;
+  line-height: 1.65;
+  margin-top: 9px;
+}
+
+.decision-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.decision-card {
+  min-height: 154px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 17px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.decision-card span {
+  color: var(--secondary-text);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.decision-card strong {
+  color: #2d2826;
+  font-size: 21px;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.decision-card p {
+  color: #6d655f;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.decision-card small {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 750;
+  margin-top: auto;
+}
+
+.decision-card.rose {
+  background: linear-gradient(180deg, #ffffff, rgba(194, 91, 110, 0.07));
+}
+
+.decision-card.amber {
+  background: linear-gradient(180deg, #ffffff, rgba(255, 149, 0, 0.08));
+}
+
+.decision-card.yellow {
+  background: linear-gradient(180deg, #ffffff, rgba(231, 168, 79, 0.12));
+}
+
+.decision-card.green {
+  background: linear-gradient(180deg, #ffffff, rgba(52, 199, 89, 0.08));
 }
 
 .command-card h2,
@@ -2799,6 +2993,8 @@ h1 {
   .action-toolbar,
   .weekly-review-grid,
   .summary-grid,
+  .decision-grid,
+  .closure-panel,
   .question-grid,
   .battlecard-grid,
   .quote-library-grid,
@@ -2868,6 +3064,8 @@ h1 {
   .weekly-review-grid,
   .meeting-lane-grid,
   .summary-grid,
+  .decision-grid,
+  .closure-panel,
   .question-grid,
   .battlecard-grid,
   .quote-library-grid,
@@ -2883,6 +3081,7 @@ h1 {
   }
 
   .command-card,
+  .decision-hero,
   .sample-card,
   .action-row,
   .action-row.action-card,
@@ -2899,6 +3098,14 @@ h1 {
 
   .quality-row {
     grid-template-columns: 1fr 70px 70px;
+  }
+
+  .loop-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .closure-item {
+    min-height: auto;
   }
 
   .quality-row .readiness {

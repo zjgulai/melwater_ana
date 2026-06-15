@@ -4,6 +4,13 @@
 
 ## 2026-06-14 当前待办
 
+- 已完成 `codegraph init`：扫描 67 个文件（1,445 nodes，3,270 edges）；当前 `.codegraph/` 未持久保留，如需使用需重新初始化。
+
+- 中文业务闭环网站第一轮已执行：主导航、首页、页面标题、全局闭环条和主业务路径文案已改为中文。
+- 中文业务闭环网站第二轮已执行：所有页面顶部已补齐“当前判断、证据基础、风险红线、建议动作、复盘指标”的统一闭环面板。
+- 中文业务闭环网站第三轮已执行：新增 UI 文案守卫 `npm run check:ui-copy`，补齐 favicon，修复系统运维页 token 表单语义，并用 Playwright 抽样验证今日决策台、数据可信度、产品痛点、行动闭环、经营复盘和系统运维。
+- 中文业务闭环网站第四轮已执行：完成桌面首页、移动首页、移动系统运维截图级 QA，证据位于 `output/playwright/2026-06-14-melwater-cn-business-loop/`；下一轮进入生产发布准备。
+- 中文业务闭环网站第五轮已执行：生成本地 release candidate `playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z`，`release:verify` 通过，腾讯云只读 `deploy:preflight --execute --check-ssh` 通过；下一步需要先 commit/push 再执行真实部署，避免生产 release 与 git 提交不可追溯。
 - 配置真实告警 webhook 后，运行生产 webhook readiness 和 alert drill。
 - 补齐生产资产清单中的负责人、SLO、腾讯云资源 ID、备份恢复证据和告警渠道。
 - 将 action owner 与 action feedback 从示例配置推进到真实业务闭环。

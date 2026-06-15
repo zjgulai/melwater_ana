@@ -21,12 +21,27 @@ Melwater 项目已经从原始 Meltwater JSON/Excel 处理，推进到可部署�
 
 注意：生产代码正确映射到 `7a09e358`；后续文档提交不会自动触发生产部署。
 
+## 2.1 整轮对话摘要（可直接交接）
+
+- 先后完成：`codegraph init`、playbook 问题梳理、网站文本从 Playbook 到 Melwater 统一、PR #1 合并、腾讯云部署回归验证、Ops/alert 可观测链路验证。
+- 生产发布结论持续一致：`main` 与 `origin/main` 对齐，生产仍使用 `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`；release 与 commit 映射可靠。
+- 当前真实未闭环口径：真实外部 webhook、action owner 与 feedback 回流、SLO/负责人/腾讯云资源清单与真实恢复演练。
+- 数据侧当前口径稳定：完整 Excel 包校验 PASS，raw 数与 unique 文档/关系行已在 handoff 文档中落地；blocked search quality gate 仍为 2 个，需后续 query rewrite 与重采复测。
+- 代码扫描口径更新：`codegraph init` 成功（67 文件，1,445 nodes，3,270 edges）；当前 `.codegraph/` 未持久保留，如需图谱查询需重新初始化。
+- 产品体验新增判断：当前网站已具备多页面能力，但仍偏分析模块堆叠，中英文混排，缺少从“数据是否可信 -> 业务问题 -> 证据 -> 负责人动作 -> 复盘结果”的中文故事线。
+- 中文产品壳第一轮已执行：前端主导航、首页“今日决策台”、全局闭环条、主页面标题和主要业务路径文案已中文化；生产尚未重新发布。
+- 中文业务闭环第二轮已执行：所有页面顶部新增“当前判断、证据基础、风险红线、建议动作、复盘指标”面板；生产尚未重新发布。
+- 中文业务闭环第三轮已执行：新增 `npm run check:ui-copy` 文案守卫，补齐 favicon，修复系统运维 token 表单语义，并通过 Playwright 抽样验证 6 条主路径。
+- 中文业务闭环第四轮已执行：输出桌面首页、移动首页、移动系统运维截图 QA，证据在 `output/playwright/2026-06-14-melwater-cn-business-loop/`；生产尚未重新发布。
+- 中文业务闭环第五轮已执行：生成本地 release candidate `playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z`，本地 `release:verify` 通过，腾讯云只读 `deploy:preflight --execute --check-ssh` 通过；因工作区未提交，未执行真实部署。
+- 接续建议优先级：先 commit/push 本轮中文化和 QA 改动，再执行真实生产部署与公网回归；随后补齐 P0 外部 webhook 与 action 闭环、生产治理信息、数据与运行时外置。
+
 ## 3. 当前能力
 
 - 原始 Meltwater JSON 导出清点、补采规划、补采执行保护、完整 Excel 解析。
 - 完整 Excel 包：`data/excel_complete_20260611/`。
 - 数据 marts：pain radar、search quality、weekly health、competitor battlecards、content opportunities、quote library、crisis watch、region priorities、concept candidates、executive monthly、action register、feedback overlay。
-- 前端产品：`outputs/prototypes/playbook-pain-radar-lab`，Melwater Analyst Lab。
+- 前端产品：`outputs/prototypes/playbook-pain-radar-lab`，本地已推进为中文 Melwater VOC 决策工作台；当前生产仍是上一版 release。
 - 生产能力：Docker release package、remote deploy、rollback dry-run、public smoke、review-state API verification、healthcheck、backup、ops report、mock alert drill、external webhook readiness gate。
 
 ## 4. 数据口径
@@ -65,6 +80,7 @@ Melwater 项目已经从原始 Meltwater JSON/Excel 处理，推进到可部署�
 - PR #1 已合并：`Release hardening and Melwater roadmap docs`。
 - 已发布生产 release：`playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`。
 - 已记录生产发布 QA 并 push 到 `origin/main`。
+- 本地中文业务闭环 release candidate 已完成 package、verify 和远程只读 preflight，但尚未 deploy。
 
 ## 6. 常用验证命令
 
@@ -100,6 +116,7 @@ docs/audits/2026-06-14-melwater-production-release-qa.md
 | `docs/README.md` | 文档索引与三方一致性快照 |
 | `docs/production/tencent-cloud-inventory.md` | 生产资产与缺口清单 |
 | `docs/audits/2026-06-14-melwater-production-release-qa.md` | 最近一次生产发布证据 |
+| `docs/audits/2026-06-14-melwater-cn-business-loop-audit.md` | 中文业务闭环产品审计和重构计划 |
 | `docs/superpowers/plans/2026-06-14-melwater-capability-debt-roadmap.md` | 项目能力、债务、路线图 |
 | `docs/playbooks/meltwater-voc-business-insights-playbook.md` | VOC 业务洞察 Playbook |
 | `outputs/prototypes/playbook-pain-radar-lab` | 前端产品与部署脚本 |
@@ -112,6 +129,8 @@ P0：
 - 给 action register 配真实 owner，并让业务动作产生 feedback 回流；当前 `action_feedback_applied=0`、`measuredActions=0`。
 - 补齐生产负责人、SLO、腾讯云资源 ID、监控入口和真实恢复演练证据。
 - 把 `ai_video.pem` 移出项目根目录，使用 SSH agent 或外部 secrets 目录。
+- 将本地中文业务决策工作台发布到腾讯云生产，并保留 release 与 commit 映射。
+- 做生产发布准备和公网回归截图，确认线上中文业务闭环面板与本地一致。
 
 P1：
 

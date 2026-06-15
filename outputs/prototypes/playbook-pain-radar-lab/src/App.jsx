@@ -56,107 +56,210 @@ const topicLabels = {
 const viewConfig = {
   home: {
     eyebrow: "Melwater VOC",
-    title: "Melwater VOC 工作台",
-    subtitle: "从业务问题进入，先看质量门禁，再进入证据、行动和复盘。",
+    title: "今日决策台",
+    subtitle: "先判断数据是否可信，再把证据转成负责人动作和复盘结果。",
   },
   search: {
-    eyebrow: "P0 · Search Quality",
-    title: "Search Quality Lab",
-    subtitle: "判断 query 是否能进入业务解释；blocked 的品类只能做治理动作。",
+    eyebrow: "P0 · 数据可信度",
+    title: "数据可信度检查",
+    subtitle: "判断搜索能不能进入业务解释；被阻断的品类只允许做治理动作。",
   },
   pain: {
-    eyebrow: "P0 · Product Pain Radar",
-    title: "Product Pain Radar",
-    subtitle: "基于真实 mart_product_pain_radar，识别高优先级产品痛点与证据样本。",
+    eyebrow: "P0 · 产品痛点",
+    title: "产品痛点优先级",
+    subtitle: "把高频痛点、负向率、证据样本和推荐负责人合并成可行动队列。",
   },
   actions: {
-    eyebrow: "P0 · Action Closed Loop",
-    title: "Action Closed Loop",
-    subtitle: "把 insight 转成 owner、状态、复盘指标和关闭原因。",
+    eyebrow: "P0 · 行动闭环",
+    title: "行动闭环看板",
+    subtitle: "把洞察转成负责人、状态、复盘指标和关闭原因。",
   },
   quality: {
-    eyebrow: "P0 · Data Quality",
-    title: "Data Quality Overview",
+    eyebrow: "P0 · 数据红线",
+    title: "数据口径与红线",
     subtitle: "解释当前数据包口径、质量风险和不能误读的指标边界。",
   },
   competitor: {
-    eyebrow: "P1 · Competitor Intelligence",
-    title: "Competitor Battlecards",
-    subtitle: "把品牌声量、负向率和 readiness 转成可复核的竞品对比素材。",
+    eyebrow: "P1 · 增长与竞品",
+    title: "竞品证据卡",
+    subtitle: "把品牌声量、负向率和可信度转成可复核的竞品对比素材。",
   },
   content: {
-    eyebrow: "P1 · Content Opportunity",
-    title: "Content Opportunity Lab",
-    subtitle: "从正向证据、渠道和主题反推内容 brief，但 blocked 品类先治理搜索。",
+    eyebrow: "P1 · 内容机会",
+    title: "内容机会池",
+    subtitle: "从正向证据、渠道和主题反推内容简报；被阻断品类先治理搜索。",
   },
   quotes: {
-    eyebrow: "P1 · Quote Library",
-    title: "User Voice Quote Library",
-    subtitle: "沉淀可复核用户原话，支持内容 brief、产品论证和证据回溯。",
+    eyebrow: "P1 · 用户原话",
+    title: "用户原话库",
+    subtitle: "沉淀可复核用户原话，支持内容简报、产品论证和证据回溯。",
   },
   concept: {
-    eyebrow: "P2 · Concept Validation",
-    title: "Concept Candidate Lab",
-    subtitle: "从痛点和证据反推产品概念候选，进入小样本验证和 owner 分派。",
+    eyebrow: "P2 · 产品验证",
+    title: "产品概念验证",
+    subtitle: "从痛点和证据反推产品概念候选，进入小样本验证和负责人分派。",
   },
   crisis: {
-    eyebrow: "P2 · Crisis Watch",
-    title: "Crisis Response Watchtower",
-    subtitle: "把每日负面集中度、周度变化点和数据质量阻断转成 PR/CX triage。",
+    eyebrow: "P2 · 风险预警",
+    title: "风险预警台",
+    subtitle: "把每日负面集中度、周度变化点和数据质量阻断转成公关/客服分诊。",
   },
   regions: {
-    eyebrow: "P2 · Region & Language",
-    title: "Region Language Priority",
+    eyebrow: "P2 · 区域语言",
+    title: "区域与语言机会",
     subtitle: "区分 country_known 与 zz 未知国家，避免把语言线索误读成地域市场结论。",
   },
   brief: {
-    eyebrow: "P2 · Executive Brief",
-    title: "Executive Monthly Brief",
-    subtitle: "为月会压缩数据质量、可行动洞察和待关闭 action 的决策入口。",
+    eyebrow: "P2 · 经营复盘",
+    title: "管理层月会",
+    subtitle: "为月会压缩数据质量、可行动洞察和待关闭动作的决策入口。",
   },
   audit: {
-    eyebrow: "P4 · Review Ops",
-    title: "Review Audit Log",
+    eyebrow: "P4 · 操作留痕",
+    title: "操作留痕",
     subtitle: "查看状态写回、操作者、版本号和事件历史，支持后续生产审计。",
   },
   ops: {
-    eyebrow: "P4 · Production Ops",
-    title: "Ops Status & Access",
+    eyebrow: "P4 · 系统运维",
+    title: "系统运维",
     subtitle: "配置本机 API token，检查生产健康、发布版本、备份和 review-state replay。",
   },
 };
 
 const navSections = [
   {
-    label: "Melwater VOC",
+    label: "业务决策",
     items: [
-      { id: "home", label: "VOC 总览", icon: IconHome },
-      { id: "search", label: "搜索质量", icon: IconSearch },
-      { id: "pain", label: "痛点雷达", icon: IconChartRadar },
-      { id: "actions", label: "动作闭环", icon: IconClipboardCheck },
-      { id: "quality", label: "数据质量", icon: IconShieldCheck },
+      { id: "home", label: "今日决策台", icon: IconHome },
+      { id: "search", label: "数据可信度", icon: IconSearch },
+      { id: "pain", label: "产品痛点", icon: IconChartRadar },
+      { id: "actions", label: "行动闭环", icon: IconClipboardCheck },
     ],
   },
   {
-    label: "下一批页面",
+    label: "机会与复盘",
     items: [
-      { id: "competitor", label: "竞品洞察", icon: IconTargetArrow },
+      { id: "competitor", label: "竞品证据", icon: IconTargetArrow },
       { id: "content", label: "内容机会", icon: IconListDetails },
-      { id: "quotes", label: "Quote Library", icon: IconMessageCircle },
-      { id: "concept", label: "概念候选", icon: IconFlask },
-      { id: "crisis", label: "危机预警", icon: IconBell },
-      { id: "regions", label: "地域语言", icon: IconUsers },
-      { id: "brief", label: "管理层月报", icon: IconBookmark },
-      { id: "audit", label: "审计日志", icon: IconDatabase },
+      { id: "quotes", label: "用户原话", icon: IconMessageCircle },
+      { id: "concept", label: "概念验证", icon: IconFlask },
+      { id: "crisis", label: "风险预警", icon: IconBell },
+      { id: "regions", label: "区域语言", icon: IconUsers },
+      { id: "brief", label: "经营复盘", icon: IconBookmark },
     ],
   },
   {
-    label: "系统设置",
+    label: "治理与运维",
     items: [
-      { id: "ops", label: "Ops 状态", icon: IconShieldCheck },
+      { id: "quality", label: "数据红线", icon: IconShieldCheck },
+      { id: "audit", label: "操作留痕", icon: IconDatabase },
+      { id: "ops", label: "系统运维", icon: IconShieldCheck },
     ],
   },
 ];
+
+const businessLoopSteps = ["数据可信", "业务问题", "证据判断", "负责人动作", "复盘结果"];
+
+const closureGuides = {
+  home: {
+    judge: "当前数据包可支撑内部 VOC 决策，但暖奶器/消毒器仍有搜索阻断。",
+    evidence: "336,435 个唯一文档、6,871,226 行关系数据、57 条待闭环动作。",
+    guardrail: "不能把声量等同销量，不能把自动情感等同真实投诉率。",
+    action: "先处理阻断搜索，再分派高优先级痛点和待复盘动作。",
+    metric: "本周看阻断数、负责人落位率、已复盘动作数。",
+  },
+  search: {
+    judge: "2 个搜索仍被阻断，被阻断品类只能输出治理动作。",
+    evidence: "搜索可信度表和噪声样本队列用于判断 query precision。",
+    guardrail: "未通过 precision 前，声量、负向率和高频词不能写进业务结论。",
+    action: "复核样本，重写 query，完成后重采并重建 marts。",
+    metric: "precision 达到阈值，blocked gate 关闭或保留业务例外。",
+  },
+  pain: {
+    judge: "吸奶器已有可行动痛点，适合进入产品、CX 和内容分派。",
+    evidence: "痛点卡包含负向率、证据数、代表样本和推荐 owner domain。",
+    guardrail: "证据弱或搜索阻断的痛点只能作为假设，不能直接承诺产品路线。",
+    action: "把 P0/P1 痛点转成产品待办、客服话术或内容解释。",
+    metric: "跟踪 owner 落位、动作上线、同类负向样本变化。",
+  },
+  actions: {
+    judge: "当前系统有行动登记能力，但真实 measured actions 仍为 0。",
+    evidence: "行动表记录状态、负责人、优先级、证据链和周会快照。",
+    guardrail: "没有负责人、证据或复盘指标的动作不能视为闭环。",
+    action: "本周先确认负责人，再推进 P0/P1 到已接收或处理中。",
+    metric: "action_feedback_applied、measuredActions、逾期动作数。",
+  },
+  quality: {
+    judge: "当前数据口径可复核，但需要持续显示解释红线。",
+    evidence: "manifest、source inventory、document/occurrence 口径和情感字段。",
+    guardrail: "document_id、occurrence_id、sentiment、zz 国家码不能混用。",
+    action: "把红线规则挂到所有业务页和导出材料。",
+    metric: "进入会议的洞察必须带口径说明和样本复核记录。",
+  },
+  competitor: {
+    judge: "竞品证据可用于话术和内容素材，但不能当市场份额。",
+    evidence: "18 张竞品卡，按品牌、品类、负向率和 readiness 排序。",
+    guardrail: "搜索配置偏向 Momcozy，不能直接比较总声量。",
+    action: "把 ready 卡片转为销售 objection、内容角度或产品差异说明。",
+    metric: "每张输出卡至少有样本、结论、负责人和使用场景。",
+  },
+  content: {
+    judge: "内容机会可转为 brief，但被阻断品类要先回到搜索治理。",
+    evidence: "30 条内容机会、10 条 ready brief、120 条原话候选。",
+    guardrail: "用户原话不能未经人工复核就外发。",
+    action: "生成主题简报、原话短名单和发布渠道建议。",
+    metric: "每周沉淀 brief 数、通过审核原话数、上线后互动指标。",
+  },
+  quotes: {
+    judge: "原话库可支撑内容和产品论证，但当前仍是候选素材。",
+    evidence: "原话包含 sentiment、topic、documentId 和 source URL。",
+    guardrail: "原话外发前必须确认授权、语境和合规风险。",
+    action: "将原话标记为可用、需法务复核或不可用。",
+    metric: "审核通过率、被内容 brief 采用数量、引用后表现。",
+  },
+  concept: {
+    judge: "概念候选适合做小样验证，不等同产品路线决策。",
+    evidence: "概念卡来自痛点、正向偏好、反证和证据样本。",
+    guardrail: "缺少订单、退货、客服或评论数据时不能宣称商业收益。",
+    action: "把高证据概念送入产品评审或小样测试。",
+    metric: "概念测试完成数、反证记录、进入 roadmap 比例。",
+  },
+  crisis: {
+    judge: "风险页用于分诊，不直接等同品牌危机。",
+    evidence: "每日负向集中度、周度变化点、平台和影响力信号。",
+    guardrail: "未抽样复核前不能对外升级为危机结论。",
+    action: "PR/CX 在 24 小时内确认 acknowledged 或 escalated。",
+    metric: "响应时长、误报原因、72 小时复盘状态。",
+  },
+  regions: {
+    judge: "区域语言页优先指导内容本地化，不直接判断市场需求。",
+    evidence: "language、country_known、mentions 和 country zz 风险。",
+    guardrail: "zz 是未知国家，不能当作地域市场。",
+    action: "先按语言抽样，再与销售地区和客服语言对齐。",
+    metric: "重点语言样本通过率、本地化内容产出和后续反馈。",
+  },
+  brief: {
+    judge: "经营复盘页应收口为管理层要决策和追责的事项。",
+    evidence: "月度 VOC、阻断搜索、ready actions、内容机会。",
+    guardrail: "只汇报可解释数据；被阻断品类只汇报治理进度。",
+    action: "月会明确本周决定、负责人、截止日和复盘指标。",
+    metric: "会议后关闭动作数、逾期动作数、阻断搜索下降数。",
+  },
+  audit: {
+    judge: "操作留痕证明写回过程可追踪，但不是业务闭环本身。",
+    evidence: "事件历史包含 namespace、actor、版本和时间戳。",
+    guardrail: "审计通过不代表动作有效，仍需业务复盘指标。",
+    action: "用事件历史排查冲突、回放状态和生成证据包。",
+    metric: "写回成功率、冲突数、可回放事件完整率。",
+  },
+  ops: {
+    judge: "系统运维页证明生产可用性，不替代业务价值验证。",
+    evidence: "healthcheck、release ref、backup、ops report 和 incident 状态。",
+    guardrail: "mock alert drill 不证明飞书/企微真实送达。",
+    action: "配置真实 webhook、补齐 SLO/负责人、执行恢复演练。",
+    metric: "webhook readiness、恢复演练证据、SLO 达标率。",
+  },
+};
 
 const microTrends = [
   { label: "声量", color: "#C25B6E", data: [18, 25, 21, 30, 28, 35, 37] },
@@ -213,7 +316,66 @@ function displayTopic(card) {
 }
 
 function readinessLabel(value) {
-  return String(value || "").replaceAll("_", " ");
+  const labels = {
+    pass: "通过",
+    ready: "可判断",
+    ready_for_action: "可行动",
+    ready_for_review: "待复核",
+    blocked_by_query_noise: "搜索阻断",
+    data_quality_alert: "质量风险",
+    weak_signal: "弱信号",
+    pending_review: "待审核",
+  };
+  return labels[value] || String(value || "").replaceAll("_", " ");
+}
+
+function actionStatusLabel(value) {
+  const labels = {
+    Proposed: "待确认",
+    Accepted: "已接收",
+    "In Progress": "处理中",
+    Shipped: "已上线",
+    Measured: "已复盘",
+    Closed: "已关闭",
+    Rejected: "已拒绝",
+  };
+  return labels[value] || value;
+}
+
+function actionTypeLabel(value) {
+  const labels = {
+    competitor_matrix: "竞品证据卡",
+    concept_test: "概念验证",
+    content_brief: "内容简报",
+    executive_decision: "管理层决策",
+    pr_triage: "公关分诊",
+    product_backlog: "产品待办",
+    query_update: "搜索治理",
+  };
+  return labels[value] || String(value || "").replaceAll("_", " ");
+}
+
+function sentimentLabel(value) {
+  const labels = {
+    all: "全部",
+    positive: "正向",
+    negative: "负向",
+    neutral: "中性",
+    unknown: "未知",
+  };
+  return labels[value] || value;
+}
+
+function decisionLaneLabel(value) {
+  const labels = {
+    Archive: "归档",
+    "Approve data fix": "批准数据治理",
+    "Confirm owner": "确认负责人",
+    "Request evidence": "补齐证据",
+    "Commit this cycle": "本周期承诺",
+    "Track next": "下轮跟进",
+  };
+  return labels[value] || value;
 }
 
 function ownerForTheme(theme) {
@@ -292,7 +454,7 @@ function derivedBusinessImpact(action, card) {
 }
 
 function actionOwnerHint(action) {
-  return action.owner_name || actionOwnerHints[action.owner_domain] || action.owner_domain || "Unassigned owner";
+  return action.owner_name || actionOwnerHints[action.owner_domain] || action.owner_domain || "未分配负责人";
 }
 
 function enrichAction(action, drafts = {}) {
@@ -308,7 +470,7 @@ function enrichAction(action, drafts = {}) {
     ...action,
     category: actionCategory(action),
     topicId: actionTopicId(action),
-    displayTopic: card ? displayTopic(card) : "Search quality",
+    displayTopic: card ? displayTopic(card) : "搜索质量",
     ownerName: ownerOverride || actionOwnerHint(action),
     ownerResolved: Boolean(ownerOverride || action.owner_name),
     priority: priorityOverride || derivedPriority(action, card),
@@ -323,27 +485,27 @@ function enrichAction(action, drafts = {}) {
 }
 
 function actionDueInfo(action, now = new Date()) {
-  if (!action.due_date) return { date: null, days: null, label: "No due date", tone: "muted" };
+  if (!action.due_date) return { date: null, days: null, label: "未设截止日", tone: "muted" };
   const [year, month, day] = String(action.due_date).split("-").map(Number);
   const due = new Date(year, month - 1, day);
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const days = Math.ceil((due.getTime() - today.getTime()) / 86400000);
-  if (days < 0) return { date: action.due_date, days, label: `${Math.abs(days)}d overdue`, tone: "rose" };
-  if (days === 0) return { date: action.due_date, days, label: "Due today", tone: "rose" };
-  if (days <= 7) return { date: action.due_date, days, label: `${days}d left`, tone: "amber" };
-  if (days <= 14) return { date: action.due_date, days, label: `${days}d left`, tone: "yellow" };
-  return { date: action.due_date, days, label: `${days}d left`, tone: "muted" };
+  if (days < 0) return { date: action.due_date, days, label: `逾期 ${Math.abs(days)} 天`, tone: "rose" };
+  if (days === 0) return { date: action.due_date, days, label: "今天到期", tone: "rose" };
+  if (days <= 7) return { date: action.due_date, days, label: `剩余 ${days} 天`, tone: "amber" };
+  if (days <= 14) return { date: action.due_date, days, label: `剩余 ${days} 天`, tone: "yellow" };
+  return { date: action.due_date, days, label: `剩余 ${days} 天`, tone: "muted" };
 }
 
 function actionEvidenceStrength(action) {
   if (action.action_type === "query_update") {
-    return { label: "QA required", score: 0, tone: "amber", caption: "blocked search needs sample review" };
+    return { label: "需复核", score: 0, tone: "amber", caption: "搜索阻断需要样本复核" };
   }
   const scoreValue = action.evidenceCount + action.quotes.length * 2;
-  if (scoreValue >= 20) return { label: "Strong", score: scoreValue, tone: "green", caption: `${action.evidenceCount} samples / ${action.quotes.length} quotes` };
-  if (scoreValue >= 6) return { label: "Medium", score: scoreValue, tone: "amber", caption: `${action.evidenceCount} samples / ${action.quotes.length} quotes` };
-  if (scoreValue > 0) return { label: "Weak", score: scoreValue, tone: "yellow", caption: `${action.evidenceCount} samples / ${action.quotes.length} quotes` };
-  return { label: "Missing", score: 0, tone: "rose", caption: "no evidence linked" };
+  if (scoreValue >= 20) return { label: "证据强", score: scoreValue, tone: "green", caption: `${action.evidenceCount} 样本 / ${action.quotes.length} 原话` };
+  if (scoreValue >= 6) return { label: "证据中", score: scoreValue, tone: "amber", caption: `${action.evidenceCount} 样本 / ${action.quotes.length} 原话` };
+  if (scoreValue > 0) return { label: "证据弱", score: scoreValue, tone: "yellow", caption: `${action.evidenceCount} 样本 / ${action.quotes.length} 原话` };
+  return { label: "缺证据", score: 0, tone: "rose", caption: "尚未关联证据" };
 }
 
 function actionDecisionLane(action) {
@@ -406,7 +568,7 @@ function formatSnapshotDate(date = new Date()) {
 
 function buildMeetingSnapshotPayload(review, reviewActions, overrides = {}) {
   const snapshotDate = formatSnapshotDate();
-  const snapshotTitle = overrides.title || `Melwater Weekly Action Review ${snapshotDate}`;
+  const snapshotTitle = overrides.title || `Melwater 每周行动复盘 ${snapshotDate}`;
   const note = overrides.note || "";
   const snapshotKey = `weekly-${snapshotDate}`;
   return {
@@ -656,7 +818,7 @@ function useWritebackState(namespace) {
 
 function AppLogo() {
   return (
-    <div className="app-logo" aria-label="Melwater Analyst Lab">
+    <div className="app-logo" aria-label="Melwater VOC 决策工作台">
       <IconChartRadar size={19} stroke={2.4} />
     </div>
   );
@@ -668,8 +830,8 @@ function Sidebar({ activeView, setActiveView }) {
       <div className="sidebar-top">
         <AppLogo />
         <div className="brand-copy">
-          <strong>Melwater Analyst Lab</strong>
-          <span>VOC closed-loop analytics</span>
+          <strong>Melwater VOC 决策工作台</strong>
+          <span>证据到行动闭环</span>
         </div>
       </div>
 
@@ -702,14 +864,14 @@ function Sidebar({ activeView, setActiveView }) {
 
       <div className="sidebar-footer">
         <button className="nav-section-label" type="button">
-          <span>系统设置</span>
+          <span>当前身份</span>
           <IconChevronDown size={14} />
         </button>
         <div className="user-chip">
           <span className="avatar">A</span>
           <div>
-            <strong>Analyst</strong>
-            <span>Online</span>
+            <strong>分析师</strong>
+            <span>在线</span>
           </div>
         </div>
       </div>
@@ -732,13 +894,13 @@ function Header({ activeView, actionCreated }) {
           2026/01/01 - 2026/06/11
           <IconChevronDown size={14} />
         </button>
-        <button className="icon-button" aria-label="Refresh" type="button">
+        <button className="icon-button" aria-label="刷新" type="button">
           <IconRefresh size={17} />
         </button>
-        <button className="icon-button" aria-label="Export" type="button">
+        <button className="icon-button" aria-label="导出" type="button">
           <IconDownload size={17} />
         </button>
-        <button className="icon-button has-dot" aria-label="Notifications" type="button">
+        <button className="icon-button has-dot" aria-label="通知" type="button">
           <IconBell size={17} />
           {actionCreated && <span />}
         </button>
@@ -748,6 +910,59 @@ function Header({ activeView, actionCreated }) {
         </div>
       </div>
     </header>
+  );
+}
+
+function BusinessLoopStrip({ activeView }) {
+  const activeIndex = {
+    home: 0,
+    search: 0,
+    quality: 0,
+    pain: 2,
+    competitor: 2,
+    content: 2,
+    quotes: 2,
+    concept: 2,
+    crisis: 2,
+    regions: 2,
+    actions: 3,
+    brief: 4,
+    audit: 4,
+    ops: 4,
+  }[activeView] ?? 0;
+  return (
+    <section className="loop-strip" aria-label="业务闭环路径">
+      {businessLoopSteps.map((step, index) => (
+        <span className={index <= activeIndex ? "active" : ""} key={step}>
+          <b>{index + 1}</b>
+          {step}
+        </span>
+      ))}
+    </section>
+  );
+}
+
+function BusinessClosurePanel({ activeView }) {
+  const guide = closureGuides[activeView] || closureGuides.home;
+  const items = [
+    ["当前判断", guide.judge, IconCircleCheck],
+    ["证据基础", guide.evidence, IconDatabase],
+    ["风险红线", guide.guardrail, IconShieldCheck],
+    ["建议动作", guide.action, IconTargetArrow],
+    ["复盘指标", guide.metric, IconClipboardCheck],
+  ];
+  return (
+    <section className="closure-panel" aria-label="页面业务闭环">
+      {items.map(([label, body, Icon]) => (
+        <article className="closure-item" key={label}>
+          <Icon size={15} />
+          <div>
+            <strong>{label}</strong>
+            <p>{body}</p>
+          </div>
+        </article>
+      ))}
+    </section>
   );
 }
 
@@ -766,10 +981,10 @@ function FilterBar({ category, setCategory }) {
   return (
     <section className="filter-bar">
       <SelectPill icon={IconBox} label="品类" value={category} />
-      <SelectPill icon={IconTargetArrow} label="指标" value="Priority / Quality" />
-      <SelectPill icon={IconShieldCheck} label="数据包" value="20260611 marts" />
+      <SelectPill icon={IconTargetArrow} label="指标" value="优先级 / 可信度" />
+      <SelectPill icon={IconShieldCheck} label="数据包" value="20260611 洞察集" />
       <SelectPill icon={IconCalendar} label="时间范围" value="近 12 周" />
-      <SelectPill icon={IconAdjustmentsHorizontal} label="排序" value="Readiness first" />
+      <SelectPill icon={IconAdjustmentsHorizontal} label="排序" value="先看可行动" />
       <button className="filter-toggle" onClick={() => setCategory(category === "吸奶器" ? "全部品类" : "吸奶器")} type="button">
         <IconFilter size={16} />
         更多筛选
@@ -799,7 +1014,7 @@ function MetricCard({ label, value, caption, tone = "rose" }) {
 }
 
 function SyncBadge({ state }) {
-  const label = state === "api" ? "api writeback" : state === "local" ? "local fallback" : state === "conflict" ? "conflict refreshed" : "loading state";
+  const label = state === "api" ? "已写回 API" : state === "local" ? "本地暂存" : state === "conflict" ? "冲突已刷新" : "同步中";
   return <span className={`sync-badge ${state}`}>{label}</span>;
 }
 
@@ -811,7 +1026,7 @@ function QualityGateBanner({ category }) {
       <section className="quality-banner pass">
         <IconCircleCheck size={18} />
         <div>
-          <strong>Quality gate pass</strong>
+          <strong>可信度通过</strong>
           <p>当前筛选下没有 query-blocked 搜索，可进入业务解释，但仍需证据复核。</p>
         </div>
       </section>
@@ -831,45 +1046,56 @@ function QualityGateBanner({ category }) {
 function HomePage({ setActiveView }) {
   const counts = vocData.manifest.counts;
   const topQuestions = [
-    ["搜索是否可信？", "先治理暖奶器/消毒器 query noise", "search", "blocked"],
-    ["吸奶器痛点集中在哪？", "续航、噪音、舒适度进入 ready 状态", "pain", "ready"],
-    ["哪些 action 没有 owner？", "57 条 action 仍为 Proposed", "actions", "review"],
-    ["当前数据能否下结论？", "document/occurrence/sentiment/zz 需要分开解释", "quality", "guardrail"],
-    ["竞品对比怎么讲？", "18 张 battlecard，6 张可进入复核", "competitor", "ready"],
-    ["内容机会在哪里？", "30 条机会，10 条可形成 content brief", "content", "ready"],
-    ["哪些原话能引用？", "120 条 quote 候选，需要逐条复核", "quotes", "review"],
-    ["哪些概念值得验证？", "21 个概念候选，7 个可进入复核", "concept", "ready"],
-    ["今天有危机信号吗？", "30 条 daily alert 需要 PR/CX triage", "crisis", "blocked"],
-    ["地域结论可靠吗？", "区分 19 条已知国家与 zz 未知国家", "regions", "guardrail"],
-    ["月会先看什么？", "按月份压缩 blocked search 与 ready action", "brief", "review"],
-    ["写回是否可审计？", "查看 actor、版本号、事件历史与 CSV 导出", "audit", "ready"],
-    ["生产是否健康？", "检查 Token、健康检查、备份和发布版本", "ops", "ready"],
+    ["这些数据能下结论吗？", "先处理暖奶器/消毒器搜索噪声，避免错误业务判断。", "search", "已阻断", "rose"],
+    ["今天最该解决哪个产品问题？", "吸奶器续航、噪音、舒适度已进入证据复核队列。", "pain", "可行动", "green"],
+    ["哪些动作还没有负责人？", "57 条建议动作仍需负责人确认、状态推进和复盘口径。", "actions", "待确认", "amber"],
+    ["哪些结论不能说？", "声量、情感、国家码和用户原话必须按红线解释。", "quality", "红线", "amber"],
+    ["竞品和内容该怎么转化？", "竞品证据、内容机会和用户原话需要合并为增长动作。", "competitor", "可复核", "green"],
+    ["本周月会要决策什么？", "先看阻断搜索、待分派动作、风险预警和未复盘事项。", "brief", "待复盘", "amber"],
+  ];
+  const decisionCards = [
+    ["数据可信", `${vocData.summaries.blockedSearches} 个搜索阻断`, "先治理 query，再开放业务解释。", "search", "rose"],
+    ["产品优先级", `${vocData.painCards.length} 张痛点卡`, "按证据深度和负向率进入产品/CX 队列。", "pain", "amber"],
+    ["行动闭环", `${vocData.summaries.proposedActions} 条待确认`, "必须明确负责人、截止日和复盘指标。", "actions", "yellow"],
+    ["经营复盘", `${vocData.executiveMonthly.length} 条月度记录`, "压缩为管理层需要决策和追责的事项。", "brief", "green"],
   ];
 
   return (
     <div className="home-stack">
       <div className="summary-grid">
-        <MetricCard label="唯一洞察" value={counts.fact_insight} caption="fact_insight" tone="rose" />
-        <MetricCard label="证据样本" value={counts.fact_evidence_sample} caption="fact_evidence_sample" tone="amber" />
-        <MetricCard label="待闭环动作" value={vocData.summaries.proposedActions} caption="all status = Proposed" tone="yellow" />
-        <MetricCard label="阻断搜索" value={vocData.summaries.blockedSearches} caption="query quality gate" tone="muted" />
+        <MetricCard label="洞察总量" value={counts.fact_insight} caption="已生成 insight" tone="rose" />
+        <MetricCard label="证据样本" value={counts.fact_evidence_sample} caption="可回溯 evidence" tone="amber" />
+        <MetricCard label="待闭环动作" value={vocData.summaries.proposedActions} caption="仍需负责人确认" tone="yellow" />
+        <MetricCard label="阻断搜索" value={vocData.summaries.blockedSearches} caption="暂不能下业务结论" tone="muted" />
       </div>
 
-      <section className="card command-card">
+      <section className="card decision-hero">
         <div>
-          <h2>从业务问题进入</h2>
-          <p>P2 已把概念验证、危机 triage、地域语言优先级和管理层月报接入同一套证据闭环。</p>
+          <span className="hero-kicker">今日处理顺序</span>
+          <h2>先确认数据可信，再把问题分派给负责人</h2>
+          <p>这个页面只保留业务负责人今天需要处理的路径：哪些数据不能解释、哪些痛点优先处理、哪些动作没人负责、哪些事项进入复盘。</p>
         </div>
         <MartFreshness />
       </section>
 
+      <div className="decision-grid">
+        {decisionCards.map(([title, value, body, route, tone]) => (
+          <button className={`decision-card card ${tone}`} key={title} onClick={() => setActiveView(route)} type="button">
+            <span>{title}</span>
+            <strong>{value}</strong>
+            <p>{body}</p>
+            <small>进入处理 <IconExternalLink size={13} /></small>
+          </button>
+        ))}
+      </div>
+
       <div className="question-grid">
-        {topQuestions.map(([title, body, route, status]) => (
+        {topQuestions.map(([title, body, route, status, tone]) => (
           <button className="question-card card" key={title} onClick={() => setActiveView(route)} type="button">
-            <span className={`status-badge ${status === "ready" ? "green" : status === "blocked" ? "rose" : "amber"}`}>{status}</span>
+            <span className={`status-badge ${tone}`}>{status}</span>
             <h2>{title}</h2>
             <p>{body}</p>
-            <small>打开页面 <IconExternalLink size={13} /></small>
+            <small>进入页面 <IconExternalLink size={13} /></small>
           </button>
         ))}
       </div>
@@ -885,16 +1111,16 @@ function SearchQualityPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Pass searches" value={pass.length} caption="可进入业务解释" tone="green" />
-        <MetricCard label="Blocked searches" value={blocked.length} caption="只能治理 query" tone="rose" />
-        <MetricCard label="Review samples" value={vocData.querySamples.length} caption="前端快照样本" tone="amber" />
-        <MetricCard label="Worst precision" value={pct(Math.min(...vocData.searchQuality.map((item) => item.precision)), 1)} caption="Bottle Warmer" tone="muted" />
+        <MetricCard label="通过搜索" value={pass.length} caption="可进入业务解释" tone="green" />
+        <MetricCard label="阻断搜索" value={blocked.length} caption="只能治理 query" tone="rose" />
+        <MetricCard label="复核样本" value={vocData.querySamples.length} caption="前端快照样本" tone="amber" />
+        <MetricCard label="最低准确率" value={pct(Math.min(...vocData.searchQuality.map((item) => item.precision)), 1)} caption="Bottle Warmer" tone="muted" />
       </div>
 
       <section className="card data-table-card">
         <div className="card-header">
           <div>
-            <h2>Query Quality Gate</h2>
+            <h2>搜索可信度门禁</h2>
             <p>blocked 的品类会在下游页面显示业务解释风险。</p>
           </div>
         </div>
@@ -907,7 +1133,7 @@ function SearchQualityPage() {
               </span>
               <b>{item.occurrences.toLocaleString()}</b>
               <i>{pct(item.precision, 1)}</i>
-              <span className={`readiness ${item.status}`}>{item.status}</span>
+              <span className={`readiness ${item.status}`}>{readinessLabel(item.status)}</span>
             </div>
           ))}
         </div>
@@ -916,7 +1142,7 @@ function SearchQualityPage() {
       <section className="card data-table-card">
         <div className="card-header">
           <div>
-            <h2>Noise Sample Review Queue</h2>
+            <h2>噪声样本复核队列</h2>
             <p>先把样本标记为真产品、噪声或不确定，再重写 query。</p>
           </div>
           <SyncBadge state={syncState} />
@@ -1069,7 +1295,7 @@ function IssueTable({ selectedId, onSelect, painCards }) {
     <section className="card issue-card">
       <div className="card-header">
         <div>
-          <h2>痛点明细（Issue List）</h2>
+          <h2>痛点明细</h2>
           <p>点击行查看右侧洞察、证据样本和推荐动作。</p>
         </div>
         <div className="table-tools">
@@ -1082,8 +1308,8 @@ function IssueTable({ selectedId, onSelect, painCards }) {
           <span>痛点</span>
           <span>负责人</span>
           <span>占比</span>
-          <span>Priority</span>
-          <span>Lift</span>
+          <span>优先级</span>
+          <span>提升</span>
           <span>趋势</span>
           <span>渠道</span>
           <span>状态</span>
@@ -1311,20 +1537,20 @@ function CompetitorPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Battlecards" value={cards.length} caption="brand x category" tone="rose" />
-        <MetricCard label="Ready cards" value={vocData.summaries.readyCompetitors} caption="可进入复核" tone="green" />
-        <MetricCard label="Competitor brands" value={competitors.length} caption="非 owned rows" tone="amber" />
-        <MetricCard label="Categories" value={categories.size} caption="当前数据覆盖" tone="muted" />
+        <MetricCard label="竞品卡" value={cards.length} caption="品牌 x 品类" tone="rose" />
+        <MetricCard label="可复核卡片" value={vocData.summaries.readyCompetitors} caption="可进入复核" tone="green" />
+        <MetricCard label="竞品品牌" value={competitors.length} caption="非自有品牌行" tone="amber" />
+        <MetricCard label="覆盖品类" value={categories.size} caption="当前数据覆盖" tone="muted" />
       </div>
 
       <div className="battlecard-layout">
         <section className="card battlecard-board">
           <div className="card-header">
             <div>
-              <h2>Brand Battlecard Queue</h2>
+              <h2>竞品证据队列</h2>
               <p>优先看 ready_for_review；blocked 品类只用于搜索治理，不做竞品结论。</p>
             </div>
-            <span className="status-badge rose">VOC mentions</span>
+            <span className="status-badge rose">VOC 提及</span>
           </div>
           <div className="battlecard-grid">
             {cards.map((item) => {
@@ -1423,10 +1649,10 @@ function ContentOpportunityPage({ setActiveView }) {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Opportunities" value={vocData.contentOpportunities.length} caption="content briefs candidates" tone="rose" />
-        <MetricCard label="Ready briefs" value={vocData.summaries.readyContentBriefs} caption="ready_for_review" tone="green" />
-        <MetricCard label="Quote library" value={vocData.summaries.quotes} caption="可复核原话" tone="amber" />
-        <MetricCard label="Source types" value={sourceTypes.length - 1} caption="渠道维度" tone="muted" />
+        <MetricCard label="内容机会" value={vocData.contentOpportunities.length} caption="内容简报候选" tone="rose" />
+        <MetricCard label="可复核简报" value={vocData.summaries.readyContentBriefs} caption="待人工复核" tone="green" />
+        <MetricCard label="用户原话" value={vocData.summaries.quotes} caption="可复核原话" tone="amber" />
+        <MetricCard label="来源类型" value={sourceTypes.length - 1} caption="渠道维度" tone="muted" />
       </div>
 
       <section className="card tab-card">
@@ -1451,11 +1677,11 @@ function ContentOpportunityPage({ setActiveView }) {
         <section className="card data-table-card">
           <div className="card-header">
             <div>
-              <h2>Content Opportunity Queue</h2>
-              <p>按正向证据量排序，优先生成主题 brief 和 quote shortlist。</p>
+              <h2>内容机会队列</h2>
+              <p>按正向证据量排序，优先生成主题简报和用户原话短名单。</p>
             </div>
             <button className="tiny-select" onClick={() => setActiveView("quotes")} type="button">
-              打开 Quote Library
+              打开用户原话库
             </button>
           </div>
           <div className="opportunity-list">
@@ -1491,7 +1717,7 @@ function ContentOpportunityPage({ setActiveView }) {
           </div>
           <div className="detail-stack">
             <div className="battlecard-diagnosis">
-              <strong>Brief recommendation</strong>
+              <strong>内容建议</strong>
               <p>
                 {selected.readiness === "blocked_by_query_noise"
                   ? "当前机会来自 blocked 品类，先把 query 样本复核完成，再决定是否进入内容生产。"
@@ -1522,17 +1748,17 @@ function QuoteLibraryPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Quote candidates" value={vocData.quoteLibrary.length} caption="content_brief_quote" tone="rose" />
-        <MetricCard label="Filtered" value={quotes.length} caption={sentiment} tone="amber" />
-        <MetricCard label="Reviewed now" value={Object.keys(reviewed).length} caption="前端临时状态" tone="green" />
-        <MetricCard label="Usage type" value="1" caption="brief quote" tone="muted" />
+        <MetricCard label="原话候选" value={vocData.quoteLibrary.length} caption="内容简报原话" tone="rose" />
+        <MetricCard label="当前筛选" value={quotes.length} caption={sentimentLabel(sentiment)} tone="amber" />
+        <MetricCard label="本次已审" value={Object.keys(reviewed).length} caption="前端临时状态" tone="green" />
+        <MetricCard label="使用类型" value="1" caption="简报引用" tone="muted" />
       </div>
 
       <section className="card tab-card">
         <div className="tab-row">
           {sentiments.map((item) => (
             <button className={sentiment === item ? "active" : ""} key={item} onClick={() => setSentiment(item)} type="button">
-              {item}
+              {sentimentLabel(item)}
             </button>
           ))}
           <SyncBadge state={syncState} />
@@ -1795,7 +2021,7 @@ function CrisisWatchPage() {
           </div>
           <div className="detail-stack">
             <div className="meter-row">
-              <span>Negative load</span>
+              <span>负向压力</span>
               <div className="meter-track warning">
                 <i style={{ width: `${Math.max(8, (selected.negative / maxNegative) * 100)}%` }} />
               </div>
@@ -1803,10 +2029,10 @@ function CrisisWatchPage() {
             </div>
             <div className="runbook-grid">
               {[
-                ["Data QA", "确认 query、source、重复内容和情感标签"],
+                ["数据复核", "确认 query、source、重复内容和情感标签"],
                 ["CX", "抽样 20 条原话，判断是否为真实投诉"],
                 ["PR", "如真实负面集中，准备 FAQ 和响应口径"],
-                ["Owner", "24h 内标记 acknowledged / escalated"],
+                ["负责人", "24h 内标记 acknowledged / escalated"],
               ].map(([label, body]) => (
                 <span key={label}>
                   <strong>{label}</strong>
@@ -1817,7 +2043,7 @@ function CrisisWatchPage() {
             <div className="quote-preview-list">
               {changePoints.map((item) => (
                 <article className="quote-preview-card" key={`${item.category}-${item.week}`}>
-                  <p>{item.category} · {item.week}: {item.level} · volume {signedPct(item.wowVolume)} · negative {signedPct(item.wowNegative)}</p>
+                  <p>{item.category} · {item.week}: {item.level} · 声量 {signedPct(item.wowVolume)} · 负向 {signedPct(item.wowNegative)}</p>
                   <small>{item.reason}</small>
                 </article>
               ))}
@@ -1841,16 +2067,16 @@ function RegionLanguagePage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Rows" value={vocData.regionPriorities.length} caption="language x country" tone="rose" />
-        <MetricCard label="Known countries" value={vocData.summaries.knownRegionRows} caption="country_known=yes" tone="green" />
-        <MetricCard label="Unknown zz" value={unknownRows.length} caption="只能做语言线索" tone="amber" />
-        <MetricCard label="Visible" value={rows.length} caption={knownOnly ? "known only" : "all"} tone="muted" />
+        <MetricCard label="机会行" value={vocData.regionPriorities.length} caption="语言 x 国家" tone="rose" />
+        <MetricCard label="已知国家" value={vocData.summaries.knownRegionRows} caption="country_known=yes" tone="green" />
+        <MetricCard label="未知 zz" value={unknownRows.length} caption="只能做语言线索" tone="amber" />
+        <MetricCard label="当前显示" value={rows.length} caption={knownOnly ? "仅已知国家" : "全部"} tone="muted" />
       </div>
 
       <section className="card tab-card">
         <div className="tab-row">
-          <button className={!knownOnly ? "active" : ""} onClick={() => setKnownOnly(false)} type="button">all rows</button>
-          <button className={knownOnly ? "active" : ""} onClick={() => setKnownOnly(true)} type="button">known country only</button>
+          <button className={!knownOnly ? "active" : ""} onClick={() => setKnownOnly(false)} type="button">全部线索</button>
+          <button className={knownOnly ? "active" : ""} onClick={() => setKnownOnly(true)} type="button">仅已知国家</button>
         </div>
       </section>
 
@@ -1860,10 +2086,10 @@ function RegionLanguagePage() {
         <section className="card p2-board">
           <div className="card-header">
             <div>
-              <h2>Region Language Priority</h2>
+              <h2>区域与语言优先级</h2>
               <p>country_known=no 的 zz 只能作为语言和内容优先级，不能当作地域市场。</p>
             </div>
-            <span className="status-badge amber">country guardrail</span>
+            <span className="status-badge amber">地域红线</span>
           </div>
           <div className="signal-list region">
             {rows.map((item) => {
@@ -1971,10 +2197,10 @@ function ExecutiveMonthlyPage() {
         <section className="card p2-board">
           <div className="card-header">
             <div>
-              <h2>Monthly Board Pack</h2>
-              <p>月会顺序：先数据质量阻断，再看 ready action，最后看内容/概念扩展。</p>
+              <h2>月会决策包</h2>
+              <p>月会顺序：先看数据质量阻断，再看可行动事项，最后看内容/概念扩展。</p>
             </div>
-            <span className="status-badge green">{rows.length} categories</span>
+            <span className="status-badge green">{rows.length} 个品类</span>
           </div>
           <div className="signal-list monthly">
             {rows.map((item) => (
@@ -1992,7 +2218,7 @@ function ExecutiveMonthlyPage() {
                 <span>{pct(item.negativeRate, 1)}</span>
                 <i>{item.blockedSearches}</i>
                 <span className={`readiness ${item.blockedSearches ? "blocked_by_query_noise" : "ready_for_review"}`}>
-                  {item.blockedSearches ? "blocked search" : "ready"}
+                  {item.blockedSearches ? "搜索阻断" : "可复核"}
                 </span>
               </button>
             ))}
@@ -2002,26 +2228,26 @@ function ExecutiveMonthlyPage() {
         <aside className="card p2-detail">
           <div className="side-header">
             <div>
-              <h2>Board Narrative · {selected.category}</h2>
-              <p>{month} · {compactNumber(selected.occurrences)} occurrences</p>
+              <h2>会议叙事 · {selected.category}</h2>
+              <p>{month} · {compactNumber(selected.occurrences)} 次出现</p>
             </div>
             <IconBookmark size={17} />
           </div>
           <div className="detail-stack">
             <div className="battlecard-diagnosis">
-              <strong>Recommended monthly framing</strong>
+              <strong>建议月会讲法</strong>
               <p>
                 {selected.blockedSearches
-                  ? `${selected.category} 有 ${selected.blockedSearches} 个 blocked search，管理层页只输出治理进展，不输出业务判断。`
-                  : `${selected.category} 数据质量通过，可讨论 ${selected.readyActions} 条 ready action、痛点优先级和内容机会。`}
+                  ? `${selected.category} 有 ${selected.blockedSearches} 个搜索阻断，管理层页只输出治理进展，不输出业务判断。`
+                  : `${selected.category} 数据质量通过，可讨论 ${selected.readyActions} 条可行动事项、痛点优先级和内容机会。`}
               </p>
             </div>
             <div className="runbook-grid">
               {[
-                ["1. Quality", `${selected.blockedSearches} blocked search`],
-                ["2. VOC", `${pct(selected.negativeRate, 1)} negative rate`],
-                ["3. Action", `${selected.readyActions} ready actions`],
-                ["4. Close", "owner + next metric"],
+                ["1. 可信度", `${selected.blockedSearches} 个阻断搜索`],
+                ["2. VOC", `${pct(selected.negativeRate, 1)} 负向率`],
+                ["3. 动作", `${selected.readyActions} 条可行动`],
+                ["4. 闭环", "负责人 + 下次指标"],
               ].map(([label, body]) => (
                 <span key={label}>
                   <strong>{label}</strong>
@@ -2033,7 +2259,7 @@ function ExecutiveMonthlyPage() {
               {readyBriefs.map((brief) => (
                 <article className="quote-preview-card" key={brief.briefId}>
                   <p>{brief.topic} · {brief.platform}: {brief.suggestedAngle}</p>
-                  <small>{brief.category} · {brief.quotes} quotes · {pct(brief.positiveRate, 1)} positive</small>
+                  <small>{brief.category} · {brief.quotes} 条原话 · {pct(brief.positiveRate, 1)} 正向</small>
                 </article>
               ))}
             </div>
@@ -2071,16 +2297,16 @@ function AuditLogPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Events" value={events.length} caption="review-events.jsonl" tone="rose" />
-        <MetricCard label="Actors" value={new Set(events.map((event) => event.actor)).size} caption="updatedBy" tone="green" />
-        <MetricCard label="Namespaces" value={Object.keys(namespaceCounts).length} caption="writeback domains" tone="amber" />
-        <MetricCard label="Latest" value={events[0]?.operation || "none"} caption={events[0]?.timestamp?.slice(0, 19) || "no event"} tone="muted" />
+        <MetricCard label="事件数" value={events.length} caption="review-events.jsonl" tone="rose" />
+        <MetricCard label="操作者" value={new Set(events.map((event) => event.actor)).size} caption="updatedBy" tone="green" />
+        <MetricCard label="写回域" value={Object.keys(namespaceCounts).length} caption="writeback domains" tone="amber" />
+        <MetricCard label="最近操作" value={events[0]?.operation || "none"} caption={events[0]?.timestamp?.slice(0, 19) || "暂无事件"} tone="muted" />
       </div>
 
       <section className="card data-table-card">
         <div className="card-header">
           <div>
-            <h2>Review Event History</h2>
+            <h2>操作事件历史</h2>
             <p>事件历史用于生产审计、冲突排查和下游自动化 replay。</p>
           </div>
           <div className="header-badges">
@@ -2118,8 +2344,8 @@ function OpsStatusPage() {
 
   const [draftToken, setDraftToken] = useState(() => readStorage("melwater:apiToken"));
   const [savedToken, setSavedToken] = useState(() => readStorage("melwater:apiToken"));
-  const [reviewer, setReviewer] = useState(() => readStorage("melwater:reviewer", "Analyst"));
-  const [authStatus, setAuthStatus] = useState({ state: "loading", label: "checking token" });
+  const [reviewer, setReviewer] = useState(() => readStorage("melwater:reviewer", "分析师"));
+  const [authStatus, setAuthStatus] = useState({ state: "loading", label: "正在检查 token" });
   const [opsStatus, setOpsStatus] = useState(null);
   const [opsSyncState, setOpsSyncState] = useState("loading");
   const [opsActionState, setOpsActionState] = useState({ state: "idle", message: "" });
@@ -2143,7 +2369,7 @@ function OpsStatusPage() {
   const testToken = useCallback(
     (token) => {
       const targetToken = String(token || "").trim();
-      setAuthStatus({ state: "loading", label: "checking token" });
+      setAuthStatus({ state: "loading", label: "正在检查 token" });
       return requestJsonWithToken("/health", targetToken)
         .then((payload) => {
           setAuthStatus({
@@ -2220,7 +2446,7 @@ function OpsStatusPage() {
   function saveReviewer() {
     try {
       window.localStorage.setItem("melwater:reviewer", reviewer.trim() || "Analyst");
-      setMessage("Reviewer 名称已保存。");
+      setMessage("操作者名称已保存。");
     } catch {
       setMessage("浏览器 localStorage 不可用，无法保存 reviewer。");
     }
@@ -2232,7 +2458,7 @@ function OpsStatusPage() {
       setOpsActionState({ state: "error", message: "请先保存 admin token，再执行手动运维动作。" });
       return;
     }
-    const actionLabel = action === "backup" ? "API 备份" : "Ops report";
+    const actionLabel = action === "backup" ? "API 备份" : "运维报告";
     const path = action === "backup" ? "/ops/backup" : "/ops/report";
     const body = action === "backup"
       ? { label: `ops-ui-${new Date().toISOString().replace(/[:.]/g, "-")}` }
@@ -2250,7 +2476,7 @@ function OpsStatusPage() {
         state: "ok",
         message: action === "backup"
           ? `API 备份完成：${payload.backup?.label || body.label}`
-          : `Ops report 已生成：${payload.reportFiles?.markdown || "latest markdown"}`,
+          : `运维报告已生成：${payload.reportFiles?.markdown || "latest markdown"}`,
       });
     } catch (error) {
       setOpsActionState({
@@ -2301,44 +2527,50 @@ function OpsStatusPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="API Token" value={authStatus.state === "ok" ? authStatus.role || "ok" : "check"} caption={authStatus.label} tone={authStatus.state === "ok" ? "green" : "amber"} />
-        <MetricCard label="Release" value={shortHash(opsStatus?.release?.ref)} caption="MELWATER_RELEASE_REF" tone="rose" />
-        <MetricCard label="Health" value={health?.ok ? "OK" : "Need check"} caption={formatDateTime(health?.checkedAt)} tone={health?.ok ? "green" : "yellow"} />
-        <MetricCard label="Incident" value={incidentLabel} caption={formatDateTime(incident?.openedAt || incident?.resolvedAt)} tone={incidentTone} />
+        <MetricCard label="访问令牌" value={authStatus.state === "ok" ? authStatus.role || "ok" : "待检查"} caption={authStatus.label} tone={authStatus.state === "ok" ? "green" : "amber"} />
+        <MetricCard label="发布版本" value={shortHash(opsStatus?.release?.ref)} caption="MELWATER_RELEASE_REF" tone="rose" />
+        <MetricCard label="健康检查" value={health?.ok ? "通过" : "待检查"} caption={formatDateTime(health?.checkedAt)} tone={health?.ok ? "green" : "yellow"} />
+        <MetricCard label="事故状态" value={incidentLabel} caption={formatDateTime(incident?.openedAt || incident?.resolvedAt)} tone={incidentTone} />
       </div>
 
       <div className="ops-layout">
         <section className="card ops-card">
           <div className="card-header">
             <div>
-              <h2>Access Token</h2>
+              <h2>访问令牌</h2>
               <p>真实飞书/企微还未接入前，先用本机 Token 管理完成生产访问闭环。</p>
             </div>
             <span className={`status-badge ${authTone}`}>{authStatus.label}</span>
           </div>
-          <div className="token-form">
+          <form
+            className="token-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              saveToken();
+            }}
+          >
             <label>
               <span>API token</span>
               <input
                 autoComplete="off"
                 onChange={(event) => setDraftToken(event.target.value)}
-                placeholder="Paste viewer/editor/admin token"
+                placeholder="粘贴 viewer/editor/admin token"
                 type="password"
                 value={draftToken}
               />
             </label>
             <label>
-              <span>Reviewer</span>
+              <span>操作者</span>
               <input
                 autoComplete="off"
                 onChange={(event) => setReviewer(event.target.value)}
-                placeholder="Analyst"
+                placeholder="分析师"
                 type="text"
                 value={reviewer}
               />
             </label>
             <div className="ops-actions">
-              <button className="primary-action compact" onClick={saveToken} type="button">
+              <button className="primary-action compact" type="submit">
                 <IconCheck size={16} />
                 保存 token
               </button>
@@ -2346,17 +2578,17 @@ function OpsStatusPage() {
                 <IconShieldCheck size={15} />
                 测试 token
               </button>
-              <button className="tiny-select" onClick={saveReviewer} type="button">保存 reviewer</button>
+              <button className="tiny-select" onClick={saveReviewer} type="button">保存操作者</button>
               <button className="tiny-select" onClick={clearToken} type="button">清除</button>
             </div>
             {message && <p className="ops-note">{message}</p>}
-          </div>
+          </form>
         </section>
 
         <section className="card ops-card">
           <div className="card-header">
             <div>
-              <h2>Production Health</h2>
+              <h2>生产健康</h2>
               <p>来自服务器 cron healthcheck 的最后一次结果。</p>
             </div>
             <div className="header-badges">
@@ -2378,7 +2610,7 @@ function OpsStatusPage() {
             <div className={`ops-health-banner ${incident.status === "open" ? "blocked" : "pass"}`}>
               {incident.status === "open" ? <IconBell size={18} /> : <IconCircleCheck size={18} />}
               <div>
-                <strong>Incident: {incident.status}</strong>
+                <strong>事故：{incident.status}</strong>
                 <p>
                   {incident.status === "open"
                     ? `${incident.failureCount || 0}/${incident.threshold || 0} consecutive failures · ${incident.error || "unknown error"}`
@@ -2420,7 +2652,7 @@ function OpsStatusPage() {
         <section className="card ops-card">
           <div className="card-header">
             <div>
-              <h2>Review State Runtime</h2>
+              <h2>写回状态运行时</h2>
               <p>写回状态、事件 replay 和 namespace 数量。</p>
             </div>
             <span className={`status-badge ${reviewState?.replayOk ? "green" : "rose"}`}>
@@ -2494,8 +2726,8 @@ function OpsStatusPage() {
           )}
           {opsReport && (
             <div className="backup-card">
-              <strong>Ops report · {opsReport.healthOk}</strong>
-              <p>{formatDateTime(opsReport.generatedAt)} · incident {opsReport.incidentStatus || "none"} · {opsReport.latestBackupFile || "no backup"}</p>
+              <strong>运维报告 · {opsReport.healthOk}</strong>
+              <p>{formatDateTime(opsReport.generatedAt)} · 事故 {opsReport.incidentStatus || "none"} · {opsReport.latestBackupFile || "no backup"}</p>
               <code>{opsReport.markdownFile || "markdown unavailable"}</code>
             </div>
           )}
@@ -2543,7 +2775,7 @@ function WeeklyActionReview({
   const [snapshotTitle, setSnapshotTitle] = useState("");
   const [snapshotNote, setSnapshotNote] = useState("");
 
-  const proposedTitle = snapshotTitle.trim() || `Melwater Weekly Action Review ${formatSnapshotDate()}`;
+  const proposedTitle = snapshotTitle.trim() || `Melwater 每周行动复盘 ${formatSnapshotDate()}`;
   const latestAt = latestSnapshot?.capturedAt || "";
   const latestLabel = latestAt ? `上次归档: ${new Date(latestAt).toLocaleString("zh-CN", { hour12: false })}` : "暂无周会归档";
 
@@ -2567,13 +2799,13 @@ function WeeklyActionReview({
     <section className="card weekly-review-card">
       <div className="card-header">
         <div>
-          <h2>Weekly Action Review</h2>
-          <p>按优先级、owner、到期窗口和证据强度生成本周周会决策队列。</p>
+          <h2>每周行动复盘</h2>
+          <p>按优先级、负责人、到期窗口和证据强度生成本周周会决策队列。</p>
         </div>
         <div className="header-badges">
-          <span className="status-badge rose">{review.queue.length} in queue</span>
-          <span className="status-badge amber">{review.dueWithin14} due ≤14d</span>
-          <span className={`status-badge ${syncState === "api" ? "green" : "muted"}`}>{syncState === "api" ? "snapshot api" : "snapshot local"}</span>
+          <span className="status-badge rose">{review.queue.length} 条待处理</span>
+          <span className="status-badge amber">{review.dueWithin14} 条 14 天内到期</span>
+          <span className={`status-badge ${syncState === "api" ? "green" : "muted"}`}>{syncState === "api" ? "快照已写回" : "快照本地暂存"}</span>
         </div>
       </div>
       <div className="meeting-snapshot-controls">
@@ -2582,7 +2814,7 @@ function WeeklyActionReview({
           <input
             value={snapshotTitle}
             onChange={(event) => setSnapshotTitle(event.target.value)}
-            placeholder={`Melwater Weekly Action Review ${formatSnapshotDate()}`}
+            placeholder={`Melwater 每周行动复盘 ${formatSnapshotDate()}`}
           />
         </label>
         <label>
@@ -2591,7 +2823,7 @@ function WeeklyActionReview({
             value={snapshotNote}
             onChange={(event) => setSnapshotNote(event.target.value)}
             rows={3}
-            placeholder="记录每条 action 的本周决策、owner 确认、证据补齐要求和跟进原因。"
+            placeholder="记录每条行动的本周决策、负责人确认、证据补齐要求和跟进原因。"
           />
         </label>
         <div className="snapshot-toolbar">
@@ -2610,7 +2842,7 @@ function WeeklyActionReview({
         </div>
         {latestSnapshot && (
           <div className="snapshot-latest">
-            <small>Latest snapshot: queue {latestSnapshot.summary?.queueSize || 0}, owner load {latestSnapshot.ownerSummary?.length || 0}</small>
+            <small>最新快照：队列 {latestSnapshot.summary?.queueSize || 0}，负责人负载 {latestSnapshot.ownerSummary?.length || 0}</small>
             <small>{latestSnapshot.summary?.meetingNote || latestSnapshot.decision?.meetingNote || "—"}</small>
           </div>
         )}
@@ -2622,7 +2854,7 @@ function WeeklyActionReview({
             {laneCounts.map((item) => (
               <span key={item.lane}>
                 <strong>{item.count}</strong>
-                <small>{item.lane}</small>
+                <small>{decisionLaneLabel(item.lane)}</small>
               </span>
             ))}
           </div>
@@ -2634,7 +2866,7 @@ function WeeklyActionReview({
                 <div className="queue-main">
                   <div className="action-title-row">
                     <span className={`status-badge ${action.priority === "P0" ? "rose" : action.priority === "P1" ? "amber" : "muted"}`}>{action.priority}</span>
-                    <strong>{action.decisionLane}</strong>
+                    <strong>{decisionLaneLabel(action.decisionLane)}</strong>
                     <small>{action.owner_domain || "unassigned"} · {action.category} · {action.displayTopic}</small>
                   </div>
                   <p>{action.businessImpact}</p>
@@ -2652,7 +2884,7 @@ function WeeklyActionReview({
                       onClick={() => onStatusChange(action.action_id, status, writeMeta(action))}
                       type="button"
                     >
-                      {status}
+                      {actionStatusLabel(status)}
                     </button>
                   ))}
                 </div>
@@ -2663,7 +2895,7 @@ function WeeklyActionReview({
 
         <aside className="weekly-owner-panel">
           <div>
-            <h3>Owner Load</h3>
+            <h3>负责人负载</h3>
             <p>先解决 owner 未落位，再承诺交付节奏。</p>
           </div>
           <div className="owner-load-list">
@@ -2671,14 +2903,14 @@ function WeeklyActionReview({
               <article key={owner.owner}>
                 <div>
                   <strong>{owner.owner}</strong>
-                  <small>{owner.total} actions · {owner.needsOwner} need owner</small>
+                  <small>{owner.total} 条动作 · {owner.needsOwner} 条待定负责人</small>
                 </div>
                 <span>{owner.p0p1} P0/P1</span>
               </article>
             ))}
           </div>
           <div className="weekly-decision-note">
-            <strong>Meeting rule</strong>
+            <strong>会议规则</strong>
             <p>P0/P1 必须在会中明确 owner、状态和验收指标；证据不足的 action 不能直接承诺上线，只能进入 evidence request。</p>
           </div>
         </aside>
@@ -2751,10 +2983,10 @@ function ActionLoopPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="Total actions" value={vocData.actions.length} caption="fact_action_register" tone="rose" />
-        <MetricCard label="P0/P1 actions" value={highPriorityCount} caption="优先进入周会跟进" tone="amber" />
-        <MetricCard label="Need owner" value={unassignedCount} caption="owner_name 待落位" tone="yellow" />
-        <MetricCard label="Evidence linked" value={evidenceLinkedCount} caption="可追溯 quote / sample" tone="green" />
+        <MetricCard label="动作总数" value={vocData.actions.length} caption="行动登记表" tone="rose" />
+        <MetricCard label="高优先级" value={highPriorityCount} caption="优先进入周会跟进" tone="amber" />
+        <MetricCard label="待定负责人" value={unassignedCount} caption="负责人待落位" tone="yellow" />
+        <MetricCard label="已关联证据" value={evidenceLinkedCount} caption="可追溯原话 / 样本" tone="green" />
       </div>
       <WeeklyActionReview
         review={weeklyReview}
@@ -2768,44 +3000,44 @@ function ActionLoopPage() {
       <section className="card data-table-card">
         <div className="card-header">
           <div>
-            <h2>Action Register</h2>
-            <p>把 Playbook 的问题反推到 owner、优先级、业务影响、证据链和复盘口径。</p>
+            <h2>行动登记表</h2>
+            <p>把业务问题反推到负责人、优先级、业务影响、证据链和复盘口径。</p>
           </div>
           <SyncBadge state={syncState} />
         </div>
         <div className="action-toolbar">
           <label>
-            Owner
+            负责人域
             <select value={ownerFilter} onChange={(event) => setOwnerFilter(event.target.value)}>
               {ownerOptions.map((owner) => (
-                <option key={owner} value={owner}>{owner === "all" ? "All owners" : owner}</option>
+                <option key={owner} value={owner}>{owner === "all" ? "全部负责人" : owner}</option>
               ))}
             </select>
           </label>
           <label>
-            Status
+            状态
             <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
-              <option value="all">All status</option>
-              {actionStatuses.map((status) => <option key={status}>{status}</option>)}
+              <option value="all">全部状态</option>
+              {actionStatuses.map((status) => <option key={status} value={status}>{actionStatusLabel(status)}</option>)}
             </select>
           </label>
           <label>
-            Priority
+            优先级
             <select value={priorityFilter} onChange={(event) => setPriorityFilter(event.target.value)}>
-              <option value="all">All priority</option>
+              <option value="all">全部优先级</option>
               {actionPriorities.map((priority) => <option key={priority}>{priority}</option>)}
             </select>
           </label>
           <label>
-            Evidence
+            证据
             <select value={evidenceFilter} onChange={(event) => setEvidenceFilter(event.target.value)}>
-              <option value="all">All actions</option>
-              <option value="linked">Evidence linked</option>
+              <option value="all">全部动作</option>
+              <option value="linked">已关联证据</option>
             </select>
           </label>
           <label className="action-search">
-            Search
-            <input placeholder="topic / category / impact" value={query} onChange={(event) => setQuery(event.target.value)} />
+            搜索
+            <input placeholder="主题 / 品类 / 影响" value={query} onChange={(event) => setQuery(event.target.value)} />
           </label>
           <button className="filter-toggle action-export-button" onClick={() => downloadActionCsv(filteredActions)} type="button">
             <IconDownload size={15} />
@@ -2818,14 +3050,14 @@ function ActionLoopPage() {
               <div className="action-card-main">
                 <div className="action-title-row">
                   <span className={`status-badge ${action.priority === "P0" ? "rose" : action.priority === "P1" ? "amber" : "muted"}`}>{action.priority}</span>
-                  <strong>{action.action_type.replaceAll("_", " ")}</strong>
+                  <strong>{actionTypeLabel(action.action_type)}</strong>
                   <small>{action.category} · {action.displayTopic}</small>
                 </div>
                 <p>{action.source_action}</p>
                 <div className="action-meta-grid">
-                  <span><b>Expected</b>{action.expected_metric || "待补齐"}</span>
-                  <span><b>Due</b>{action.due_date || "TBD"}</span>
-                  <span><b>Review</b>{action.review_date || "TBD"}</span>
+                  <span><b>预期指标</b>{action.expected_metric || "待补齐"}</span>
+                  <span><b>截止日</b>{action.due_date || "待定"}</span>
+                  <span><b>复盘日</b>{action.review_date || "待定"}</span>
                 </div>
                 <div className="action-impact-note">{action.businessImpact}</div>
                 <div className="action-proof-list">
@@ -2848,18 +3080,18 @@ function ActionLoopPage() {
               </div>
               <div className="action-control-grid">
                 <label>
-                  Status
+                  状态
                   <select
                     value={action.status}
                     onChange={(event) => writeActionStatus(action.action_id, event.target.value, writeMeta(action))}
                   >
                     {actionStatuses.map((status) => (
-                      <option key={status}>{status}</option>
+                      <option key={status} value={status}>{actionStatusLabel(status)}</option>
                     ))}
                   </select>
                 </label>
                 <label>
-                  Owner name
+                  负责人
                   <input
                     defaultValue={action.ownerName}
                     key={`${action.action_id}-${action.ownerName}`}
@@ -2870,7 +3102,7 @@ function ActionLoopPage() {
                   />
                 </label>
                 <label>
-                  Priority
+                  优先级
                   <select
                     value={action.priority}
                     onChange={(event) => writeActionPriority(action.action_id, event.target.value, writeMeta(action))}
@@ -2881,7 +3113,7 @@ function ActionLoopPage() {
                   </select>
                 </label>
                 <label>
-                  Biz impact
+                  业务影响
                   <input
                     defaultValue={action.businessImpact}
                     key={`${action.action_id}-${action.businessImpact}`}
@@ -2965,6 +3197,8 @@ export function App() {
       <Sidebar activeView={activeView} setActiveView={setActiveView} />
       <main className="workspace">
         <Header activeView={activeView} actionCreated={actionCreated} />
+        <BusinessLoopStrip activeView={activeView} />
+        <BusinessClosurePanel activeView={activeView} />
         <AppBody
           activeView={activeView}
           category={category}

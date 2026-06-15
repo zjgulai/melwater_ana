@@ -11,15 +11,19 @@
 | 仓库文档主线 | `main` / `origin/main` | 当前文档 HEAD 以 `git log -1` 为准；文档提交不等同于生产部署 |
 | 生产代码版本 | `playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358` | 生产 `REVISION` 和 `MELWATER_RELEASE_REF` 均指向该 release |
 | 代码来源提交 | `7a09e358` | PR #1 merge commit，生产 release id 中的 `g7a09e358` 与此一致 |
+| 本地静态分析索引 | 已执行，未持久化 | 本次会话已完成 `codegraph init`（67 文件，1,445 nodes，3,270 edges）；当前 `.codegraph/` 不在工作区 |
 | 发布证据提交 | `900ca318` | 首次记录生产发布 QA 的文档提交；后续交接文档可能位于更新提交 |
 | 生产域名 | `https://melwater.lute-tlz-dddd.top` | 公网站点 HTTP 200，review-state API 验收通过 |
 | 当前生产证据 | `docs/audits/2026-06-14-melwater-production-release-qa.md` | 公网、API、ops report、mock alert drill 均已记录 |
+| 本地产品体验 | 中文 Melwater VOC 决策工作台 | 已完成中文导航、今日决策台、页面闭环面板、UI 文案守卫、6 条 Playwright 抽样路径和桌面/移动截图 QA；尚未部署生产 |
+| 本地发布候选 | `playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z` | `release:verify` 与腾讯云只读 `deploy:preflight --execute --check-ssh` 通过；工作区未提交，暂不应真实部署 |
 
 ## 当前源文档
 
 | 主题 | 文档 | 用途 |
 | --- | --- | --- |
 | 项目总览、债务和路线图 | `docs/superpowers/plans/2026-06-14-melwater-capability-debt-roadmap.md` | 当前项目能力、业务价值、扩展性、脆弱点、缺口和优化计划 |
+| 中文业务闭环产品审计 | `docs/audits/2026-06-14-melwater-cn-business-loop-audit.md` | 当前网站中文化、故事线、页面闭环和产品重构计划 |
 | Codex 交接摘要 | `docs/handoff/2026-06-14-codex-project-handoff-summary.md` | 下一次开发/执行 Codex 的快速上下文 |
 | 数据业务 Playbook | `docs/playbooks/meltwater-voc-business-insights-playbook.md` | Meltwater VOC 数据如何转为业务洞察和动作 |
 | 质量门禁 | `docs/runbooks/quality-gates.md` | 本地数据、代码、类型和安全扫描验收命令 |
@@ -56,12 +60,15 @@
 - `docs/audits/2026-06-12-site-playbook-gap-analysis.md`：站点与 Playbook GAP 的早期版本；部分内容已被 P15-P17 和当前路线图更新。
 - `docs/audits/2026-06-13-*`：生产、Ops、Action closed-loop、Weekly review、Meeting snapshot 的最新 QA 证据。
 - `docs/audits/2026-06-14-melwater-production-release-qa.md`：PR #1 合并后生产发布、release 到 git commit 映射、公网站点、API、ops report 和 alert drill 验收证据。
+- `docs/audits/2026-06-14-melwater-cn-business-loop-audit.md`：中文业务闭环产品审计、重构计划和 Phase 1-3 本地执行记录。
 
 ## 当前已知未完成事项
 
 - `codex/fix-playbook-deploy-checklist` 已通过 PR #1 合并；本地/远端分支可按需清理。
 - 真实 Feishu/WeCom webhook 未配置，生产 webhook readiness 仍应阻断。
 - `action_feedback_applied` 和 `measuredActions` 当前为 0，需要真实业务动作回流。
+- 本地网站已重构为中文业务决策工作台；生产站仍未发布本轮本地中文化改动。
+- 仍需先提交并推送本轮本地改动，再执行真实生产部署和发布后公网截图回归。
 - 生产资产清单仍缺负责人、SLO、腾讯云资源 ID、监控入口和真实回滚恢复演练记录。
 - 大体量数据、发布包、运行状态和私钥应从仓库工作目录外置。
 

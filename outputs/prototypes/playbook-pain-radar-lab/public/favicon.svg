@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Melwater VOC">
+  <rect width="64" height="64" rx="16" fill="#f4efe7"/>
+  <circle cx="22" cy="22" r="8" fill="#a65f3f"/>
+  <path d="M18 42c7-14 19-20 30-20-3 12-12 21-28 24z" fill="#d7a66f"/>
+  <path d="M16 44c12 2 22-2 31-13" fill="none" stroke="#6f513d" stroke-width="4" stroke-linecap="round"/>
+</svg>
