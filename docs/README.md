@@ -16,7 +16,7 @@
 | 生产域名 | `https://melwater.lute-tlz-dddd.top` | 公网站点 HTTP 200，review-state API 验收通过 |
 | 当前生产证据 | `docs/audits/2026-06-14-melwater-production-release-qa.md` | 公网、API、ops report、mock alert drill 均已记录 |
 | 本地产品体验 | 中文 Melwater VOC 决策工作台 | 已完成中文导航、今日决策台、页面闭环面板、UI 文案守卫、6 条 Playwright 抽样路径和桌面/移动截图 QA；尚未部署生产 |
-| 本地发布候选 | `playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z` | `release:verify` 与腾讯云只读 `deploy:preflight --execute --check-ssh` 通过；工作区未提交，暂不应真实部署 |
+| 本地发布候选 | `playbook-pain-radar-lab-0.0.0-2026-06-15T02-51-50-613Z` | 本轮改动已提交并推送到 `origin/main`，commit `f0d52ca0`；candidate manifest `gitSha=f0d52ca0`，`release:verify` 与腾讯云只读 `deploy:preflight --execute --check-ssh` 通过 |
 
 ## 当前源文档
 
@@ -68,7 +68,7 @@
 - 真实 Feishu/WeCom webhook 未配置，生产 webhook readiness 仍应阻断。
 - `action_feedback_applied` 和 `measuredActions` 当前为 0，需要真实业务动作回流。
 - 本地网站已重构为中文业务决策工作台；生产站仍未发布本轮本地中文化改动。
-- 仍需先提交并推送本轮本地改动，再执行真实生产部署和发布后公网截图回归。
+- 仍需执行真实生产部署和发布后公网截图回归。
 - 生产资产清单仍缺负责人、SLO、腾讯云资源 ID、监控入口和真实回滚恢复演练记录。
 - 大体量数据、发布包、运行状态和私钥应从仓库工作目录外置。
 

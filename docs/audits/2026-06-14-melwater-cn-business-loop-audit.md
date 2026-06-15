@@ -450,7 +450,7 @@
 
 执行时间：2026-06-15
 
-发布候选：
+首次发布候选：
 
 - Release ID：`playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z`
 - Release dir：`outputs/prototypes/playbook-pain-radar-lab/releases/playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z`
@@ -478,5 +478,6 @@
 
 发布前阻断：
 
-- 当前工作区仍有未提交改动。`release:package` 会打入本地改动，但 manifest 的 `gitSha` 仍来自当前 HEAD；如果直接部署，会造成生产 release 与 git commit 不可追溯。
-- 因此真实部署前必须先完成 commit/push，再重新生成带可追溯 commit 的 release candidate。
+- 当前记录对应的首次候选生成时，工作区仍有未提交改动。`release:package` 会打入本地改动，但 manifest 的 `gitSha` 仍来自当前 HEAD；如果直接部署，会造成生产 release 与 git commit 不可追溯。
+- 该阻断点已在后续步骤修复：本轮中文化和 QA 改动已提交并推送到 `origin/main`，commit `f0d52ca0`；随后重新生成可追溯 release candidate `playbook-pain-radar-lab-0.0.0-2026-06-15T02-51-50-613Z`，manifest `gitSha=f0d52ca0`，`release:verify` 通过，腾讯云只读 `deploy:preflight --execute --check-ssh` 通过。
+- 后续真实部署前如再发生 docs-only 或代码提交，应按同一规则重新生成 candidate，确保 release manifest 的 `gitSha` 对齐目标提交。

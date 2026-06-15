@@ -33,8 +33,9 @@ Melwater 项目已经从原始 Meltwater JSON/Excel 处理，推进到可部署�
 - 中文业务闭环第二轮已执行：所有页面顶部新增“当前判断、证据基础、风险红线、建议动作、复盘指标”面板；生产尚未重新发布。
 - 中文业务闭环第三轮已执行：新增 `npm run check:ui-copy` 文案守卫，补齐 favicon，修复系统运维 token 表单语义，并通过 Playwright 抽样验证 6 条主路径。
 - 中文业务闭环第四轮已执行：输出桌面首页、移动首页、移动系统运维截图 QA，证据在 `output/playwright/2026-06-14-melwater-cn-business-loop/`；生产尚未重新发布。
-- 中文业务闭环第五轮已执行：生成本地 release candidate `playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z`，本地 `release:verify` 通过，腾讯云只读 `deploy:preflight --execute --check-ssh` 通过；因工作区未提交，未执行真实部署。
-- 接续建议优先级：先 commit/push 本轮中文化和 QA 改动，再执行真实生产部署与公网回归；随后补齐 P0 外部 webhook 与 action 闭环、生产治理信息、数据与运行时外置。
+- 中文业务闭环第五轮已执行：生成本地 release candidate `playbook-pain-radar-lab-0.0.0-2026-06-15T02-46-20-637Z`，本地 `release:verify` 通过，腾讯云只读 `deploy:preflight --execute --check-ssh` 通过。
+- 当前阻断点已修复：本轮中文化和 QA 改动已提交并推送到 `origin/main`，commit `f0d52ca0`；随后重新生成可追溯 release candidate `playbook-pain-radar-lab-0.0.0-2026-06-15T02-51-50-613Z`，manifest `gitSha=f0d52ca0`，本地 `release:verify` 与腾讯云只读 preflight 均通过。
+- 接续建议优先级：执行真实生产部署与公网回归；随后补齐 P0 外部 webhook 与 action 闭环、生产治理信息、数据与运行时外置。
 
 ## 3. 当前能力
 
@@ -80,7 +81,7 @@ Melwater 项目已经从原始 Meltwater JSON/Excel 处理，推进到可部署�
 - PR #1 已合并：`Release hardening and Melwater roadmap docs`。
 - 已发布生产 release：`playbook-pain-radar-lab-0.0.0-20260614T052228Z-g7a09e358`。
 - 已记录生产发布 QA 并 push 到 `origin/main`。
-- 本地中文业务闭环 release candidate 已完成 package、verify 和远程只读 preflight，但尚未 deploy。
+- 本地中文业务闭环 release candidate 已完成 package、verify、manifest gitSha 对齐和远程只读 preflight，但尚未 deploy。
 
 ## 6. 常用验证命令
 
