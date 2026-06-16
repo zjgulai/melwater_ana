@@ -262,6 +262,55 @@ def main() -> None:
         }
         for row in read_csv(MART_DIR / "user_voice_quote_library.csv")[:120]
     ]
+    storyline_stage_order = {
+        "数据可信": 0,
+        "产品痛点": 1,
+        "内容增长": 2,
+        "竞品增长": 3,
+        "风险分诊": 4,
+        "概念验证": 5,
+        "经营复盘": 6,
+    }
+    priority_order = {"P0": 0, "P1": 1, "P2": 2}
+    storyline_decision_queue = [
+        {
+            "queueRank": as_int(row["queue_rank"]),
+            "actionId": row["action_id"],
+            "insightId": row["insight_id"],
+            "decisionType": row["decision_type"],
+            "storylineStage": row["storyline_stage"],
+            "category": row["category"],
+            "sourceAction": row["source_action"],
+            "ownerDomain": row["owner_domain"],
+            "ownerName": row["owner_name"],
+            "priorityLevel": row["priority_level"],
+            "decisionStatus": row["decision_status"],
+            "expectedMetric": row["expected_metric"],
+            "evidenceStatus": row["evidence_status"],
+            "nextAction": row["next_action"],
+        }
+        for row in read_csv(MART_DIR / "storyline_decision_queue.csv")
+    ]
+    storyline_decision_queue = sorted(
+        storyline_decision_queue,
+        key=lambda item: (
+            priority_order.get(item["priorityLevel"], 9),
+            storyline_stage_order.get(item["storylineStage"], 99),
+            item["queueRank"],
+        ),
+    )
+    for index, item in enumerate(storyline_decision_queue, start=1):
+        item["queueRank"] = index
+    action_conversion_funnel = [
+        {
+            "stageOrder": as_int(row["stage_order"]),
+            "stageKey": row["stage_key"],
+            "stageLabel": row["stage_label"],
+            "actionCount": as_int(row["action_count"]),
+            "conversionRate": as_float(row["conversion_rate"]),
+        }
+        for row in read_csv(MART_DIR / "action_conversion_funnel.csv")
+    ]
 
     snapshot = {
         "generatedFrom": str(MART_DIR.relative_to(ROOT)),
@@ -281,6 +330,8 @@ def main() -> None:
         "contentBriefQueue": content_brief_queue,
         "weeklyChangePoints": weekly_change_points,
         "quoteLibrary": quote_library,
+        "storylineDecisionQueue": storyline_decision_queue,
+        "actionConversionFunnel": action_conversion_funnel,
         "summaries": {
             "blockedSearches": sum(1 for item in search_quality if item["status"] != "pass"),
             "readyPainCards": sum(1 for item in pain_cards if item["readiness"] in {"ready_for_review", "ready_for_action"}),
@@ -293,6 +344,7 @@ def main() -> None:
             "knownRegionRows": sum(1 for item in region_priorities if item["countryKnown"] == "yes"),
             "monthlyRows": len(executive_monthly),
             "quotes": len(quote_library),
+            "storylineP0Actions": sum(1 for item in storyline_decision_queue if item["priorityLevel"] == "P0"),
         },
     }
 

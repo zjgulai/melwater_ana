@@ -2,7 +2,7 @@
   "generatedFrom": "data/marts/20260611",
   "manifest": {
     "status": "PASS",
-    "generated_at": "2026-06-12T01:51:56.294346+00:00",
+    "generated_at": "2026-06-16T06:01:38.533230+00:00",
     "source_count": 7,
     "document_count": 347138,
     "taxonomy_versions": {
@@ -32,6 +32,8 @@
       "fact_sample_review": 3863,
       "fact_action_register": 57,
       "mart_action_status_summary": 10,
+      "mart_storyline_decision_queue": 57,
+      "mart_action_conversion_funnel": 7,
       "fact_action_feedback_unmatched": 0,
       "action_feedback_applied": 0
     },
@@ -57,6 +59,8 @@
       "query_sample_review_queue.csv",
       "action_register.csv",
       "action_status_summary.csv",
+      "storyline_decision_queue.csv",
+      "action_conversion_funnel.csv",
       "action_feedback_unmatched.csv",
       "action_closed_loop_summary.md"
     ]
@@ -1796,9 +1800,9 @@
       "expected_metric": "reviewed precision >= 80%; blocked business conclusions can be re-enabled",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1813,9 +1817,9 @@
       "expected_metric": "reviewed precision >= 80%; blocked business conclusions can be re-enabled",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1830,9 +1834,9 @@
       "expected_metric": "issue negative share or related CS tickets decrease after shipped action",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1847,9 +1851,9 @@
       "expected_metric": "issue negative share or related CS tickets decrease after shipped action",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1864,9 +1868,9 @@
       "expected_metric": "issue negative share or related CS tickets decrease after shipped action",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1881,9 +1885,9 @@
       "expected_metric": "issue negative share or related CS tickets decrease after shipped action",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1898,9 +1902,9 @@
       "expected_metric": "issue negative share or related CS tickets decrease after shipped action",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1915,9 +1919,9 @@
       "expected_metric": "issue negative share or related CS tickets decrease after shipped action",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1932,9 +1936,9 @@
       "expected_metric": "issue negative share or related CS tickets decrease after shipped action",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1949,9 +1953,9 @@
       "expected_metric": "battlecard reviewed and converted into claim/objection handling guidance",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1966,9 +1970,9 @@
       "expected_metric": "battlecard reviewed and converted into claim/objection handling guidance",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -1983,9 +1987,9 @@
       "expected_metric": "battlecard reviewed and converted into claim/objection handling guidance",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2000,9 +2004,9 @@
       "expected_metric": "battlecard reviewed and converted into claim/objection handling guidance",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2017,9 +2021,9 @@
       "expected_metric": "battlecard reviewed and converted into claim/objection handling guidance",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2034,9 +2038,9 @@
       "expected_metric": "battlecard reviewed and converted into claim/objection handling guidance",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2051,9 +2055,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2068,9 +2072,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2085,9 +2089,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2102,9 +2106,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2119,9 +2123,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2136,9 +2140,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2153,9 +2157,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2170,9 +2174,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2187,9 +2191,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2204,9 +2208,9 @@
       "expected_metric": "content brief shipped and engagement/positive theme lift reviewed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2221,9 +2225,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2238,9 +2242,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2255,9 +2259,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2272,9 +2276,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2289,9 +2293,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2306,9 +2310,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2323,9 +2327,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2340,9 +2344,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2357,9 +2361,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2374,9 +2378,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2391,9 +2395,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2408,9 +2412,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2425,9 +2429,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2442,9 +2446,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2459,9 +2463,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2476,9 +2480,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2493,9 +2497,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2510,9 +2514,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2527,9 +2531,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2544,9 +2548,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2561,9 +2565,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2578,9 +2582,9 @@
       "expected_metric": "alert triaged within 24h and 72h review completed",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2595,9 +2599,9 @@
       "expected_metric": "concept card reviewed with VOC samples plus external feedback",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2612,9 +2616,9 @@
       "expected_metric": "concept card reviewed with VOC samples plus external feedback",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2629,9 +2633,9 @@
       "expected_metric": "concept card reviewed with VOC samples plus external feedback",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2646,9 +2650,9 @@
       "expected_metric": "concept card reviewed with VOC samples plus external feedback",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2663,9 +2667,9 @@
       "expected_metric": "concept card reviewed with VOC samples plus external feedback",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2680,9 +2684,9 @@
       "expected_metric": "concept card reviewed with VOC samples plus external feedback",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2697,9 +2701,9 @@
       "expected_metric": "concept card reviewed with VOC samples plus external feedback",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2714,9 +2718,9 @@
       "expected_metric": "decision owner and next experiment recorded",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2731,9 +2735,9 @@
       "expected_metric": "decision owner and next experiment recorded",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     },
@@ -2748,9 +2752,9 @@
       "expected_metric": "decision owner and next experiment recorded",
       "baseline_value": "",
       "target_value": "",
-      "due_date": "2026-06-26",
+      "due_date": "2026-06-30",
       "shipped_at": "",
-      "review_date": "2026-07-10",
+      "review_date": "2026-07-14",
       "actual_metric": "",
       "close_reason": ""
     }
@@ -3524,7 +3528,7 @@
       "source_key_json": "{\"search_id\": \"22869413\", \"search_name\": \"Bottle Warmer\"}",
       "recommended_action_type": "query_update",
       "owner_domain": "Data",
-      "created_at": "2026-06-12T01:51:56.223658+00:00"
+      "created_at": "2026-06-16T06:01:38.458167+00:00"
     },
     {
       "insight_id": "insight-38514da59dd8808f",
@@ -3540,7 +3544,7 @@
       "source_key_json": "{\"search_id\": \"28678966\", \"search_name\": \"Bottle Sterilizer & Dryer\"}",
       "recommended_action_type": "query_update",
       "owner_domain": "Data",
-      "created_at": "2026-06-12T01:51:56.224369+00:00"
+      "created_at": "2026-06-16T06:01:38.459095+00:00"
     },
     {
       "insight_id": "insight-8a1c9ef6e35137df",
@@ -3556,7 +3560,7 @@
       "source_key_json": "{\"search_id\": \"18922074\", \"search_name\": \"（勿动）Momcozy\"}",
       "recommended_action_type": "monitor",
       "owner_domain": "Data",
-      "created_at": "2026-06-12T01:51:56.224484+00:00"
+      "created_at": "2026-06-16T06:01:38.459202+00:00"
     },
     {
       "insight_id": "insight-4867c805508aa5e2",
@@ -3572,7 +3576,7 @@
       "source_key_json": "{\"search_id\": \"18922087\", \"search_name\": \"（勿动）Momcozy Negative Information\"}",
       "recommended_action_type": "monitor",
       "owner_domain": "Data",
-      "created_at": "2026-06-12T01:51:56.224569+00:00"
+      "created_at": "2026-06-16T06:01:38.459285+00:00"
     },
     {
       "insight_id": "insight-beafafacc3fbe55e",
@@ -3588,7 +3592,7 @@
       "source_key_json": "{\"search_id\": \"18913527\", \"search_name\": \"Elvie\"}",
       "recommended_action_type": "monitor",
       "owner_domain": "Data",
-      "created_at": "2026-06-12T01:51:56.224576+00:00"
+      "created_at": "2026-06-16T06:01:38.459291+00:00"
     },
     {
       "insight_id": "insight-78ace0e70e72ba7a",
@@ -3604,7 +3608,7 @@
       "source_key_json": "{\"search_id\": \"28546462\", \"search_name\": \"Willow Breast Pump\"}",
       "recommended_action_type": "monitor",
       "owner_domain": "Data",
-      "created_at": "2026-06-12T01:51:56.224581+00:00"
+      "created_at": "2026-06-16T06:01:38.459296+00:00"
     },
     {
       "insight_id": "insight-ded413d88ff6e63b",
@@ -3620,7 +3624,7 @@
       "source_key_json": "{\"search_id\": \"28546470\", \"search_name\": \"Medela Breast Pump\"}",
       "recommended_action_type": "monitor",
       "owner_domain": "Data",
-      "created_at": "2026-06-12T01:51:56.224586+00:00"
+      "created_at": "2026-06-16T06:01:38.459300+00:00"
     },
     {
       "insight_id": "insight-349291b3892ff3ee",
@@ -3636,7 +3640,7 @@
       "source_key_json": "{\"search_id\": \"28546460\", \"search_name\": \"Eufy Breast Pump\"}",
       "recommended_action_type": "monitor",
       "owner_domain": "Data",
-      "created_at": "2026-06-12T01:51:56.224590+00:00"
+      "created_at": "2026-06-16T06:01:38.459305+00:00"
     },
     {
       "insight_id": "insight-3ea6d9275487f8a9",
@@ -3652,7 +3656,7 @@
       "source_key_json": "{\"search_id\": \"28546475\", \"search_name\": \"Spectra Breast Pump\"}",
       "recommended_action_type": "monitor",
       "owner_domain": "Data",
-      "created_at": "2026-06-12T01:51:56.224595+00:00"
+      "created_at": "2026-06-16T06:01:38.459310+00:00"
     },
     {
       "insight_id": "insight-2284f30de707c6be",
@@ -3668,7 +3672,7 @@
       "source_key_json": "{\"topic_id\": \"battery_power\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.224601+00:00"
+      "created_at": "2026-06-16T06:01:38.459316+00:00"
     },
     {
       "insight_id": "insight-55a881eb0ea08140",
@@ -3684,7 +3688,7 @@
       "source_key_json": "{\"topic_id\": \"return_refund\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "CX",
-      "created_at": "2026-06-12T01:51:56.224717+00:00"
+      "created_at": "2026-06-16T06:01:38.459395+00:00"
     },
     {
       "insight_id": "insight-205f50ea35f98a79",
@@ -3700,7 +3704,7 @@
       "source_key_json": "{\"topic_id\": \"battery_power\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.224786+00:00"
+      "created_at": "2026-06-16T06:01:38.459445+00:00"
     },
     {
       "insight_id": "insight-5a963cfc2b3df9eb",
@@ -3716,7 +3720,7 @@
       "source_key_json": "{\"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.224871+00:00"
+      "created_at": "2026-06-16T06:01:38.459526+00:00"
     },
     {
       "insight_id": "insight-25c0be8285fb1d16",
@@ -3732,7 +3736,7 @@
       "source_key_json": "{\"topic_id\": \"noise\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/Content",
-      "created_at": "2026-06-12T01:51:56.224951+00:00"
+      "created_at": "2026-06-16T06:01:38.459655+00:00"
     },
     {
       "insight_id": "insight-a2e86c76e6c3f2de",
@@ -3748,7 +3752,7 @@
       "source_key_json": "{\"topic_id\": \"noise\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/Content",
-      "created_at": "2026-06-12T01:51:56.225037+00:00"
+      "created_at": "2026-06-16T06:01:38.459770+00:00"
     },
     {
       "insight_id": "insight-4948334b46355f01",
@@ -3764,7 +3768,7 @@
       "source_key_json": "{\"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.225124+00:00"
+      "created_at": "2026-06-16T06:01:38.459864+00:00"
     },
     {
       "insight_id": "insight-8a32dfa927274c46",
@@ -3780,7 +3784,7 @@
       "source_key_json": "{\"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.225205+00:00"
+      "created_at": "2026-06-16T06:01:38.459944+00:00"
     },
     {
       "insight_id": "insight-f0514428ac1deeac",
@@ -3796,7 +3800,7 @@
       "source_key_json": "{\"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.225262+00:00"
+      "created_at": "2026-06-16T06:01:38.459998+00:00"
     },
     {
       "insight_id": "insight-aa656ee73c3f0aa3",
@@ -3812,7 +3816,7 @@
       "source_key_json": "{\"topic_id\": \"return_refund\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "CX",
-      "created_at": "2026-06-12T01:51:56.225361+00:00"
+      "created_at": "2026-06-16T06:01:38.460079+00:00"
     },
     {
       "insight_id": "insight-bf56ab1cf157fad3",
@@ -3828,7 +3832,7 @@
       "source_key_json": "{\"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product",
-      "created_at": "2026-06-12T01:51:56.225436+00:00"
+      "created_at": "2026-06-16T06:01:38.460146+00:00"
     },
     {
       "insight_id": "insight-c1f617d0f981edeb",
@@ -3844,7 +3848,7 @@
       "source_key_json": "{\"topic_id\": \"battery_power\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.225533+00:00"
+      "created_at": "2026-06-16T06:01:38.460221+00:00"
     },
     {
       "insight_id": "insight-336984893ff7a86f",
@@ -3860,7 +3864,7 @@
       "source_key_json": "{\"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.225616+00:00"
+      "created_at": "2026-06-16T06:01:38.460301+00:00"
     },
     {
       "insight_id": "insight-dc8e0dcb1f546f27",
@@ -3876,7 +3880,7 @@
       "source_key_json": "{\"topic_id\": \"return_refund\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "CX",
-      "created_at": "2026-06-12T01:51:56.225702+00:00"
+      "created_at": "2026-06-16T06:01:38.460382+00:00"
     },
     {
       "insight_id": "insight-3e15661894a05624",
@@ -3892,7 +3896,7 @@
       "source_key_json": "{\"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.225798+00:00"
+      "created_at": "2026-06-16T06:01:38.460471+00:00"
     },
     {
       "insight_id": "insight-ec3a23a58c6107d1",
@@ -3908,7 +3912,7 @@
       "source_key_json": "{\"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.225882+00:00"
+      "created_at": "2026-06-16T06:01:38.460551+00:00"
     },
     {
       "insight_id": "insight-3ee81232637abbd6",
@@ -3924,7 +3928,7 @@
       "source_key_json": "{\"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.225968+00:00"
+      "created_at": "2026-06-16T06:01:38.460630+00:00"
     },
     {
       "insight_id": "insight-2ef900ce747ece25",
@@ -3940,7 +3944,7 @@
       "source_key_json": "{\"topic_id\": \"noise\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/Content",
-      "created_at": "2026-06-12T01:51:56.226052+00:00"
+      "created_at": "2026-06-16T06:01:38.460714+00:00"
     },
     {
       "insight_id": "insight-35d4201315cad71e",
@@ -3956,7 +3960,7 @@
       "source_key_json": "{\"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product",
-      "created_at": "2026-06-12T01:51:56.226134+00:00"
+      "created_at": "2026-06-16T06:01:38.460791+00:00"
     },
     {
       "insight_id": "insight-553773a4ff567328",
@@ -3972,7 +3976,7 @@
       "source_key_json": "{\"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product/CX",
-      "created_at": "2026-06-12T01:51:56.226211+00:00"
+      "created_at": "2026-06-16T06:01:38.460863+00:00"
     },
     {
       "insight_id": "insight-3cf8c13f6d955b0d",
@@ -3988,7 +3992,7 @@
       "source_key_json": "{\"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "product_backlog",
       "owner_domain": "Product",
-      "created_at": "2026-06-12T01:51:56.226284+00:00"
+      "created_at": "2026-06-16T06:01:38.460933+00:00"
     },
     {
       "insight_id": "insight-4804c800a1274088",
@@ -4004,7 +4008,7 @@
       "source_key_json": "{\"brand_id\": \"momcozy\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226354+00:00"
+      "created_at": "2026-06-16T06:01:38.461000+00:00"
     },
     {
       "insight_id": "insight-f66d8a48550a47aa",
@@ -4020,7 +4024,7 @@
       "source_key_json": "{\"brand_id\": \"momcozy\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226420+00:00"
+      "created_at": "2026-06-16T06:01:38.461060+00:00"
     },
     {
       "insight_id": "insight-50727ce3792e2cff",
@@ -4036,7 +4040,7 @@
       "source_key_json": "{\"brand_id\": \"elvie\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226499+00:00"
+      "created_at": "2026-06-16T06:01:38.461139+00:00"
     },
     {
       "insight_id": "insight-b1226f10c5d13ab1",
@@ -4052,7 +4056,7 @@
       "source_key_json": "{\"brand_id\": \"spectra\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226564+00:00"
+      "created_at": "2026-06-16T06:01:38.461206+00:00"
     },
     {
       "insight_id": "insight-8557f06d3d2d1e6e",
@@ -4068,7 +4072,7 @@
       "source_key_json": "{\"brand_id\": \"medela\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226636+00:00"
+      "created_at": "2026-06-16T06:01:38.461277+00:00"
     },
     {
       "insight_id": "insight-4ab6918622eeeba0",
@@ -4084,7 +4088,7 @@
       "source_key_json": "{\"brand_id\": \"willow\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226700+00:00"
+      "created_at": "2026-06-16T06:01:38.461339+00:00"
     },
     {
       "insight_id": "insight-ce355c4d68127e99",
@@ -4100,7 +4104,7 @@
       "source_key_json": "{\"brand_id\": \"eufy\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226769+00:00"
+      "created_at": "2026-06-16T06:01:38.461408+00:00"
     },
     {
       "insight_id": "insight-f5267abdb8c3bc97",
@@ -4116,7 +4120,7 @@
       "source_key_json": "{\"brand_id\": \"momcozy\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226831+00:00"
+      "created_at": "2026-06-16T06:01:38.461471+00:00"
     },
     {
       "insight_id": "insight-fb0efcda5923b802",
@@ -4132,7 +4136,7 @@
       "source_key_json": "{\"brand_id\": \"willow\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226901+00:00"
+      "created_at": "2026-06-16T06:01:38.461540+00:00"
     },
     {
       "insight_id": "insight-f9216d692a1d9d47",
@@ -4148,7 +4152,7 @@
       "source_key_json": "{\"brand_id\": \"spectra\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.226993+00:00"
+      "created_at": "2026-06-16T06:01:38.461624+00:00"
     },
     {
       "insight_id": "insight-2162400bfab83104",
@@ -4164,7 +4168,7 @@
       "source_key_json": "{\"brand_id\": \"medela\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.227055+00:00"
+      "created_at": "2026-06-16T06:01:38.461676+00:00"
     },
     {
       "insight_id": "insight-ab2adb27b9719224",
@@ -4180,7 +4184,7 @@
       "source_key_json": "{\"brand_id\": \"medela\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.227123+00:00"
+      "created_at": "2026-06-16T06:01:38.461747+00:00"
     },
     {
       "insight_id": "insight-2e309aaa7bde6d75",
@@ -4196,7 +4200,7 @@
       "source_key_json": "{\"brand_id\": \"spectra\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.227191+00:00"
+      "created_at": "2026-06-16T06:01:38.461825+00:00"
     },
     {
       "insight_id": "insight-fe982d728627c8ff",
@@ -4212,7 +4216,7 @@
       "source_key_json": "{\"brand_id\": \"eufy\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.227253+00:00"
+      "created_at": "2026-06-16T06:01:38.461886+00:00"
     },
     {
       "insight_id": "insight-754cd3883f8a2d97",
@@ -4228,7 +4232,7 @@
       "source_key_json": "{\"brand_id\": \"eufy\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.227320+00:00"
+      "created_at": "2026-06-16T06:01:38.461957+00:00"
     },
     {
       "insight_id": "insight-35b00af7b3bb2919",
@@ -4244,7 +4248,7 @@
       "source_key_json": "{\"brand_id\": \"elvie\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.227379+00:00"
+      "created_at": "2026-06-16T06:01:38.462010+00:00"
     },
     {
       "insight_id": "insight-12200c90a647a925",
@@ -4260,7 +4264,7 @@
       "source_key_json": "{\"brand_id\": \"willow\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.227433+00:00"
+      "created_at": "2026-06-16T06:01:38.462069+00:00"
     },
     {
       "insight_id": "insight-4d370b25ff9ea7f5",
@@ -4276,7 +4280,7 @@
       "source_key_json": "{\"brand_id\": \"elvie\"}",
       "recommended_action_type": "competitor_matrix",
       "owner_domain": "Marketing/Data",
-      "created_at": "2026-06-12T01:51:56.227472+00:00"
+      "created_at": "2026-06-16T06:01:38.462108+00:00"
     },
     {
       "insight_id": "insight-22aa6533ece7283c",
@@ -4292,7 +4296,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227501+00:00"
+      "created_at": "2026-06-16T06:01:38.462144+00:00"
     },
     {
       "insight_id": "insight-692e3dbfe20f1e15",
@@ -4308,7 +4312,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227528+00:00"
+      "created_at": "2026-06-16T06:01:38.462168+00:00"
     },
     {
       "insight_id": "insight-f61efdae8e19b233",
@@ -4324,7 +4328,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227563+00:00"
+      "created_at": "2026-06-16T06:01:38.462207+00:00"
     },
     {
       "insight_id": "insight-b9e75eec67c48465",
@@ -4340,7 +4344,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227601+00:00"
+      "created_at": "2026-06-16T06:01:38.462243+00:00"
     },
     {
       "insight_id": "insight-813a36040a79fa7a",
@@ -4356,7 +4360,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227654+00:00"
+      "created_at": "2026-06-16T06:01:38.462283+00:00"
     },
     {
       "insight_id": "insight-0aaf4cb48077b180",
@@ -4372,7 +4376,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227695+00:00"
+      "created_at": "2026-06-16T06:01:38.462322+00:00"
     },
     {
       "insight_id": "insight-45cc3cb0b406aafb",
@@ -4388,7 +4392,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227730+00:00"
+      "created_at": "2026-06-16T06:01:38.462355+00:00"
     },
     {
       "insight_id": "insight-40599bde86733e27",
@@ -4404,7 +4408,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227770+00:00"
+      "created_at": "2026-06-16T06:01:38.462392+00:00"
     },
     {
       "insight_id": "insight-fc3f4f07dba30bda",
@@ -4420,7 +4424,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227805+00:00"
+      "created_at": "2026-06-16T06:01:38.462427+00:00"
     },
     {
       "insight_id": "insight-f3ab58dfd9075c39",
@@ -4436,7 +4440,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227849+00:00"
+      "created_at": "2026-06-16T06:01:38.462472+00:00"
     },
     {
       "insight_id": "insight-a268a54ae8d641af",
@@ -4452,7 +4456,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227885+00:00"
+      "created_at": "2026-06-16T06:01:38.462506+00:00"
     },
     {
       "insight_id": "insight-2ef9c2f771fbbac2",
@@ -4468,7 +4472,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227922+00:00"
+      "created_at": "2026-06-16T06:01:38.462543+00:00"
     },
     {
       "insight_id": "insight-3f2fd3c9d3465785",
@@ -4484,7 +4488,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227956+00:00"
+      "created_at": "2026-06-16T06:01:38.462577+00:00"
     },
     {
       "insight_id": "insight-1305499a84ea8e27",
@@ -4500,7 +4504,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.227990+00:00"
+      "created_at": "2026-06-16T06:01:38.462610+00:00"
     },
     {
       "insight_id": "insight-410c420e29e26556",
@@ -4516,7 +4520,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228031+00:00"
+      "created_at": "2026-06-16T06:01:38.462650+00:00"
     },
     {
       "insight_id": "insight-edb4a243031933b2",
@@ -4532,7 +4536,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228068+00:00"
+      "created_at": "2026-06-16T06:01:38.462683+00:00"
     },
     {
       "insight_id": "insight-05b2e7fb20d066d9",
@@ -4548,7 +4552,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228113+00:00"
+      "created_at": "2026-06-16T06:01:38.462727+00:00"
     },
     {
       "insight_id": "insight-397bfa4c3b916e3e",
@@ -4564,7 +4568,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228150+00:00"
+      "created_at": "2026-06-16T06:01:38.462763+00:00"
     },
     {
       "insight_id": "insight-9f4400f78238ea75",
@@ -4580,7 +4584,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228181+00:00"
+      "created_at": "2026-06-16T06:01:38.462793+00:00"
     },
     {
       "insight_id": "insight-665a8135bb4fe318",
@@ -4596,7 +4600,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228219+00:00"
+      "created_at": "2026-06-16T06:01:38.462829+00:00"
     },
     {
       "insight_id": "insight-5ff0c490388c6482",
@@ -4612,7 +4616,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228248+00:00"
+      "created_at": "2026-06-16T06:01:38.462858+00:00"
     },
     {
       "insight_id": "insight-bde4073d332406a9",
@@ -4628,7 +4632,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228283+00:00"
+      "created_at": "2026-06-16T06:01:38.462892+00:00"
     },
     {
       "insight_id": "insight-773a9ea7ed4a155b",
@@ -4644,7 +4648,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228314+00:00"
+      "created_at": "2026-06-16T06:01:38.462922+00:00"
     },
     {
       "insight_id": "insight-616288dadd9d9e6b",
@@ -4660,7 +4664,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228356+00:00"
+      "created_at": "2026-06-16T06:01:38.462959+00:00"
     },
     {
       "insight_id": "insight-97749733c6adb27c",
@@ -4676,7 +4680,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228393+00:00"
+      "created_at": "2026-06-16T06:01:38.462992+00:00"
     },
     {
       "insight_id": "insight-e9880fb490bd39d3",
@@ -4692,7 +4696,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228425+00:00"
+      "created_at": "2026-06-16T06:01:38.463023+00:00"
     },
     {
       "insight_id": "insight-ba65629ce8aacb34",
@@ -4708,7 +4712,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228464+00:00"
+      "created_at": "2026-06-16T06:01:38.463059+00:00"
     },
     {
       "insight_id": "insight-f33323442ad1373c",
@@ -4724,7 +4728,7 @@
       "source_key_json": "{\"source_type\": \"forum\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228499+00:00"
+      "created_at": "2026-06-16T06:01:38.463091+00:00"
     },
     {
       "insight_id": "insight-97fbf32296230322",
@@ -4740,7 +4744,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228541+00:00"
+      "created_at": "2026-06-16T06:01:38.463132+00:00"
     },
     {
       "insight_id": "insight-e25a561d00b2dc47",
@@ -4756,7 +4760,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228571+00:00"
+      "created_at": "2026-06-16T06:01:38.463161+00:00"
     },
     {
       "insight_id": "insight-b08e934ea5c05c01",
@@ -4772,7 +4776,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228593+00:00"
+      "created_at": "2026-06-16T06:01:38.463182+00:00"
     },
     {
       "insight_id": "insight-50e524f9f7c98f15",
@@ -4788,7 +4792,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228615+00:00"
+      "created_at": "2026-06-16T06:01:38.463202+00:00"
     },
     {
       "insight_id": "insight-f829739136e3e1d9",
@@ -4804,7 +4808,7 @@
       "source_key_json": "{\"source_type\": \"forum\", \"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228638+00:00"
+      "created_at": "2026-06-16T06:01:38.463224+00:00"
     },
     {
       "insight_id": "insight-a647da52d97754d3",
@@ -4820,7 +4824,7 @@
       "source_key_json": "{\"source_type\": \"reviews\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228662+00:00"
+      "created_at": "2026-06-16T06:01:38.463247+00:00"
     },
     {
       "insight_id": "insight-2e2786d05477002a",
@@ -4836,7 +4840,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228685+00:00"
+      "created_at": "2026-06-16T06:01:38.463270+00:00"
     },
     {
       "insight_id": "insight-62bb0433692d1c75",
@@ -4852,7 +4856,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228705+00:00"
+      "created_at": "2026-06-16T06:01:38.463290+00:00"
     },
     {
       "insight_id": "insight-dc314fb2d19f77ac",
@@ -4868,7 +4872,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228726+00:00"
+      "created_at": "2026-06-16T06:01:38.463311+00:00"
     },
     {
       "insight_id": "insight-ddbb48af84e36139",
@@ -4884,7 +4888,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228743+00:00"
+      "created_at": "2026-06-16T06:01:38.463328+00:00"
     },
     {
       "insight_id": "insight-5e695a154bc50567",
@@ -4900,7 +4904,7 @@
       "source_key_json": "{\"source_type\": \"reviews\", \"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228764+00:00"
+      "created_at": "2026-06-16T06:01:38.463348+00:00"
     },
     {
       "insight_id": "insight-3b5e3d429a1c7b05",
@@ -4916,7 +4920,7 @@
       "source_key_json": "{\"source_type\": \"forum\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228781+00:00"
+      "created_at": "2026-06-16T06:01:38.463364+00:00"
     },
     {
       "insight_id": "insight-b74c7256244ac2f9",
@@ -4932,7 +4936,7 @@
       "source_key_json": "{\"source_type\": \"reviews\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228797+00:00"
+      "created_at": "2026-06-16T06:01:38.463379+00:00"
     },
     {
       "insight_id": "insight-25d81734eb74ce6f",
@@ -4948,7 +4952,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228815+00:00"
+      "created_at": "2026-06-16T06:01:38.463395+00:00"
     },
     {
       "insight_id": "insight-f5d8919653790bba",
@@ -4964,7 +4968,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228828+00:00"
+      "created_at": "2026-06-16T06:01:38.463408+00:00"
     },
     {
       "insight_id": "insight-e6036cc2ad67f9a4",
@@ -4980,7 +4984,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228841+00:00"
+      "created_at": "2026-06-16T06:01:38.463420+00:00"
     },
     {
       "insight_id": "insight-4b3fe4556915ae03",
@@ -4996,7 +5000,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228853+00:00"
+      "created_at": "2026-06-16T06:01:38.463431+00:00"
     },
     {
       "insight_id": "insight-fcd6796681c23992",
@@ -5012,7 +5016,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228864+00:00"
+      "created_at": "2026-06-16T06:01:38.463441+00:00"
     },
     {
       "insight_id": "insight-921780beb4947aa3",
@@ -5028,7 +5032,7 @@
       "source_key_json": "{\"source_type\": \"reviews\", \"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228873+00:00"
+      "created_at": "2026-06-16T06:01:38.463451+00:00"
     },
     {
       "insight_id": "insight-0e589a9e061a3fdf",
@@ -5044,7 +5048,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228886+00:00"
+      "created_at": "2026-06-16T06:01:38.463463+00:00"
     },
     {
       "insight_id": "insight-a08d88a2efadfbff",
@@ -5060,7 +5064,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228898+00:00"
+      "created_at": "2026-06-16T06:01:38.463475+00:00"
     },
     {
       "insight_id": "insight-aa9fa20517796efd",
@@ -5076,7 +5080,7 @@
       "source_key_json": "{\"source_type\": \"forum\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228910+00:00"
+      "created_at": "2026-06-16T06:01:38.463487+00:00"
     },
     {
       "insight_id": "insight-c73efb2d2e6b5635",
@@ -5092,7 +5096,7 @@
       "source_key_json": "{\"source_type\": \"reviews\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228923+00:00"
+      "created_at": "2026-06-16T06:01:38.463499+00:00"
     },
     {
       "insight_id": "insight-06ab48601917baf6",
@@ -5108,7 +5112,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228936+00:00"
+      "created_at": "2026-06-16T06:01:38.463514+00:00"
     },
     {
       "insight_id": "insight-6897eab87e72ac46",
@@ -5124,7 +5128,7 @@
       "source_key_json": "{\"source_type\": \"reviews\", \"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228944+00:00"
+      "created_at": "2026-06-16T06:01:38.463522+00:00"
     },
     {
       "insight_id": "insight-620e9ce0d02175af",
@@ -5140,7 +5144,7 @@
       "source_key_json": "{\"source_type\": \"reviews\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228953+00:00"
+      "created_at": "2026-06-16T06:01:38.463529+00:00"
     },
     {
       "insight_id": "insight-496d9999584cf6c5",
@@ -5156,7 +5160,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228961+00:00"
+      "created_at": "2026-06-16T06:01:38.463537+00:00"
     },
     {
       "insight_id": "insight-0c1b544defc8281c",
@@ -5172,7 +5176,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"suction_performance\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228969+00:00"
+      "created_at": "2026-06-16T06:01:38.463545+00:00"
     },
     {
       "insight_id": "insight-8c9264bade565808",
@@ -5188,7 +5192,7 @@
       "source_key_json": "{\"source_type\": \"reviews\", \"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228977+00:00"
+      "created_at": "2026-06-16T06:01:38.463552+00:00"
     },
     {
       "insight_id": "insight-c540b27ab1884163",
@@ -5204,7 +5208,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228985+00:00"
+      "created_at": "2026-06-16T06:01:38.463560+00:00"
     },
     {
       "insight_id": "insight-7ad833f8613b46c0",
@@ -5220,7 +5224,7 @@
       "source_key_json": "{\"source_type\": \"online news\", \"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.228994+00:00"
+      "created_at": "2026-06-16T06:01:38.463569+00:00"
     },
     {
       "insight_id": "insight-868a0bd7a9b072e8",
@@ -5236,7 +5240,7 @@
       "source_key_json": "{\"source_type\": \"reviews\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229001+00:00"
+      "created_at": "2026-06-16T06:01:38.463575+00:00"
     },
     {
       "insight_id": "insight-922be8b6ebf960a2",
@@ -5252,7 +5256,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229009+00:00"
+      "created_at": "2026-06-16T06:01:38.463584+00:00"
     },
     {
       "insight_id": "insight-1b0793628a6df816",
@@ -5268,7 +5272,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"pain_comfort\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229016+00:00"
+      "created_at": "2026-06-16T06:01:38.463591+00:00"
     },
     {
       "insight_id": "insight-60c881c7af362f7e",
@@ -5284,7 +5288,7 @@
       "source_key_json": "{\"source_type\": \"social network\", \"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229025+00:00"
+      "created_at": "2026-06-16T06:01:38.463599+00:00"
     },
     {
       "insight_id": "insight-25a90713222cb9fc",
@@ -5300,7 +5304,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229033+00:00"
+      "created_at": "2026-06-16T06:01:38.463607+00:00"
     },
     {
       "insight_id": "insight-a1bfad3ae2c1ff6c",
@@ -5316,7 +5320,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229038+00:00"
+      "created_at": "2026-06-16T06:01:38.463611+00:00"
     },
     {
       "insight_id": "insight-41f4e4bfe95cfb7c",
@@ -5332,7 +5336,7 @@
       "source_key_json": "{\"source_type\": \"forum\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229043+00:00"
+      "created_at": "2026-06-16T06:01:38.463615+00:00"
     },
     {
       "insight_id": "insight-e927a49b739a83ce",
@@ -5348,7 +5352,7 @@
       "source_key_json": "{\"source_type\": \"blog\", \"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229047+00:00"
+      "created_at": "2026-06-16T06:01:38.463620+00:00"
     },
     {
       "insight_id": "insight-7bdf6a766648c108",
@@ -5364,7 +5368,7 @@
       "source_key_json": "{\"source_type\": \"comments\", \"topic_id\": \"battery_power\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229052+00:00"
+      "created_at": "2026-06-16T06:01:38.463624+00:00"
     },
     {
       "insight_id": "insight-a48a40bdda37dea2",
@@ -5380,7 +5384,7 @@
       "source_key_json": "{\"source_type\": \"comments\", \"topic_id\": \"quality_broken\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229056+00:00"
+      "created_at": "2026-06-16T06:01:38.463628+00:00"
     },
     {
       "insight_id": "insight-c6157fc5349ad1eb",
@@ -5396,7 +5400,7 @@
       "source_key_json": "{\"source_type\": \"comments\", \"topic_id\": \"noise\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229060+00:00"
+      "created_at": "2026-06-16T06:01:38.463632+00:00"
     },
     {
       "insight_id": "insight-5120c56f61429155",
@@ -5412,7 +5416,7 @@
       "source_key_json": "{\"source_type\": \"forum\", \"topic_id\": \"leak_spill\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229065+00:00"
+      "created_at": "2026-06-16T06:01:38.463636+00:00"
     },
     {
       "insight_id": "insight-5d58dc6952397e2b",
@@ -5428,7 +5432,7 @@
       "source_key_json": "{\"source_type\": \"forum\", \"topic_id\": \"return_refund\"}",
       "recommended_action_type": "content_brief",
       "owner_domain": "Content/Marketing",
-      "created_at": "2026-06-12T01:51:56.229069+00:00"
+      "created_at": "2026-06-16T06:01:38.463640+00:00"
     }
   ],
   "competitorBattlecards": [
@@ -8933,6 +8937,971 @@
       "usageType": "content_brief_quote"
     }
   ],
+  "storylineDecisionQueue": [
+    {
+      "queueRank": 1,
+      "actionId": "action-0eaab6c555da664f",
+      "insightId": "insight-5cf9a3698f7bc7eb",
+      "decisionType": "query_update",
+      "storylineStage": "数据可信",
+      "category": "暖奶器",
+      "sourceAction": "play_1_search_quality 暖奶器 search:22869413",
+      "ownerDomain": "Data",
+      "ownerName": "",
+      "priorityLevel": "P0",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "reviewed precision >= 80%; blocked business conclusions can be re-enabled",
+      "evidenceStatus": "需样本复核",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 2,
+      "actionId": "action-aa4cf9f67806df9a",
+      "insightId": "insight-38514da59dd8808f",
+      "decisionType": "query_update",
+      "storylineStage": "数据可信",
+      "category": "消毒器",
+      "sourceAction": "play_1_search_quality 消毒器 search:28678966",
+      "ownerDomain": "Data",
+      "ownerName": "",
+      "priorityLevel": "P0",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "reviewed precision >= 80%; blocked business conclusions can be re-enabled",
+      "evidenceStatus": "需样本复核",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 3,
+      "actionId": "action-07c6f1b43ed0b6a7",
+      "insightId": "insight-2284f30de707c6be",
+      "decisionType": "product_backlog",
+      "storylineStage": "产品痛点",
+      "category": "吸奶器",
+      "sourceAction": "play_3_product_pain_radar 吸奶器 topic:battery_power",
+      "ownerDomain": "Product/CX",
+      "ownerName": "",
+      "priorityLevel": "P0",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "issue negative share or related CS tickets decrease after shipped action",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 4,
+      "actionId": "action-776bdceaed6dded8",
+      "insightId": "insight-25c0be8285fb1d16",
+      "decisionType": "product_backlog",
+      "storylineStage": "产品痛点",
+      "category": "吸奶器",
+      "sourceAction": "play_3_product_pain_radar 吸奶器 topic:noise",
+      "ownerDomain": "Product/Content",
+      "ownerName": "",
+      "priorityLevel": "P0",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "issue negative share or related CS tickets decrease after shipped action",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 5,
+      "actionId": "action-46c016c06f73ca6d",
+      "insightId": "insight-ce355c4d68127e99",
+      "decisionType": "competitor_matrix",
+      "storylineStage": "竞品增长",
+      "category": "吸奶器",
+      "sourceAction": "play_4_competitor_battlecard 吸奶器 brand:eufy",
+      "ownerDomain": "Marketing/Data",
+      "ownerName": "",
+      "priorityLevel": "P0",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "battlecard reviewed and converted into claim/objection handling guidance",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 6,
+      "actionId": "action-c6a239c2b6ffefd8",
+      "insightId": "insight-b1226f10c5d13ab1",
+      "decisionType": "competitor_matrix",
+      "storylineStage": "竞品增长",
+      "category": "吸奶器",
+      "sourceAction": "play_4_competitor_battlecard 吸奶器 brand:spectra",
+      "ownerDomain": "Marketing/Data",
+      "ownerName": "",
+      "priorityLevel": "P0",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "battlecard reviewed and converted into claim/objection handling guidance",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 7,
+      "actionId": "action-5e25aa2310ff4c4e",
+      "insightId": "insight-ec3a23a58c6107d1",
+      "decisionType": "product_backlog",
+      "storylineStage": "产品痛点",
+      "category": "吸奶器",
+      "sourceAction": "play_3_product_pain_radar 吸奶器 topic:leak_spill",
+      "ownerDomain": "Product/CX",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "issue negative share or related CS tickets decrease after shipped action",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 8,
+      "actionId": "action-6c01cce733a18037",
+      "insightId": "insight-f0514428ac1deeac",
+      "decisionType": "product_backlog",
+      "storylineStage": "产品痛点",
+      "category": "吸奶器",
+      "sourceAction": "play_3_product_pain_radar 吸奶器 topic:pain_comfort",
+      "ownerDomain": "Product/CX",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "issue negative share or related CS tickets decrease after shipped action",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 9,
+      "actionId": "action-6fd134468a6c797f",
+      "insightId": "insight-336984893ff7a86f",
+      "decisionType": "product_backlog",
+      "storylineStage": "产品痛点",
+      "category": "吸奶器",
+      "sourceAction": "play_3_product_pain_radar 吸奶器 topic:quality_broken",
+      "ownerDomain": "Product/CX",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "issue negative share or related CS tickets decrease after shipped action",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 10,
+      "actionId": "action-62fae2504e892a99",
+      "insightId": "insight-dc8e0dcb1f546f27",
+      "decisionType": "product_backlog",
+      "storylineStage": "产品痛点",
+      "category": "吸奶器",
+      "sourceAction": "play_3_product_pain_radar 吸奶器 topic:return_refund",
+      "ownerDomain": "CX",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "issue negative share or related CS tickets decrease after shipped action",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 11,
+      "actionId": "action-71b3fd8ed4082ae7",
+      "insightId": "insight-bf56ab1cf157fad3",
+      "decisionType": "product_backlog",
+      "storylineStage": "产品痛点",
+      "category": "吸奶器",
+      "sourceAction": "play_3_product_pain_radar 吸奶器 topic:suction_performance",
+      "ownerDomain": "Product",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "issue negative share or related CS tickets decrease after shipped action",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 12,
+      "actionId": "action-156baf09c2022635",
+      "insightId": "insight-410c420e29e26556",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:online news:battery_power",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 13,
+      "actionId": "action-8bec2c8c3b7405be",
+      "insightId": "insight-40599bde86733e27",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:online news:noise",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 14,
+      "actionId": "action-48cdac9d0666feff",
+      "insightId": "insight-665a8135bb4fe318",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:online news:suction_performance",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 15,
+      "actionId": "action-5a8a894d33b3a3a1",
+      "insightId": "insight-813a36040a79fa7a",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:social network:battery_power",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 16,
+      "actionId": "action-cb2b8caef31f9663",
+      "insightId": "insight-edb4a243031933b2",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:social network:leak_spill",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 17,
+      "actionId": "action-e62dc5fb2be4f7ef",
+      "insightId": "insight-b9e75eec67c48465",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:social network:noise",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 18,
+      "actionId": "action-d1776699a51af5bd",
+      "insightId": "insight-fc3f4f07dba30bda",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:social network:pain_comfort",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 19,
+      "actionId": "action-d2325604c01e3009",
+      "insightId": "insight-1305499a84ea8e27",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:social network:quality_broken",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 20,
+      "actionId": "action-150ae7ca39a8d108",
+      "insightId": "insight-05b2e7fb20d066d9",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:social network:return_refund",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 21,
+      "actionId": "action-64a377c19f81c7a2",
+      "insightId": "insight-45cc3cb0b406aafb",
+      "decisionType": "content_brief",
+      "storylineStage": "内容增长",
+      "category": "吸奶器",
+      "sourceAction": "play_5_content_opportunity 吸奶器 source_topic:social network:suction_performance",
+      "ownerDomain": "Content/Marketing",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "content brief shipped and engagement/positive theme lift reviewed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 22,
+      "actionId": "action-86c2f5609c305a77",
+      "insightId": "insight-50727ce3792e2cff",
+      "decisionType": "competitor_matrix",
+      "storylineStage": "竞品增长",
+      "category": "吸奶器",
+      "sourceAction": "play_4_competitor_battlecard 吸奶器 brand:elvie",
+      "ownerDomain": "Marketing/Data",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "battlecard reviewed and converted into claim/objection handling guidance",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 23,
+      "actionId": "action-9ea585112016e2a2",
+      "insightId": "insight-8557f06d3d2d1e6e",
+      "decisionType": "competitor_matrix",
+      "storylineStage": "竞品增长",
+      "category": "吸奶器",
+      "sourceAction": "play_4_competitor_battlecard 吸奶器 brand:medela",
+      "ownerDomain": "Marketing/Data",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "battlecard reviewed and converted into claim/objection handling guidance",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 24,
+      "actionId": "action-b9be01214b897a75",
+      "insightId": "insight-4804c800a1274088",
+      "decisionType": "competitor_matrix",
+      "storylineStage": "竞品增长",
+      "category": "吸奶器",
+      "sourceAction": "play_4_competitor_battlecard 吸奶器 brand:momcozy",
+      "ownerDomain": "Marketing/Data",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "battlecard reviewed and converted into claim/objection handling guidance",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 25,
+      "actionId": "action-9ced73dd7e81d95d",
+      "insightId": "insight-4ab6918622eeeba0",
+      "decisionType": "competitor_matrix",
+      "storylineStage": "竞品增长",
+      "category": "吸奶器",
+      "sourceAction": "play_4_competitor_battlecard 吸奶器 brand:willow",
+      "ownerDomain": "Marketing/Data",
+      "ownerName": "",
+      "priorityLevel": "P1",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "battlecard reviewed and converted into claim/objection handling guidance",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 26,
+      "actionId": "action-831c957ad0ece3fa",
+      "insightId": "insight-9b49feaf906ecf41",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-01-07",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 27,
+      "actionId": "action-c3a19929d6efb76f",
+      "insightId": "insight-4d9dcf02ab218771",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-01-30",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 28,
+      "actionId": "action-eb96a2a3d0715ce8",
+      "insightId": "insight-866353a9802c13ee",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-01-31",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 29,
+      "actionId": "action-25ea9a80d1e54792",
+      "insightId": "insight-8a791c7bca804f04",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-02-08",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 30,
+      "actionId": "action-b8c68742f83f8cf3",
+      "insightId": "insight-1703e20cdd7ea4fb",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-02-11",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 31,
+      "actionId": "action-5f1f48648c24f9fa",
+      "insightId": "insight-782b18aa74c3737a",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-02-21",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 32,
+      "actionId": "action-fadd3fd2c9af9aae",
+      "insightId": "insight-a9262acb40f2c092",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-02-22",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 33,
+      "actionId": "action-de008d43dbc11a8b",
+      "insightId": "insight-e69e0858b5e14c3b",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-03-19",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 34,
+      "actionId": "action-97d49dc114b9ab8f",
+      "insightId": "insight-a994044fd8b8bf24",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-03-20",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 35,
+      "actionId": "action-549ff973a5d4a891",
+      "insightId": "insight-a5cd7f6ece40f610",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-04-07",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 36,
+      "actionId": "action-d251c7e8500eebb3",
+      "insightId": "insight-f1454afb55f45492",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-04-12",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 37,
+      "actionId": "action-0719add002fe56bb",
+      "insightId": "insight-786ef00d2a1fde6e",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-04-15",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 38,
+      "actionId": "action-29a57f2b76faa60a",
+      "insightId": "insight-2b56e977406c7521",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-04-23",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 39,
+      "actionId": "action-50778f2664188c7a",
+      "insightId": "insight-7d4cc04d4aa4f3b4",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-04-24",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 40,
+      "actionId": "action-20b043a027bf052e",
+      "insightId": "insight-2f67785aabbe0afe",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-04-25",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 41,
+      "actionId": "action-d78e87c5f29dc38b",
+      "insightId": "insight-25649eb919abf882",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-04-27",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 42,
+      "actionId": "action-2b3126a7c996a6d6",
+      "insightId": "insight-19683ec009aa947d",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-04-29",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 43,
+      "actionId": "action-b97157fd31b84341",
+      "insightId": "insight-61faf4e10b171c86",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-05-01",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 44,
+      "actionId": "action-10b14e083ffb4f60",
+      "insightId": "insight-ecb14f4006a340ca",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-05-02",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 45,
+      "actionId": "action-c557f7db0cfb93e8",
+      "insightId": "insight-6e045a7873eb7773",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-05-03",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 46,
+      "actionId": "action-4f79ea9fa1b770c8",
+      "insightId": "insight-89e778632852a127",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-05-15",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 47,
+      "actionId": "action-94f4cc766523a9fc",
+      "insightId": "insight-0fc1aafec2951d94",
+      "decisionType": "pr_triage",
+      "storylineStage": "风险分诊",
+      "category": "吸奶器",
+      "sourceAction": "play_6_crisis_watch 吸奶器 daily_alert:2026-05-17",
+      "ownerDomain": "PR/CX",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "alert triaged within 24h and 72h review completed",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 48,
+      "actionId": "action-2ada8cfd78fe14b4",
+      "insightId": "insight-37ceecf634abd8c1",
+      "decisionType": "concept_test",
+      "storylineStage": "概念验证",
+      "category": "吸奶器",
+      "sourceAction": "play_8_concept_candidates 吸奶器 topic:battery_power",
+      "ownerDomain": "Product/Research",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "concept card reviewed with VOC samples plus external feedback",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 49,
+      "actionId": "action-d5609cfb1966ec4d",
+      "insightId": "insight-10799c9c4564f036",
+      "decisionType": "concept_test",
+      "storylineStage": "概念验证",
+      "category": "吸奶器",
+      "sourceAction": "play_8_concept_candidates 吸奶器 topic:leak_spill",
+      "ownerDomain": "Product/Research",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "concept card reviewed with VOC samples plus external feedback",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 50,
+      "actionId": "action-06e532670df6cb3a",
+      "insightId": "insight-3219646c345795d0",
+      "decisionType": "concept_test",
+      "storylineStage": "概念验证",
+      "category": "吸奶器",
+      "sourceAction": "play_8_concept_candidates 吸奶器 topic:noise",
+      "ownerDomain": "Product/Research",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "concept card reviewed with VOC samples plus external feedback",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 51,
+      "actionId": "action-badc1afa2c75f50e",
+      "insightId": "insight-463c4c5e2dbbc3fa",
+      "decisionType": "concept_test",
+      "storylineStage": "概念验证",
+      "category": "吸奶器",
+      "sourceAction": "play_8_concept_candidates 吸奶器 topic:pain_comfort",
+      "ownerDomain": "Product/Research",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "concept card reviewed with VOC samples plus external feedback",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 52,
+      "actionId": "action-0f1bf1f2c1913771",
+      "insightId": "insight-8706bd743a5e5201",
+      "decisionType": "concept_test",
+      "storylineStage": "概念验证",
+      "category": "吸奶器",
+      "sourceAction": "play_8_concept_candidates 吸奶器 topic:quality_broken",
+      "ownerDomain": "Product/Research",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "concept card reviewed with VOC samples plus external feedback",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 53,
+      "actionId": "action-68fb694ac88c4b5a",
+      "insightId": "insight-25074f17d24224c0",
+      "decisionType": "concept_test",
+      "storylineStage": "概念验证",
+      "category": "吸奶器",
+      "sourceAction": "play_8_concept_candidates 吸奶器 topic:return_refund",
+      "ownerDomain": "Product/Research",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "concept card reviewed with VOC samples plus external feedback",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 54,
+      "actionId": "action-31638807430dbfd2",
+      "insightId": "insight-d731c832e6b604ff",
+      "decisionType": "concept_test",
+      "storylineStage": "概念验证",
+      "category": "吸奶器",
+      "sourceAction": "play_8_concept_candidates 吸奶器 topic:suction_performance",
+      "ownerDomain": "Product/Research",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "concept card reviewed with VOC samples plus external feedback",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 55,
+      "actionId": "action-55a4cfe0f40040db",
+      "insightId": "insight-b2cc430a2abdf621",
+      "decisionType": "executive_decision",
+      "storylineStage": "经营复盘",
+      "category": "吸奶器",
+      "sourceAction": "play_10_executive_monthly 吸奶器 month:2026-05",
+      "ownerDomain": "Data/Business Leads",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "decision owner and next experiment recorded",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 56,
+      "actionId": "action-babb2152bc3308bf",
+      "insightId": "insight-b63bf5aa545c3718",
+      "decisionType": "executive_decision",
+      "storylineStage": "经营复盘",
+      "category": "暖奶器",
+      "sourceAction": "play_10_executive_monthly 暖奶器 month:2026-05",
+      "ownerDomain": "Data/Business Leads",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "decision owner and next experiment recorded",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    },
+    {
+      "queueRank": 57,
+      "actionId": "action-2dfd6f9716eff156",
+      "insightId": "insight-5939f740c00e7919",
+      "decisionType": "executive_decision",
+      "storylineStage": "经营复盘",
+      "category": "消毒器",
+      "sourceAction": "play_10_executive_monthly 消毒器 month:2026-05",
+      "ownerDomain": "Data/Business Leads",
+      "ownerName": "",
+      "priorityLevel": "P2",
+      "decisionStatus": "待负责人确认",
+      "expectedMetric": "decision owner and next experiment recorded",
+      "evidenceStatus": "需关联证据",
+      "nextAction": "补齐 owner、baseline、target 和复盘指标。"
+    }
+  ],
+  "actionConversionFunnel": [
+    {
+      "stageOrder": 1,
+      "stageKey": "proposed",
+      "stageLabel": "已提出",
+      "actionCount": 57,
+      "conversionRate": 1.0
+    },
+    {
+      "stageOrder": 2,
+      "stageKey": "owner_assigned",
+      "stageLabel": "已分派负责人",
+      "actionCount": 0,
+      "conversionRate": 0.0
+    },
+    {
+      "stageOrder": 3,
+      "stageKey": "accepted",
+      "stageLabel": "已确认执行",
+      "actionCount": 0,
+      "conversionRate": 0.0
+    },
+    {
+      "stageOrder": 4,
+      "stageKey": "in_progress",
+      "stageLabel": "执行中",
+      "actionCount": 0,
+      "conversionRate": 0.0
+    },
+    {
+      "stageOrder": 5,
+      "stageKey": "shipped",
+      "stageLabel": "已交付",
+      "actionCount": 0,
+      "conversionRate": 0.0
+    },
+    {
+      "stageOrder": 6,
+      "stageKey": "measured",
+      "stageLabel": "已复盘指标",
+      "actionCount": 0,
+      "conversionRate": 0.0
+    },
+    {
+      "stageOrder": 7,
+      "stageKey": "closed",
+      "stageLabel": "已关闭",
+      "actionCount": 0,
+      "conversionRate": 0.0
+    }
+  ],
   "summaries": {
     "blockedSearches": 2,
     "readyPainCards": 7,
@@ -8944,6 +9913,7 @@
     "crisisAlerts": 30,
     "knownRegionRows": 19,
     "monthlyRows": 14,
-    "quotes": 120
+    "quotes": 120,
+    "storylineP0Actions": 6
   }
 }

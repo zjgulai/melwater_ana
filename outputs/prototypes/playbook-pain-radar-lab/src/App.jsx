@@ -1139,6 +1139,80 @@ function MetricCard({ label, value, caption, tone = "rose" }) {
   );
 }
 
+const storylineStageRoutes = {
+  数据可信: "search",
+  产品痛点: "pain",
+  内容增长: "content",
+  竞品增长: "competitor",
+  风险分诊: "crisis",
+  概念验证: "concept",
+  经营复盘: "brief",
+};
+
+function StorylineDecisionQueue({ limit = 6, title = "故事线决策队列", caption = "按数据可信、业务问题、负责人动作和复盘指标排序。", setActiveView }) {
+  const rows = vocData.storylineDecisionQueue.slice(0, limit);
+  return (
+    <section className="card storyline-card">
+      <div className="card-header">
+        <div>
+          <h2>{title}</h2>
+          <p>{caption}</p>
+        </div>
+        <span className="status-badge rose">{vocData.summaries.storylineP0Actions} 条 P0</span>
+      </div>
+      <div className="storyline-list">
+        {rows.map((item) => {
+          const route = storylineStageRoutes[item.storylineStage] || "actions";
+          const clickable = Boolean(setActiveView);
+          const RowTag = clickable ? "button" : "article";
+          return (
+            <RowTag
+              className="storyline-row"
+              key={item.actionId}
+              onClick={clickable ? () => setActiveView(route) : undefined}
+              type={clickable ? "button" : undefined}
+            >
+              <span className={`status-badge ${item.priorityLevel === "P0" ? "rose" : item.priorityLevel === "P1" ? "amber" : "muted"}`}>{item.priorityLevel}</span>
+              <div>
+                <strong>{item.queueRank}. {item.storylineStage} · {actionTypeLabel(item.decisionType)}</strong>
+                <p>{item.category} · {item.decisionStatus} · {item.ownerDomain}</p>
+                <small>{item.nextAction}</small>
+              </div>
+              <i>{item.evidenceStatus}</i>
+            </RowTag>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function ActionConversionFunnel({ title = "行动闭环漏斗", caption = "只把完成分派、执行、交付和复盘的动作算作闭环。" }) {
+  return (
+    <section className="card funnel-card">
+      <div className="card-header">
+        <div>
+          <h2>{title}</h2>
+          <p>{caption}</p>
+        </div>
+        <span className="status-badge amber">{vocData.summaries.measuredActions} 已复盘</span>
+      </div>
+      <div className="funnel-steps">
+        {vocData.actionConversionFunnel.map((stage) => (
+          <article className="funnel-step" key={stage.stageKey}>
+            <span>{stage.stageLabel}</span>
+            <strong>{stage.actionCount}</strong>
+            <div className="funnel-bar">
+              <i style={{ width: `${Math.max(4, Number(stage.conversionRate || 0) * 100)}%` }} />
+            </div>
+            <small>{pct(stage.conversionRate, 0)}</small>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function SyncBadge({ state }) {
   const label = state === "api" ? "已写回 API" : state === "local" ? "本地暂存" : state === "conflict" ? "冲突已刷新" : "同步中";
   return <span className={`sync-badge ${state}`}>{label}</span>;
@@ -1181,8 +1255,8 @@ function HomePage({ setActiveView }) {
   ];
   const decisionCards = [
     ["数据可信", `${vocData.summaries.blockedSearches} 个搜索阻断`, "先治理搜索词，再开放业务解释。", "search", "rose"],
-    ["产品优先级", `${vocData.painCards.length} 张痛点卡`, "按证据深度和负向率进入产品/CX 队列。", "pain", "amber"],
-    ["行动闭环", `${vocData.summaries.proposedActions} 条待确认`, "必须明确负责人、截止日和复盘指标。", "actions", "yellow"],
+    ["P0 决策", `${vocData.summaries.storylineP0Actions} 条`, "先处理 query、痛点和竞品 objection。", "actions", "amber"],
+    ["闭环断点", `${vocData.summaries.measuredActions} 条已复盘`, "当前关键缺口是 owner 和 actual metric。", "actions", "yellow"],
     ["经营复盘", `${vocData.executiveMonthly.length} 条月度记录`, "压缩为管理层需要决策和追责的事项。", "brief", "green"],
   ];
 
@@ -1191,7 +1265,7 @@ function HomePage({ setActiveView }) {
       <div className="summary-grid">
         <MetricCard label="洞察总量" value={counts.fact_insight} caption="已生成 insight" tone="rose" />
         <MetricCard label="证据样本" value={counts.fact_evidence_sample} caption="可回溯 evidence" tone="amber" />
-        <MetricCard label="待闭环动作" value={vocData.summaries.proposedActions} caption="仍需负责人确认" tone="yellow" />
+        <MetricCard label="P0 决策" value={vocData.summaries.storylineP0Actions} caption="先跑最小闭环" tone="yellow" />
         <MetricCard label="阻断搜索" value={vocData.summaries.blockedSearches} caption="暂不能下业务结论" tone="muted" />
       </div>
 
@@ -1203,6 +1277,19 @@ function HomePage({ setActiveView }) {
         </div>
         <MartFreshness />
       </section>
+
+      <div className="storyline-home-grid">
+        <StorylineDecisionQueue
+          limit={6}
+          setActiveView={setActiveView}
+          title="今天只推进这 6 个决策"
+          caption="按新版故事线排序：先解锁数据可信，再处理产品痛点和竞品增长。"
+        />
+        <ActionConversionFunnel
+          title="闭环断点"
+          caption="提出动作不等于闭环；负责人、执行、交付、复盘缺一不可。"
+        />
+      </div>
 
       <div className="decision-grid">
         {decisionCards.map(([title, value, body, route, tone]) => (
@@ -2299,13 +2386,14 @@ function ExecutiveMonthlyPage() {
   const [selectedCategory, setSelectedCategory] = useState(rows[0]?.category || "");
   const selected = rows.find((item) => item.category === selectedCategory) || rows[0] || vocData.executiveMonthly[0];
   const readyBriefs = vocData.contentBriefQueue.filter((item) => item.readiness === "ready_for_review").slice(0, 5);
+  const p0Queue = vocData.storylineDecisionQueue.filter((item) => item.priorityLevel === "P0");
 
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
         <MetricCard label="月份" value={month} caption="管理层月报" tone="rose" />
         <MetricCard label="触点量" value={compactNumber(totals.occurrences)} caption="月度 VOC" tone="amber" />
-        <MetricCard label="平均负向率" value={pct(avgNegative, 1)} caption="加权口径" tone="yellow" />
+        <MetricCard label="P0 决策" value={p0Queue.length} caption="本轮优先确认" tone="yellow" />
         <MetricCard label="可行动事项" value={totals.ready} caption="负责人跟进" tone="green" />
       </div>
 
@@ -2319,12 +2407,24 @@ function ExecutiveMonthlyPage() {
         </div>
       </section>
 
+      <div className="storyline-home-grid">
+        <StorylineDecisionQueue
+          limit={5}
+          title="月会先确认这 5 件事"
+          caption="管理层只看能改变资源、负责人和复盘指标的事项；其余进入观察或补证据。"
+        />
+        <ActionConversionFunnel
+          title="本月闭环成熟度"
+          caption={`当前平均负向率 ${pct(avgNegative, 1)}，但业务成效只看已分派、已交付和已复盘动作。`}
+        />
+      </div>
+
       <div className="p2-layout">
         <section className="card p2-board">
           <div className="card-header">
             <div>
               <h2>月会决策包</h2>
-              <p>月会顺序：先看数据质量阻断，再看可行动事项，最后看内容/概念扩展。</p>
+              <p>月会顺序：先确认 P0 决策，再看数据质量阻断，最后看可行动事项和内容/概念扩展。</p>
             </div>
             <span className="status-badge green">{rows.length} 个品类</span>
           </div>
@@ -2365,7 +2465,7 @@ function ExecutiveMonthlyPage() {
               <p>
                 {selected.blockedSearches
                   ? `${selected.category} 有 ${selected.blockedSearches} 个搜索阻断，管理层页只输出治理进展，不输出业务判断。`
-                  : `${selected.category} 数据质量通过，可讨论 ${selected.readyActions} 条可行动事项、痛点优先级和内容机会。`}
+                  : `${selected.category} 数据质量通过，可讨论 ${selected.readyActions} 条可行动事项；会中必须确认 owner、baseline、target 和 review date。`}
               </p>
             </div>
             <div className="runbook-grid">
@@ -3076,7 +3176,7 @@ function ActionLoopPage() {
     if (query.trim() && !text.includes(query.trim().toLowerCase())) return false;
     return true;
   });
-  const highPriorityCount = actions.filter((action) => ["P0", "P1"].includes(action.priority)).length;
+  const storylineP0Count = vocData.summaries.storylineP0Actions;
   const unassignedCount = actions.filter((action) => !ownerDraft[action.action_id] && !action.owner_name).length;
   const evidenceLinkedCount = actions.filter((action) => action.evidenceCount > 0 || action.quotes.length > 0).length;
   const weeklyReview = useMemo(() => buildWeeklyActionReview(actions), [actions]);
@@ -3110,9 +3210,20 @@ function ActionLoopPage() {
     <div className="lab-stack">
       <div className="summary-grid compact">
         <MetricCard label="动作总数" value={vocData.actions.length} caption="行动登记表" tone="rose" />
-        <MetricCard label="高优先级" value={highPriorityCount} caption="优先进入周会跟进" tone="amber" />
+        <MetricCard label="P0 决策" value={storylineP0Count} caption="新版故事线优先级" tone="amber" />
         <MetricCard label="待定负责人" value={unassignedCount} caption="负责人待落位" tone="yellow" />
         <MetricCard label="已关联证据" value={evidenceLinkedCount} caption="可追溯原话 / 样本" tone="green" />
+      </div>
+      <div className="storyline-home-grid">
+        <ActionConversionFunnel
+          title="行动闭环转化漏斗"
+          caption="当前 57 条动作仍主要停在提出阶段；先把 P0 动作推进到负责人和复盘指标。"
+        />
+        <StorylineDecisionQueue
+          limit={6}
+          title="P0 / P1 执行优先级"
+          caption="队列来自 mart_storyline_decision_queue，先治理搜索，再处理吸奶器痛点和竞品 objection。"
+        />
       </div>
       <WeeklyActionReview
         review={weeklyReview}

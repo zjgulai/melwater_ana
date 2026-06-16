@@ -500,6 +500,31 @@ def _create_mart_schema(db: sqlite3.Connection) -> None:
             PRIMARY KEY(owner_domain, owner_name, status)
         );
 
+        CREATE TABLE mart_storyline_decision_queue(
+            queue_rank INTEGER PRIMARY KEY,
+            action_id TEXT NOT NULL,
+            insight_id TEXT,
+            decision_type TEXT NOT NULL,
+            storyline_stage TEXT NOT NULL,
+            category TEXT NOT NULL,
+            source_action TEXT NOT NULL,
+            owner_domain TEXT NOT NULL,
+            owner_name TEXT NOT NULL,
+            priority_level TEXT NOT NULL,
+            decision_status TEXT NOT NULL,
+            expected_metric TEXT NOT NULL,
+            evidence_status TEXT NOT NULL,
+            next_action TEXT NOT NULL
+        );
+
+        CREATE TABLE mart_action_conversion_funnel(
+            stage_order INTEGER PRIMARY KEY,
+            stage_key TEXT NOT NULL,
+            stage_label TEXT NOT NULL,
+            action_count INTEGER NOT NULL,
+            conversion_rate REAL NOT NULL
+        );
+
         CREATE TABLE fact_action_feedback_unmatched(
             action_id TEXT PRIMARY KEY,
             reason TEXT NOT NULL,
@@ -1927,6 +1952,170 @@ def _build_action_status_summary(action_rows: list[dict[str, Any]]) -> list[dict
     )
 
 
+def _action_storyline_stage(action_type: str) -> str:
+    return {
+        "query_update": "数据可信",
+        "product_backlog": "产品痛点",
+        "competitor_matrix": "竞品增长",
+        "content_brief": "内容增长",
+        "pr_triage": "风险分诊",
+        "concept_test": "概念验证",
+        "executive_decision": "经营复盘",
+    }.get(action_type, "业务动作")
+
+
+def _action_decision_status(row: dict[str, Any]) -> str:
+    status = str(row.get("status") or "Proposed")
+    owner_name = str(row.get("owner_name") or "").strip()
+    actual_metric = str(row.get("actual_metric") or "").strip()
+    if status == "Closed":
+        return "已关闭"
+    if status == "Rejected":
+        return "已拒绝"
+    if status == "Measured" or actual_metric:
+        return "已复盘"
+    if not owner_name:
+        return "待负责人确认"
+    if status == "Proposed":
+        return "待业务确认"
+    return "执行中"
+
+
+def _action_next_step(row: dict[str, Any]) -> str:
+    owner_name = str(row.get("owner_name") or "").strip()
+    baseline = str(row.get("baseline_value") or "").strip()
+    target = str(row.get("target_value") or "").strip()
+    actual_metric = str(row.get("actual_metric") or "").strip()
+    close_reason = str(row.get("close_reason") or "").strip()
+    status = str(row.get("status") or "Proposed")
+    if status in ACTION_TERMINAL_STATUSES:
+        return "将 close/reject reason 回写到规则、内容或产品知识库。"
+    if status == "Measured" or actual_metric:
+        return "在经营复盘页确认指标变化，并决定继续、扩大或关闭。"
+    if not owner_name or not baseline or not target:
+        return "补齐 owner、baseline、target 和复盘指标。"
+    if status == "Proposed":
+        return "业务负责人确认是否接受、暂缓或拒绝该动作。"
+    if not close_reason:
+        return "推进执行并在 review_date 前补齐 actual_metric。"
+    return "等待下次数据刷新验证 before/after。"
+
+
+def _action_priority_level(row: dict[str, Any]) -> str:
+    action_type = str(row.get("action_type") or "")
+    source_action = str(row.get("source_action") or "").lower()
+    if action_type == "query_update":
+        return "P0"
+    if action_type == "product_backlog" and any(term in source_action for term in ("battery", "noise")):
+        return "P0"
+    if action_type == "competitor_matrix" and any(term in source_action for term in ("eufy", "spectra")):
+        return "P0"
+    if action_type in {"product_backlog", "content_brief", "competitor_matrix"}:
+        return "P1"
+    return "P2"
+
+
+def _action_evidence_status(row: dict[str, Any]) -> str:
+    action_type = str(row.get("action_type") or "")
+    source_action = str(row.get("source_action") or "")
+    if action_type == "query_update":
+        return "需样本复核"
+    if "blocked_by_query_noise" in source_action:
+        return "搜索阻断"
+    return "需关联证据"
+
+
+def _build_storyline_decision_queue(action_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    action_type_order = {
+        "query_update": 0,
+        "product_backlog": 1,
+        "content_brief": 2,
+        "competitor_matrix": 3,
+        "pr_triage": 4,
+        "concept_test": 5,
+        "executive_decision": 6,
+    }
+    ranked = sorted(
+        action_rows,
+        key=lambda row: (
+            {"P0": 0, "P1": 1, "P2": 2}.get(_action_priority_level(row), 9),
+            action_type_order.get(str(row.get("action_type") or ""), 99),
+            str(row.get("source_action") or ""),
+        ),
+    )
+    rows: list[dict[str, Any]] = []
+    for index, row in enumerate(ranked, start=1):
+        action_type = str(row.get("action_type") or "")
+        rows.append(
+            {
+                "queue_rank": index,
+                "action_id": str(row.get("action_id") or ""),
+                "insight_id": str(row.get("insight_id") or ""),
+                "decision_type": action_type,
+                "storyline_stage": _action_storyline_stage(action_type),
+                "category": str(row.get("source_action") or "").split(" ")[1]
+                if len(str(row.get("source_action") or "").split(" ")) > 1
+                else "",
+                "source_action": str(row.get("source_action") or ""),
+                "owner_domain": str(row.get("owner_domain") or ""),
+                "owner_name": str(row.get("owner_name") or ""),
+                "priority_level": _action_priority_level(row),
+                "decision_status": _action_decision_status(row),
+                "expected_metric": str(row.get("expected_metric") or ""),
+                "evidence_status": _action_evidence_status(row),
+                "next_action": _action_next_step(row),
+            }
+        )
+    return rows
+
+
+def _build_action_conversion_funnel(action_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    total = len(action_rows)
+
+    def rate(count: int) -> float:
+        return count / total if total else 0.0
+
+    accepted_statuses = {"Accepted", "In Progress", "Shipped", "Measured", "Closed"}
+    in_progress_statuses = {"In Progress", "Shipped", "Measured", "Closed"}
+    shipped_statuses = {"Shipped", "Measured", "Closed"}
+    measured_statuses = {"Measured", "Closed"}
+    stages = [
+        ("proposed", "已提出", total),
+        (
+            "owner_assigned",
+            "已分派负责人",
+            sum(1 for row in action_rows if str(row.get("owner_name") or "").strip()),
+        ),
+        ("accepted", "已确认执行", sum(1 for row in action_rows if str(row.get("status") or "") in accepted_statuses)),
+        (
+            "in_progress",
+            "执行中",
+            sum(1 for row in action_rows if str(row.get("status") or "") in in_progress_statuses),
+        ),
+        ("shipped", "已交付", sum(1 for row in action_rows if str(row.get("status") or "") in shipped_statuses)),
+        (
+            "measured",
+            "已复盘指标",
+            sum(
+                1
+                for row in action_rows
+                if str(row.get("status") or "") in measured_statuses or str(row.get("actual_metric") or "").strip()
+            ),
+        ),
+        ("closed", "已关闭", sum(1 for row in action_rows if str(row.get("status") or "") == "Closed")),
+    ]
+    return [
+        {
+            "stage_order": index,
+            "stage_key": stage_key,
+            "stage_label": stage_label,
+            "action_count": count,
+            "conversion_rate": rate(count),
+        }
+        for index, (stage_key, stage_label, count) in enumerate(stages, start=1)
+    ]
+
+
 def _action_expected_metric(action_type: str) -> str:
     return {
         "query_update": "reviewed precision >= 80%; blocked business conclusions can be re-enabled",
@@ -2003,6 +2192,30 @@ def _insert_closure_rows(
             )
             """,
             summary_rows,
+        )
+    storyline_rows = _build_storyline_decision_queue(action_rows)
+    if storyline_rows:
+        mart_db.executemany(
+            """
+            INSERT INTO mart_storyline_decision_queue VALUES (
+                :queue_rank, :action_id, :insight_id, :decision_type,
+                :storyline_stage, :category, :source_action, :owner_domain,
+                :owner_name, :priority_level, :decision_status, :expected_metric,
+                :evidence_status, :next_action
+            )
+            """,
+            storyline_rows,
+        )
+    funnel_rows = _build_action_conversion_funnel(action_rows)
+    if funnel_rows:
+        mart_db.executemany(
+            """
+            INSERT INTO mart_action_conversion_funnel VALUES (
+                :stage_order, :stage_key, :stage_label, :action_count,
+                :conversion_rate
+            )
+            """,
+            funnel_rows,
         )
     if unmatched_feedback_rows:
         mart_db.executemany(
@@ -2084,6 +2297,37 @@ def _insert_closure_rows(
             "measured_count",
             "closed_count",
             "rejected_count",
+        ],
+    )
+    _write_dict_csv(
+        output_dir / "storyline_decision_queue.csv",
+        storyline_rows,
+        [
+            "queue_rank",
+            "action_id",
+            "insight_id",
+            "decision_type",
+            "storyline_stage",
+            "category",
+            "source_action",
+            "owner_domain",
+            "owner_name",
+            "priority_level",
+            "decision_status",
+            "expected_metric",
+            "evidence_status",
+            "next_action",
+        ],
+    )
+    _write_dict_csv(
+        output_dir / "action_conversion_funnel.csv",
+        funnel_rows,
+        [
+            "stage_order",
+            "stage_key",
+            "stage_label",
+            "action_count",
+            "conversion_rate",
         ],
     )
     _write_dict_csv(
@@ -3207,6 +3451,8 @@ def _write_manifest(
             "query_sample_review_queue.csv",
             "action_register.csv",
             "action_status_summary.csv",
+            "storyline_decision_queue.csv",
+            "action_conversion_funnel.csv",
             "action_feedback_unmatched.csv",
             "action_closed_loop_summary.md",
         ],
@@ -3332,6 +3578,8 @@ def _build_mart_outputs(
             "fact_sample_review": len(sample_rows),
             "fact_action_register": len(action_rows),
             "mart_action_status_summary": len(action_summary_rows),
+            "mart_storyline_decision_queue": len(_build_storyline_decision_queue(action_rows)),
+            "mart_action_conversion_funnel": len(_build_action_conversion_funnel(action_rows)),
             "fact_action_feedback_unmatched": len(unmatched_feedback_rows),
             "action_feedback_applied": action_feedback_applied,
         },

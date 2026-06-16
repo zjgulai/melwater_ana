@@ -103,6 +103,8 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert (output_dir / "action_status_summary.csv").is_file()
     assert (output_dir / "action_feedback_unmatched.csv").is_file()
     assert (output_dir / "action_closed_loop_summary.md").is_file()
+    assert (output_dir / "storyline_decision_queue.csv").is_file()
+    assert (output_dir / "action_conversion_funnel.csv").is_file()
 
     manifest = json.loads((output_dir / "mart_manifest.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "PASS"
@@ -124,6 +126,8 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert manifest["counts"]["fact_sample_review"] == manifest["counts"]["fact_evidence_sample"]
     assert manifest["counts"]["fact_action_register"] >= 1
     assert manifest["counts"]["mart_action_status_summary"] >= 1
+    assert manifest["counts"]["mart_storyline_decision_queue"] >= 1
+    assert manifest["counts"]["mart_action_conversion_funnel"] == 7
     assert manifest["counts"]["fact_action_feedback_unmatched"] == 0
     assert manifest["counts"]["action_feedback_applied"] == 0
 
@@ -234,6 +238,21 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
             """
         ).fetchone()
         action_summary = db.execute("SELECT SUM(action_count) FROM mart_action_status_summary").fetchone()
+        decision_queue = db.execute(
+            """
+            SELECT decision_type, storyline_stage, owner_domain, decision_status, next_action
+            FROM mart_storyline_decision_queue
+            ORDER BY queue_rank
+            LIMIT 1
+            """
+        ).fetchone()
+        action_funnel = db.execute(
+            """
+            SELECT stage_key, action_count
+            FROM mart_action_conversion_funnel
+            ORDER BY stage_order
+            """
+        ).fetchall()
 
     assert search == (2, 3, 2, "blocked_by_query_noise")
     assert pain == (2, 0, "blocked_by_query_noise")
@@ -254,6 +273,15 @@ def test_build_marts_generates_p0_outputs(fixture_config: Path, tmp_path: Path):
     assert action[0] >= 1
     assert action[0] == action[1]
     assert action_summary == (action[0],)
+    assert decision_queue == (
+        "query_update",
+        "数据可信",
+        "Data",
+        "待负责人确认",
+        "补齐 owner、baseline、target 和复盘指标。",
+    )
+    assert action_funnel[0] == ("proposed", action[0])
+    assert action_funnel[-1] == ("closed", 0)
 
 
 def test_build_marts_applies_action_feedback_overlay(fixture_config: Path, tmp_path: Path):
