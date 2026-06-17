@@ -48,6 +48,7 @@ import {
   getDateRangeByKey,
   isTemporalRangeActive,
 } from "./dateRangeFilters.js";
+import { persistDateRangeKey, resolveInitialDateRangeKey } from "./dateRangePersistence.js";
 
 const topicLabels = {
   battery_power: "电池续航",
@@ -3498,14 +3499,22 @@ export function App() {
   const [activeView, setActiveView] = useState("home");
   const [category, setCategory] = useState("吸奶器");
   const [actionCreated, setActionCreated] = useState(false);
-  const [dateRangeKey, setDateRangeKey] = useState("all");
+  const [dateRangeKey, setDateRangeKey] = useState(() => {
+    if (typeof window === "undefined") return "all";
+    return resolveInitialDateRangeKey(window.location.search, window.localStorage);
+  });
   const dateRange = getDateRangeByKey(dateRangeKey);
+  const handleDateRangeKeyChange = useCallback((key) => {
+    const nextRange = getDateRangeByKey(key);
+    if (typeof window !== "undefined") persistDateRangeKey(nextRange.key, window);
+    setDateRangeKey(nextRange.key);
+  }, []);
 
   return (
     <div className="app-shell">
       <Sidebar activeView={activeView} setActiveView={setActiveView} />
       <main className="workspace">
-        <Header activeView={activeView} actionCreated={actionCreated} dateRange={dateRange} setDateRangeKey={setDateRangeKey} />
+        <Header activeView={activeView} actionCreated={actionCreated} dateRange={dateRange} setDateRangeKey={handleDateRangeKeyChange} />
         <BusinessLoopStrip activeView={activeView} />
         <BusinessClosurePanel activeView={activeView} />
         <PageUsageGuide activeView={activeView} />

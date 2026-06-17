@@ -61,3 +61,41 @@ def test_header_exposes_interactive_date_menu():
     assert 'aria-haspopup="menu"' in source
     assert "setDateRangeKey" in source
     assert "DATE_RANGE_OPTIONS" in source
+
+
+def test_date_range_persistence_prefers_url_then_storage():
+    output = run_node_module(
+        """
+        import {
+          DATE_RANGE_QUERY_PARAM,
+          DATE_RANGE_STORAGE_KEY,
+          resolveInitialDateRangeKey,
+        } from "./src/dateRangePersistence.js";
+
+        const storage = new Map([[DATE_RANGE_STORAGE_KEY, "last90"]]);
+        const storageLike = {
+          getItem: (key) => storage.get(key) || "",
+        };
+
+        const fromUrl = resolveInitialDateRangeKey(`?${DATE_RANGE_QUERY_PARAM}=last30`, storageLike);
+        if (fromUrl !== "last30") throw new Error(`url should win, got ${fromUrl}`);
+
+        const fromStorage = resolveInitialDateRangeKey("", storageLike);
+        if (fromStorage !== "last90") throw new Error(`storage should be fallback, got ${fromStorage}`);
+
+        const invalidFallback = resolveInitialDateRangeKey("?dateRange=unknown", { getItem: () => "unknown" });
+        if (invalidFallback !== "all") throw new Error(`invalid values should fall back to all, got ${invalidFallback}`);
+
+        console.log(JSON.stringify({ fromUrl, fromStorage, invalidFallback }));
+        """
+    )
+
+    assert "last30" in output
+
+
+def test_app_persists_date_range_selection():
+    source = (APP_DIR / "src" / "App.jsx").read_text()
+
+    assert "resolveInitialDateRangeKey" in source
+    assert "persistDateRangeKey" in source
+    assert "handleDateRangeKeyChange" in source
