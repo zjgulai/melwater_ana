@@ -604,6 +604,12 @@ function actionDueInfo(action, now = new Date()) {
   return { date: action.due_date, days, label: `剩余 ${days} 天`, tone: "muted" };
 }
 
+function actionSourceDateLabel(action) {
+  if (!action.sourceDateStart || !action.sourceDateEnd) return "无源日期";
+  if (action.sourceDateStart === action.sourceDateEnd) return action.sourceDateStart;
+  return `${action.sourceDateStart} - ${action.sourceDateEnd}`;
+}
+
 function actionEvidenceStrength(action) {
   if (action.action_type === "query_update") {
     return { label: "需复核", score: 0, tone: "amber", caption: "搜索阻断需要样本复核" };
@@ -988,6 +994,7 @@ function Sidebar({ activeView, setActiveView }) {
 
 const dateRangeScopeCopy = {
   search: "当前页面按 sourceDate 字段筛选可推导日期的噪声样本复核队列；搜索质量总表仍为全量聚合。",
+  actions: "当前页面按 sourceDateStart/sourceDateEnd 筛选可回溯证据源日期的行动；截止日和复盘日仍只表示执行管理窗口。",
   quotes: "当前页面按 sourceDate 字段筛选可推导日期的用户原话；没有源日期的原话不会进入收窄范围。",
   crisis: "当前页面按 day / week 字段筛选每日风险和周度变化点。",
   brief: "当前页面按 month 字段筛选经营复盘月度记录。",
@@ -1063,10 +1070,10 @@ function Header({ activeView, actionCreated, dateRange, setDateRangeKey }) {
 }
 
 function DateRangeScopeNote({ activeView, dateRange }) {
-  const temporalViews = new Set(["search", "quotes", "crisis", "brief"]);
+  const temporalViews = new Set(["search", "actions", "quotes", "crisis", "brief"]);
   const body = temporalViews.has(activeView)
     ? dateRangeScopeCopy[activeView]
-    : "当前页面使用已生成的全量聚合 mart，前端不会用日期重算洞察；切到数据可信度、用户原话、风险预警或经营复盘可查看按时间范围筛选后的记录。";
+    : "当前页面使用已生成的全量聚合 mart，前端不会用日期重算洞察；切到数据可信度、行动闭环、用户原话、风险预警或经营复盘可查看按时间范围筛选后的记录。";
 
   return (
     <section className={isTemporalRangeActive(dateRange) ? "date-scope-note active" : "date-scope-note"} aria-label="时间范围筛选说明">
@@ -3231,7 +3238,7 @@ function WeeklyActionReview({
   );
 }
 
-function ActionLoopPage() {
+function ActionLoopPage({ dateRange }) {
   const { values: statusDraft, writeValue: writeActionStatus, syncState: statusSync } = useWritebackState("actionStatus");
   const { values: ownerDraft, writeValue: writeActionOwner, syncState: ownerSync } = useWritebackState("actionOwner");
   const { values: priorityDraft, writeValue: writeActionPriority, syncState: prioritySync } = useWritebackState("actionPriority");
@@ -3252,8 +3259,13 @@ function ActionLoopPage() {
     })),
     [impactDraft, ownerDraft, priorityDraft, statusDraft],
   );
-  const ownerOptions = useMemo(() => ["all", ...new Set(actions.map((action) => action.owner_domain || "unassigned"))], [actions]);
-  const filteredActions = actions.filter((action) => {
+  const scopedActions = useMemo(
+    () => filterSourceRowsByDateRange(actions, dateRange, "sourceDateStart"),
+    [actions, dateRange],
+  );
+  const sourceDatedActionCount = actions.filter((action) => action.sourceDateStart && action.sourceDateEnd).length;
+  const ownerOptions = useMemo(() => ["all", ...new Set(scopedActions.map((action) => action.owner_domain || "unassigned"))], [scopedActions]);
+  const filteredActions = scopedActions.filter((action) => {
     const text = `${action.action_type} ${action.source_action} ${action.category} ${action.topicId} ${action.ownerName} ${action.businessImpact}`.toLowerCase();
     if (ownerFilter !== "all" && (action.owner_domain || "unassigned") !== ownerFilter) return false;
     if (statusFilter !== "all" && action.status !== statusFilter) return false;
@@ -3262,10 +3274,9 @@ function ActionLoopPage() {
     if (query.trim() && !text.includes(query.trim().toLowerCase())) return false;
     return true;
   });
-  const storylineP0Count = vocData.summaries.storylineP0Actions;
-  const unassignedCount = actions.filter((action) => !ownerDraft[action.action_id] && !action.owner_name).length;
-  const evidenceLinkedCount = actions.filter((action) => action.evidenceCount > 0 || action.quotes.length > 0).length;
-  const weeklyReview = useMemo(() => buildWeeklyActionReview(actions), [actions]);
+  const storylineP0Count = scopedActions.filter((action) => action.priority === "P0").length;
+  const unassignedCount = scopedActions.filter((action) => !ownerDraft[action.action_id] && !action.owner_name).length;
+  const weeklyReview = useMemo(() => buildWeeklyActionReview(scopedActions), [scopedActions]);
   const writeMeta = (action) => ({
     actionType: action.action_type,
     category: action.category,
@@ -3295,15 +3306,15 @@ function ActionLoopPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="动作总数" value={vocData.actions.length} caption="行动登记表" tone="rose" />
+        <MetricCard label="动作总数" value={scopedActions.length} caption={dateRange.title} tone="rose" />
         <MetricCard label="P0 决策" value={storylineP0Count} caption="新版故事线优先级" tone="amber" />
         <MetricCard label="待定负责人" value={unassignedCount} caption="负责人待落位" tone="yellow" />
-        <MetricCard label="已关联证据" value={evidenceLinkedCount} caption="可追溯原话 / 样本" tone="green" />
+        <MetricCard label="源日期覆盖" value={sourceDatedActionCount} caption="quote_library 可回溯" tone="green" />
       </div>
       <div className="storyline-home-grid">
         <ActionConversionFunnel
           title="行动闭环转化漏斗"
-          caption="当前 57 条动作仍主要停在提出阶段；先把 P0 动作推进到负责人和复盘指标。"
+          caption="当前视图只统计所选采集时间范围内可回溯证据源日期的动作；执行截止日不作为采集日期。"
         />
         <StorylineDecisionQueue
           limit={6}
@@ -3379,6 +3390,7 @@ function ActionLoopPage() {
                 <p>{action.source_action}</p>
                 <div className="action-meta-grid">
                   <span><b>预期指标</b>{action.expected_metric || "待补齐"}</span>
+                  <span><b>证据源日期</b>{actionSourceDateLabel(action)}</span>
                   <span><b>截止日</b>{action.due_date || "待定"}</span>
                   <span><b>复盘日</b>{action.review_date || "待定"}</span>
                 </div>
@@ -3450,6 +3462,11 @@ function ActionLoopPage() {
             </article>
           ))}
         </div>
+        {!filteredActions.length && (
+          <div className="empty-state">
+            当前时间范围内没有可回溯源日期的行动；切回全量或选择 1-2 月样本期。无源日期动作不会进入收窄范围。
+          </div>
+        )}
         {filteredActions.length > 24 && <div className="action-more-note">已显示前 24 条；可继续筛选或导出全部 {filteredActions.length} 条。</div>}
       </section>
     </div>
@@ -3496,7 +3513,7 @@ function DataQualityPage() {
 function AppBody({ activeView, category, setCategory, actionCreated, setActionCreated, setActiveView, dateRange }) {
   if (activeView === "search") return <SearchQualityPage dateRange={dateRange} />;
   if (activeView === "pain") return <PainRadarPage category={category} setCategory={setCategory} actionCreated={actionCreated} setActionCreated={setActionCreated} />;
-  if (activeView === "actions") return <ActionLoopPage />;
+  if (activeView === "actions") return <ActionLoopPage dateRange={dateRange} />;
   if (activeView === "quality") return <DataQualityPage />;
   if (activeView === "competitor") return <CompetitorPage />;
   if (activeView === "content") return <ContentOpportunityPage setActiveView={setActiveView} />;

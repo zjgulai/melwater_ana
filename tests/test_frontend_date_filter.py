@@ -60,7 +60,16 @@ def test_date_filter_helpers_apply_ranges_to_temporal_marts():
         const emptyRecentSamples = filterSourceRowsByDateRange(data.querySamples, last30, "sourceDate");
         if (emptyRecentSamples.length !== 0) throw new Error("last30 should not include Jan/Feb query samples");
 
-        console.log(JSON.stringify({ allDaily: allDaily.length, recentDaily: recentDaily.length, recentMonthly: recentMonthly.length, sampleRows: sampleRows.length }));
+        const actionRows = filterSourceRowsByDateRange(data.actions, sampleWindow, "sourceDateStart");
+        if (!actionRows.length) throw new Error("sample window should keep source-dated actions");
+        if (actionRows.some((row) => !row.sourceDateEnd || row.sourceDateStart > sampleWindow.end || row.sourceDateEnd < sampleWindow.start)) {
+          throw new Error("sample window returned out-of-range actions");
+        }
+
+        const emptyRecentActions = filterSourceRowsByDateRange(data.actions, last30, "sourceDateStart");
+        if (emptyRecentActions.length !== 0) throw new Error("last30 should not include Jan/Feb source-dated actions");
+
+        console.log(JSON.stringify({ allDaily: allDaily.length, recentDaily: recentDaily.length, recentMonthly: recentMonthly.length, sampleRows: sampleRows.length, actionRows: actionRows.length }));
         """
     )
 
@@ -120,8 +129,10 @@ def test_app_extends_date_range_filter_to_sample_and_quote_pages():
 
     assert "function SearchQualityPage({ dateRange })" in source
     assert "function QuoteLibraryPage({ dateRange })" in source
+    assert "function ActionLoopPage({ dateRange })" in source
     assert "filterSourceRowsByDateRange(vocData.querySamples" in source
     assert "filterSourceRowsByDateRange(vocData.quoteLibrary" in source
+    assert "filterSourceRowsByDateRange(actions, dateRange, \"sourceDateStart\"" in source
 
 
 def test_quote_metadata_long_ids_are_allowed_to_wrap():

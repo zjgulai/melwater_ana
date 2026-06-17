@@ -1804,7 +1804,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-aa4cf9f67806df9a",
@@ -1821,7 +1825,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-07c6f1b43ed0b6a7",
@@ -1838,7 +1846,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-02-18",
+      "sourceDateEnd": "2026-02-18",
+      "sourceDateCount": "1",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-776bdceaed6dded8",
@@ -1855,7 +1867,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-06",
+      "sourceDateEnd": "2026-01-06",
+      "sourceDateCount": "1",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-6c01cce733a18037",
@@ -1872,7 +1888,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-09",
+      "sourceDateEnd": "2026-02-11",
+      "sourceDateCount": "2",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-71b3fd8ed4082ae7",
@@ -1889,7 +1909,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-6fd134468a6c797f",
@@ -1906,7 +1930,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-02",
+      "sourceDateEnd": "2026-01-18",
+      "sourceDateCount": "2",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-62fae2504e892a99",
@@ -1923,7 +1951,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-02",
+      "sourceDateEnd": "2026-01-22",
+      "sourceDateCount": "5",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-5e25aa2310ff4c4e",
@@ -1940,7 +1972,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-18",
+      "sourceDateEnd": "2026-01-23",
+      "sourceDateCount": "2",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-b9be01214b897a75",
@@ -1957,7 +1993,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-86c2f5609c305a77",
@@ -1974,7 +2014,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-c6a239c2b6ffefd8",
@@ -1991,7 +2035,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-9ea585112016e2a2",
@@ -2008,7 +2056,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-9ced73dd7e81d95d",
@@ -2025,7 +2077,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-46c016c06f73ca6d",
@@ -2042,7 +2098,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-e62dc5fb2be4f7ef",
@@ -2059,7 +2119,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-5a8a894d33b3a3a1",
@@ -2076,7 +2140,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-64a377c19f81c7a2",
@@ -2093,7 +2161,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-8bec2c8c3b7405be",
@@ -2110,7 +2182,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-d1776699a51af5bd",
@@ -2127,7 +2203,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-d2325604c01e3009",
@@ -2144,7 +2224,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-156baf09c2022635",
@@ -2161,7 +2245,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-cb2b8caef31f9663",
@@ -2178,7 +2266,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-150ae7ca39a8d108",
@@ -2195,7 +2287,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-48cdac9d0666feff",
@@ -2212,7 +2308,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-50778f2664188c7a",
@@ -2229,7 +2329,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-5f1f48648c24f9fa",
@@ -2246,7 +2350,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-de008d43dbc11a8b",
@@ -2263,7 +2371,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-b8c68742f83f8cf3",
@@ -2280,7 +2392,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-549ff973a5d4a891",
@@ -2297,7 +2413,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-0719add002fe56bb",
@@ -2314,7 +2434,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-97d49dc114b9ab8f",
@@ -2331,7 +2455,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-25ea9a80d1e54792",
@@ -2348,7 +2476,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-2b3126a7c996a6d6",
@@ -2365,7 +2497,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-d251c7e8500eebb3",
@@ -2382,7 +2518,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-c3a19929d6efb76f",
@@ -2399,7 +2539,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-b97157fd31b84341",
@@ -2416,7 +2560,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-fadd3fd2c9af9aae",
@@ -2433,7 +2581,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-4f79ea9fa1b770c8",
@@ -2450,7 +2602,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-d78e87c5f29dc38b",
@@ -2467,7 +2623,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-10b14e083ffb4f60",
@@ -2484,7 +2644,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-eb96a2a3d0715ce8",
@@ -2501,7 +2665,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-29a57f2b76faa60a",
@@ -2518,7 +2686,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-831c957ad0ece3fa",
@@ -2535,7 +2707,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-20b043a027bf052e",
@@ -2552,7 +2728,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-c557f7db0cfb93e8",
@@ -2569,7 +2749,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-94f4cc766523a9fc",
@@ -2586,7 +2770,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-2ada8cfd78fe14b4",
@@ -2603,7 +2791,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-02-18",
+      "sourceDateEnd": "2026-02-18",
+      "sourceDateCount": "1",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-badc1afa2c75f50e",
@@ -2620,7 +2812,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-09",
+      "sourceDateEnd": "2026-02-11",
+      "sourceDateCount": "2",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-06e532670df6cb3a",
@@ -2637,7 +2833,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-06",
+      "sourceDateEnd": "2026-01-06",
+      "sourceDateCount": "1",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-31638807430dbfd2",
@@ -2654,7 +2854,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-68fb694ac88c4b5a",
@@ -2671,7 +2875,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-02",
+      "sourceDateEnd": "2026-01-22",
+      "sourceDateCount": "5",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-0f1bf1f2c1913771",
@@ -2688,7 +2896,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-02",
+      "sourceDateEnd": "2026-01-18",
+      "sourceDateCount": "2",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-d5609cfb1966ec4d",
@@ -2705,7 +2917,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "2026-01-18",
+      "sourceDateEnd": "2026-01-23",
+      "sourceDateCount": "2",
+      "sourceDateBasis": "quote_library"
     },
     {
       "action_id": "action-55a4cfe0f40040db",
@@ -2722,7 +2938,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-babb2152bc3308bf",
@@ -2739,7 +2959,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     },
     {
       "action_id": "action-2dfd6f9716eff156",
@@ -2756,7 +2980,11 @@
       "shipped_at": "",
       "review_date": "2026-07-14",
       "actual_metric": "",
-      "close_reason": ""
+      "close_reason": "",
+      "sourceDateStart": "",
+      "sourceDateEnd": "",
+      "sourceDateCount": "",
+      "sourceDateBasis": "none"
     }
   ],
   "actionStatusSummary": [

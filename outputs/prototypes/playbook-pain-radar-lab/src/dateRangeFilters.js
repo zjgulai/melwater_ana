@@ -65,7 +65,15 @@ export function filterMonthlyRowsByDateRange(rows, range, field) {
 }
 
 export function filterSourceRowsByDateRange(rows, range, field) {
-  return filterDailyRowsByDateRange(rows, range, field);
+  if (!range || range.key === "all") return rows;
+  return rows.filter((row) => {
+    const value = row[field];
+    if (!value) return false;
+    const endField = field.endsWith("Start") ? `${field.slice(0, -"Start".length)}End` : "";
+    const endValue = endField ? row[endField] : "";
+    if (endValue) return String(value).slice(0, 10) <= range.end && String(endValue).slice(0, 10) >= range.start;
+    return isDayInRange(value, range);
+  });
 }
 
 export function isTemporalRangeActive(range) {

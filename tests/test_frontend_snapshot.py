@@ -40,6 +40,11 @@ def test_frontend_snapshot_exposes_source_dates_for_sample_and_quote_filters(pro
 
     query_sample_dates = [row.get("sourceDate") for row in snapshot["querySamples"] if row.get("sourceDate")]
     quote_dates = [row.get("sourceDate") for row in snapshot["quoteLibrary"] if row.get("sourceDate")]
+    action_source_ranges = [
+        row
+        for row in snapshot["actions"]
+        if row.get("sourceDateStart") and row.get("sourceDateEnd") and row.get("sourceDateCount")
+    ]
 
     assert len(query_sample_dates) >= 30
     assert min(query_sample_dates) >= "2026-01-01"
@@ -47,3 +52,8 @@ def test_frontend_snapshot_exposes_source_dates_for_sample_and_quote_filters(pro
     assert len(quote_dates) >= 10
     assert min(quote_dates) >= "2026-01-01"
     assert max(quote_dates) <= "2026-02-28"
+    assert len(action_source_ranges) >= 10
+    assert {row["action_type"] for row in action_source_ranges}.issuperset({"product_backlog", "concept_test"})
+    assert all(row["sourceDateStart"] <= row["sourceDateEnd"] for row in action_source_ranges)
+    assert min(row["sourceDateStart"] for row in action_source_ranges) >= "2026-01-01"
+    assert max(row["sourceDateEnd"] for row in action_source_ranges) <= "2026-02-28"

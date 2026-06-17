@@ -54,6 +54,16 @@ def infer_source_date(*values: str) -> str:
     return ""
 
 
+def action_topic_id(action: dict[str, str]) -> str:
+    match = re.search(r"topic:([a-z0-9_]+)", action.get("source_action", ""), flags=re.IGNORECASE)
+    return match.group(1) if match else ""
+
+
+def action_category(action: dict[str, str], categories: list[str]) -> str:
+    source = action.get("source_action", "")
+    return next((category for category in categories if category in source), "")
+
+
 def parse_search_precision(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     table_re = re.compile(r"^\| (?P<cells>.+) \|$")
@@ -283,6 +293,29 @@ def main() -> None:
         }
         for row in read_csv(MART_DIR / "user_voice_quote_library.csv")[:120]
     ]
+    quote_dates_by_action_key: dict[tuple[str, str], set[str]] = {}
+    for quote in quote_library:
+        source_date = quote.get("sourceDate")
+        if not source_date:
+            continue
+        key = (quote.get("category", ""), quote.get("topicId", ""))
+        quote_dates_by_action_key.setdefault(key, set()).add(source_date)
+
+    categories = [card["category"] for card in pain_cards]
+    for action in action_register:
+        category = action_category(action, categories)
+        topic_id = action_topic_id(action)
+        dates = sorted(quote_dates_by_action_key.get((category, topic_id), set()))
+        if not dates:
+            action["sourceDateStart"] = ""
+            action["sourceDateEnd"] = ""
+            action["sourceDateCount"] = ""
+            action["sourceDateBasis"] = "none"
+            continue
+        action["sourceDateStart"] = dates[0]
+        action["sourceDateEnd"] = dates[-1]
+        action["sourceDateCount"] = str(len(dates))
+        action["sourceDateBasis"] = "quote_library"
     storyline_stage_order = {
         "数据可信": 0,
         "产品痛点": 1,
