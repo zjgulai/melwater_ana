@@ -1,4 +1,5 @@
 import subprocess
+import re
 from pathlib import Path
 
 
@@ -121,3 +122,15 @@ def test_app_extends_date_range_filter_to_sample_and_quote_pages():
     assert "function QuoteLibraryPage({ dateRange })" in source
     assert "filterSourceRowsByDateRange(vocData.querySamples" in source
     assert "filterSourceRowsByDateRange(vocData.quoteLibrary" in source
+
+
+def test_quote_metadata_long_ids_are_allowed_to_wrap():
+    styles = (APP_DIR / "src" / "styles.css").read_text()
+    rule_match = re.search(
+        r"\.quote-meta-grid strong,\s*\.drawer-meta-grid strong\s*\{(?P<body>[^}]+)\}",
+        styles,
+        flags=re.MULTILINE,
+    )
+
+    assert rule_match
+    assert "overflow-wrap: anywhere;" in rule_match.group("body")

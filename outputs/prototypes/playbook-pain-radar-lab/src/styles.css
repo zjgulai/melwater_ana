@@ -2969,12 +2969,15 @@ button.storyline-row:hover {
 
 .quote-meta-grid strong,
 .drawer-meta-grid strong {
+  max-width: 100%;
   overflow: hidden;
+  overflow-wrap: anywhere;
   color: #4d4541;
   font-size: 10px;
   font-weight: 650;
   text-overflow: ellipsis;
   white-space: nowrap;
+  word-break: break-word;
 }
 
 .quote-actions {
