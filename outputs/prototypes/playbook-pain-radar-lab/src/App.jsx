@@ -40,6 +40,14 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import vocData from "./data/vocData.json";
+import {
+  DATE_RANGE_OPTIONS,
+  filterDailyRowsByDateRange,
+  filterMonthlyRowsByDateRange,
+  filterWeeklyRowsByDateRange,
+  getDateRangeByKey,
+  isTemporalRangeActive,
+} from "./dateRangeFilters.js";
 
 const topicLabels = {
   battery_power: "电池续航",
@@ -976,8 +984,16 @@ function Sidebar({ activeView, setActiveView }) {
   );
 }
 
-function Header({ activeView, actionCreated }) {
+const dateRangeScopeCopy = {
+  crisis: "当前页面按 day / week 字段筛选每日风险和周度变化点。",
+  brief: "当前页面按 month 字段筛选经营复盘月度记录。",
+  ops: "当前页面展示生产状态，不受 VOC 采集日期影响。",
+  audit: "当前页面展示操作留痕，不受 VOC 采集日期影响。",
+};
+
+function Header({ activeView, actionCreated, dateRange, setDateRangeKey }) {
   const copy = viewConfig[activeView] || viewConfig.home;
+  const [dateMenuOpen, setDateMenuOpen] = useState(false);
   return (
     <header className="topbar">
       <div className="title-block">
@@ -986,11 +1002,43 @@ function Header({ activeView, actionCreated }) {
         <p>{copy.subtitle}</p>
       </div>
       <div className="topbar-actions">
-        <button className="date-button" type="button">
-          <IconCalendar size={16} />
-          2026/01/01 - 2026/06/11
-          <IconChevronDown size={14} />
-        </button>
+        <div className="date-filter">
+          <button
+            aria-expanded={dateMenuOpen}
+            aria-haspopup="menu"
+            className="date-button"
+            onClick={() => setDateMenuOpen((open) => !open)}
+            type="button"
+          >
+            <IconCalendar size={16} />
+            {dateRange.label}
+            <IconChevronDown size={14} />
+          </button>
+          {dateMenuOpen && (
+            <div className="date-filter-menu" role="menu">
+              <div className="date-menu-copy">
+                <strong>选择采集时间范围</strong>
+                <span>{dateRangeScopeCopy[activeView] || "当前页面为预聚合指标；仅有 day / week / month 字段的页面会重新筛选。"}</span>
+              </div>
+              {DATE_RANGE_OPTIONS.map((option) => (
+                <button
+                  className={option.key === dateRange.key ? "date-menu-option active" : "date-menu-option"}
+                  key={option.key}
+                  onClick={() => {
+                    setDateRangeKey(option.key);
+                    setDateMenuOpen(false);
+                  }}
+                  role="menuitem"
+                  type="button"
+                >
+                  <strong>{option.title}</strong>
+                  <span>{option.label}</span>
+                  <small>{option.description}</small>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <button className="icon-button" aria-label="刷新" type="button">
           <IconRefresh size={17} />
         </button>
@@ -1007,6 +1055,22 @@ function Header({ activeView, actionCreated }) {
         </div>
       </div>
     </header>
+  );
+}
+
+function DateRangeScopeNote({ activeView, dateRange }) {
+  const temporalViews = new Set(["crisis", "brief"]);
+  const body = temporalViews.has(activeView)
+    ? dateRangeScopeCopy[activeView]
+    : "当前页面使用已生成的全量聚合 mart，前端不会用日期重算洞察；切到风险预警或经营复盘可查看按时间范围筛选后的记录。";
+
+  return (
+    <section className={isTemporalRangeActive(dateRange) ? "date-scope-note active" : "date-scope-note"} aria-label="时间范围筛选说明">
+      <IconCalendar size={15} />
+      <span>
+        时间范围：<strong>{dateRange.title}</strong> · {body}
+      </span>
+    </section>
   );
 }
 
@@ -2153,28 +2217,32 @@ function ConceptCandidatePage() {
   );
 }
 
-function CrisisWatchPage() {
-  const categories = ["all", ...new Set(vocData.crisisWatch.map((item) => item.category))];
+function CrisisWatchPage({ dateRange }) {
+  const crisisRows = useMemo(() => filterDailyRowsByDateRange(vocData.crisisWatch, dateRange, "day"), [dateRange]);
+  const weeklyRows = useMemo(() => filterWeeklyRowsByDateRange(vocData.weeklyChangePoints, dateRange, "week"), [dateRange]);
+  const categories = ["all", ...new Set(crisisRows.map((item) => item.category))];
   const [category, setCategory] = useState("all");
   const { values: status, writeValue: writeCrisisStatus, syncState } = useWritebackState("crisisTriage");
-  const events = vocData.crisisWatch.filter((item) => category === "all" || item.category === category);
-  const selected = events[0] || vocData.crisisWatch[0];
-  const changePoints = vocData.weeklyChangePoints.filter((item) => category === "all" || item.category === category).slice(0, 6);
-  const maxNegative = Math.max(...vocData.crisisWatch.map((item) => item.negative || 0), 1);
+  const effectiveCategory = category === "all" || categories.includes(category) ? category : "all";
+  const events = crisisRows.filter((item) => effectiveCategory === "all" || item.category === effectiveCategory);
+  const selected = events[0] || crisisRows[0] || vocData.crisisWatch[0];
+  const changePoints = weeklyRows.filter((item) => effectiveCategory === "all" || item.category === effectiveCategory).slice(0, 6);
+  const maxNegative = Math.max(...crisisRows.map((item) => item.negative || 0), 1);
+  const alertCount = crisisRows.filter((item) => item.alert !== "normal").length;
 
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="每日告警" value={vocData.summaries.crisisAlerts} caption="非绿色事件" tone="rose" />
+        <MetricCard label="每日告警" value={alertCount} caption={dateRange.title} tone="rose" />
         <MetricCard label="最高负向" value={compactNumber(selected.negative)} caption={selected.day} tone="amber" />
-        <MetricCard label="变化点" value={vocData.weeklyChangePoints.length} caption="周度 VOC" tone="yellow" />
+        <MetricCard label="变化点" value={weeklyRows.length} caption="周度 VOC" tone="yellow" />
         <MetricCard label="已分诊" value={Object.keys(status).length} caption="前端临时状态" tone="green" />
       </div>
 
       <section className="card tab-card">
         <div className="tab-row">
           {categories.map((item) => (
-            <button className={category === item ? "active" : ""} key={item} onClick={() => setCategory(item)} type="button">
+            <button className={effectiveCategory === item ? "active" : ""} key={item} onClick={() => setCategory(item)} type="button">
               {item === "all" ? "全部品类" : item}
             </button>
           ))}
@@ -2194,7 +2262,7 @@ function CrisisWatchPage() {
             </div>
           </div>
           <div className="signal-list crisis">
-            {events.map((item) => {
+            {events.length ? events.map((item) => {
               const key = `${item.category}-${item.day}`;
               return (
                 <article className="signal-row static" key={key}>
@@ -2216,11 +2284,11 @@ function CrisisWatchPage() {
                     })}
                     type="button"
                   >
-                    {status[key] ? { escalated: "已升级", acknowledged: "已确认" }[status[key]] || status[key] : "分诊"}
+                  {status[key] ? { escalated: "已升级", acknowledged: "已确认" }[status[key]] || status[key] : "分诊"}
                   </button>
                 </article>
               );
-            })}
+            }) : <div className="empty-state">当前时间范围没有风险事件，切换到全量数据查看历史记录。</div>}
           </div>
         </section>
 
@@ -2368,10 +2436,12 @@ function RegionLanguagePage() {
   );
 }
 
-function ExecutiveMonthlyPage() {
-  const months = [...new Set(vocData.executiveMonthly.map((item) => item.month))].sort();
+function ExecutiveMonthlyPage({ dateRange }) {
+  const monthlyRows = useMemo(() => filterMonthlyRowsByDateRange(vocData.executiveMonthly, dateRange, "month"), [dateRange]);
+  const months = [...new Set(monthlyRows.map((item) => item.month))].sort();
   const [month, setMonth] = useState(months[months.length - 1]);
-  const rows = vocData.executiveMonthly.filter((item) => item.month === month);
+  const activeMonth = months.includes(month) ? month : months[months.length - 1] || "";
+  const rows = monthlyRows.filter((item) => item.month === activeMonth);
   const totals = rows.reduce(
     (acc, item) => {
       acc.occurrences += item.occurrences;
@@ -2391,7 +2461,7 @@ function ExecutiveMonthlyPage() {
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="月份" value={month} caption="管理层月报" tone="rose" />
+        <MetricCard label="月份" value={activeMonth || "无记录"} caption={dateRange.title} tone="rose" />
         <MetricCard label="触点量" value={compactNumber(totals.occurrences)} caption="月度 VOC" tone="amber" />
         <MetricCard label="P0 决策" value={p0Queue.length} caption="本轮优先确认" tone="yellow" />
         <MetricCard label="可行动事项" value={totals.ready} caption="负责人跟进" tone="green" />
@@ -2400,7 +2470,7 @@ function ExecutiveMonthlyPage() {
       <section className="card tab-card">
         <div className="tab-row">
           {months.map((item) => (
-            <button className={month === item ? "active" : ""} key={item} onClick={() => setMonth(item)} type="button">
+            <button className={activeMonth === item ? "active" : ""} key={item} onClick={() => setMonth(item)} type="button">
               {item}
             </button>
           ))}
@@ -2437,8 +2507,8 @@ function ExecutiveMonthlyPage() {
                 type="button"
               >
                 <div>
-                  <strong>{item.category}</strong>
-                  <small>{item.month}</small>
+              <strong>{item.category}</strong>
+              <small>{item.month}</small>
                 </div>
                 <b>{compactNumber(item.occurrences)}</b>
                 <span>{pct(item.negativeRate, 1)}</span>
@@ -2455,7 +2525,7 @@ function ExecutiveMonthlyPage() {
           <div className="side-header">
             <div>
               <h2>会议叙事 · {selected.category}</h2>
-              <p>{month} · {compactNumber(selected.occurrences)} 次出现</p>
+              <p>{activeMonth || selected.month} · {compactNumber(selected.occurrences)} 次出现</p>
             </div>
             <IconBookmark size={17} />
           </div>
@@ -3407,7 +3477,7 @@ function DataQualityPage() {
   );
 }
 
-function AppBody({ activeView, category, setCategory, actionCreated, setActionCreated, setActiveView }) {
+function AppBody({ activeView, category, setCategory, actionCreated, setActionCreated, setActiveView, dateRange }) {
   if (activeView === "search") return <SearchQualityPage />;
   if (activeView === "pain") return <PainRadarPage category={category} setCategory={setCategory} actionCreated={actionCreated} setActionCreated={setActionCreated} />;
   if (activeView === "actions") return <ActionLoopPage />;
@@ -3416,9 +3486,9 @@ function AppBody({ activeView, category, setCategory, actionCreated, setActionCr
   if (activeView === "content") return <ContentOpportunityPage setActiveView={setActiveView} />;
   if (activeView === "quotes") return <QuoteLibraryPage />;
   if (activeView === "concept") return <ConceptCandidatePage />;
-  if (activeView === "crisis") return <CrisisWatchPage />;
+  if (activeView === "crisis") return <CrisisWatchPage dateRange={dateRange} />;
   if (activeView === "regions") return <RegionLanguagePage />;
-  if (activeView === "brief") return <ExecutiveMonthlyPage />;
+  if (activeView === "brief") return <ExecutiveMonthlyPage dateRange={dateRange} />;
   if (activeView === "audit") return <AuditLogPage />;
   if (activeView === "ops") return <OpsStatusPage />;
   return <HomePage setActiveView={setActiveView} />;
@@ -3428,15 +3498,18 @@ export function App() {
   const [activeView, setActiveView] = useState("home");
   const [category, setCategory] = useState("吸奶器");
   const [actionCreated, setActionCreated] = useState(false);
+  const [dateRangeKey, setDateRangeKey] = useState("all");
+  const dateRange = getDateRangeByKey(dateRangeKey);
 
   return (
     <div className="app-shell">
       <Sidebar activeView={activeView} setActiveView={setActiveView} />
       <main className="workspace">
-        <Header activeView={activeView} actionCreated={actionCreated} />
+        <Header activeView={activeView} actionCreated={actionCreated} dateRange={dateRange} setDateRangeKey={setDateRangeKey} />
         <BusinessLoopStrip activeView={activeView} />
         <BusinessClosurePanel activeView={activeView} />
         <PageUsageGuide activeView={activeView} />
+        <DateRangeScopeNote activeView={activeView} dateRange={dateRange} />
         <AppBody
           activeView={activeView}
           category={category}
@@ -3444,6 +3517,7 @@ export function App() {
           actionCreated={actionCreated}
           setActionCreated={setActionCreated}
           setActiveView={setActiveView}
+          dateRange={dateRange}
         />
       </main>
     </div>

@@ -403,6 +403,101 @@ h1 {
   font-size: 12px;
 }
 
+.date-filter {
+  position: relative;
+  display: inline-flex;
+}
+
+.date-filter-menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(320px, calc(100vw - 40px));
+  padding: 12px;
+  background: rgba(255, 252, 248, 0.98);
+  border: 1px solid #e3d2c9;
+  border-radius: 18px;
+  box-shadow: 0 18px 44px rgba(64, 42, 32, 0.16);
+}
+
+.date-menu-copy {
+  display: grid;
+  gap: 4px;
+  padding: 6px 8px 10px;
+  border-bottom: 1px solid #eadbd4;
+}
+
+.date-menu-copy strong {
+  color: #2d2826;
+  font-size: 13px;
+}
+
+.date-menu-copy span {
+  color: #756c66;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.date-menu-option {
+  width: 100%;
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  margin-top: 8px;
+  text-align: left;
+  color: #4d4641;
+  background: #fffaf5;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.date-menu-option:hover,
+.date-menu-option.active {
+  background: #fff4ec;
+  border-color: #e7c2b4;
+}
+
+.date-menu-option strong {
+  font-size: 13px;
+  color: #2d2826;
+}
+
+.date-menu-option span {
+  font-size: 12px;
+  color: #5f5753;
+}
+
+.date-menu-option small {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #85786f;
+}
+
+.date-scope-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 14px;
+  color: #6d655f;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(226, 205, 194, 0.78);
+  border-radius: 16px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.date-scope-note.active {
+  color: #5a3d28;
+  background: #fff4ec;
+  border-color: #e8c1af;
+}
+
+.date-scope-note strong {
+  color: #2d2826;
+}
+
 .icon-button {
   position: relative;
   width: 38px;
