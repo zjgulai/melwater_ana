@@ -2098,7 +2098,8 @@ button.storyline-row:hover {
 .action-toolbar select,
 .action-toolbar input,
 .action-control-grid select,
-.action-control-grid input {
+.action-control-grid input,
+.action-control-grid textarea {
   width: 100%;
   min-height: 34px;
   padding: 0 10px;
@@ -2112,6 +2113,7 @@ button.storyline-row:hover {
 
 .action-toolbar input:focus,
 .action-control-grid input:focus,
+.action-control-grid textarea:focus,
 .action-toolbar select:focus,
 .action-control-grid select:focus {
   border-color: rgba(194, 91, 110, 0.45);
@@ -2248,6 +2250,14 @@ button.storyline-row:hover {
 
 .action-control-grid input {
   text-overflow: ellipsis;
+}
+
+.action-control-grid textarea {
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .action-more-note {
@@ -3473,6 +3483,7 @@ code,
 .action-toolbar input,
 .action-control-grid select,
 .action-control-grid input,
+.action-control-grid textarea,
 .meeting-snapshot-controls input,
 .meeting-snapshot-controls textarea {
   font-size: var(--text-xs);
@@ -4162,6 +4173,7 @@ h1 {
   .action-toolbar input,
   .action-toolbar button,
   .action-row select,
+  .action-control-grid textarea,
   .queue-actions button,
   .verdict-buttons button {
     width: 100%;

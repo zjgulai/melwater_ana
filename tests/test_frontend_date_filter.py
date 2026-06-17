@@ -145,3 +145,12 @@ def test_quote_metadata_long_ids_are_allowed_to_wrap():
 
     assert rule_match
     assert "overflow-wrap: anywhere;" in rule_match.group("body")
+
+
+def test_action_business_impact_uses_multiline_control_to_avoid_horizontal_overflow():
+    source = (APP_DIR / "src" / "App.jsx").read_text()
+    styles = (APP_DIR / "src" / "styles.css").read_text()
+
+    assert "业务影响\n                  <textarea" in source
+    assert ".action-control-grid textarea" in styles
+    assert "resize: vertical;" in styles

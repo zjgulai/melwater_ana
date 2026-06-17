@@ -3449,12 +3449,13 @@ function ActionLoopPage({ dateRange }) {
                 </label>
                 <label>
                   业务影响
-                  <input
+                  <textarea
                     defaultValue={action.businessImpact}
                     key={`${action.action_id}-${action.businessImpact}`}
+                    rows={3}
                     onBlur={(event) => writeActionImpact(action.action_id, event.currentTarget.value.trim() || derivedBusinessImpact(action, action.painCard), writeMeta(action))}
                     onKeyDown={(event) => {
-                      if (event.key === "Enter") event.currentTarget.blur();
+                      if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) event.currentTarget.blur();
                     }}
                   />
                 </label>
