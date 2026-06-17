@@ -44,6 +44,7 @@ import {
   DATE_RANGE_OPTIONS,
   filterDailyRowsByDateRange,
   filterMonthlyRowsByDateRange,
+  filterSourceRowsByDateRange,
   filterWeeklyRowsByDateRange,
   getDateRangeByKey,
   isTemporalRangeActive,
@@ -986,6 +987,8 @@ function Sidebar({ activeView, setActiveView }) {
 }
 
 const dateRangeScopeCopy = {
+  search: "当前页面按 sourceDate 字段筛选可推导日期的噪声样本复核队列；搜索质量总表仍为全量聚合。",
+  quotes: "当前页面按 sourceDate 字段筛选可推导日期的用户原话；没有源日期的原话不会进入收窄范围。",
   crisis: "当前页面按 day / week 字段筛选每日风险和周度变化点。",
   brief: "当前页面按 month 字段筛选经营复盘月度记录。",
   ops: "当前页面展示生产状态，不受 VOC 采集日期影响。",
@@ -1060,10 +1063,10 @@ function Header({ activeView, actionCreated, dateRange, setDateRangeKey }) {
 }
 
 function DateRangeScopeNote({ activeView, dateRange }) {
-  const temporalViews = new Set(["crisis", "brief"]);
+  const temporalViews = new Set(["search", "quotes", "crisis", "brief"]);
   const body = temporalViews.has(activeView)
     ? dateRangeScopeCopy[activeView]
-    : "当前页面使用已生成的全量聚合 mart，前端不会用日期重算洞察；切到风险预警或经营复盘可查看按时间范围筛选后的记录。";
+    : "当前页面使用已生成的全量聚合 mart，前端不会用日期重算洞察；切到数据可信度、用户原话、风险预警或经营复盘可查看按时间范围筛选后的记录。";
 
   return (
     <section className={isTemporalRangeActive(dateRange) ? "date-scope-note active" : "date-scope-note"} aria-label="时间范围筛选说明">
@@ -1381,17 +1384,18 @@ function HomePage({ setActiveView }) {
   );
 }
 
-function SearchQualityPage() {
+function SearchQualityPage({ dateRange }) {
   const { values: verdicts, writeValue: writeVerdict, syncState } = useWritebackState("searchVerdict");
   const blocked = vocData.searchQuality.filter((item) => item.status !== "pass");
   const pass = vocData.searchQuality.filter((item) => item.status === "pass");
+  const querySamples = useMemo(() => filterSourceRowsByDateRange(vocData.querySamples, dateRange, "sourceDate"), [dateRange]);
 
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
         <MetricCard label="通过搜索" value={pass.length} caption="可进入业务解释" tone="green" />
         <MetricCard label="阻断搜索" value={blocked.length} caption="只能治理搜索" tone="rose" />
-        <MetricCard label="复核样本" value={vocData.querySamples.length} caption="前端快照样本" tone="amber" />
+        <MetricCard label="复核样本" value={querySamples.length} caption={dateRange.title} tone="amber" />
         <MetricCard label="最低准确率" value={pct(Math.min(...vocData.searchQuality.map((item) => item.precision)), 1)} caption="Bottle Warmer" tone="muted" />
       </div>
 
@@ -1426,12 +1430,12 @@ function SearchQualityPage() {
           <SyncBadge state={syncState} />
         </div>
         <div className="sample-list">
-          {vocData.querySamples.slice(0, 8).map((sample) => (
+          {querySamples.slice(0, 8).map((sample) => (
             <article className="sample-card" key={sample.sample_id}>
               <div>
                 <strong>{sample.category} · {sample.search_name}</strong>
                 <p>{sample.evidence_text}</p>
-                <small>{sample.matched_noise || "watch term"} · {sample.occurrence_id}</small>
+                <small>{sample.sourceDate || "无源日期"} · {sample.matched_noise || "watch term"} · {sample.occurrence_id}</small>
               </div>
               <div className="verdict-buttons">
                 {["true_product_match", "noise", "unclear"].map((verdict) => (
@@ -1451,6 +1455,9 @@ function SearchQualityPage() {
               </div>
             </article>
           ))}
+          {!querySamples.length && (
+            <div className="empty-state">当前时间范围内没有可推导源日期的样本；切回全量或选择 1-2 月样本期。</div>
+          )}
         </div>
       </section>
     </div>
@@ -2017,16 +2024,17 @@ function ContentOpportunityPage({ setActiveView }) {
   );
 }
 
-function QuoteLibraryPage() {
+function QuoteLibraryPage({ dateRange }) {
   const [sentiment, setSentiment] = useState("all");
   const { values: reviewed, writeValue: writeQuoteReview, syncState } = useWritebackState("quoteReview");
   const sentiments = ["all", ...new Set(vocData.quoteLibrary.map((quote) => quote.sentiment))];
-  const quotes = vocData.quoteLibrary.filter((quote) => sentiment === "all" || quote.sentiment === sentiment);
+  const sourceDatedQuotes = useMemo(() => filterSourceRowsByDateRange(vocData.quoteLibrary, dateRange, "sourceDate"), [dateRange]);
+  const quotes = sourceDatedQuotes.filter((quote) => sentiment === "all" || quote.sentiment === sentiment);
 
   return (
     <div className="lab-stack">
       <div className="summary-grid compact">
-        <MetricCard label="原话候选" value={vocData.quoteLibrary.length} caption="内容简报原话" tone="rose" />
+        <MetricCard label="原话候选" value={sourceDatedQuotes.length} caption={dateRange.title} tone="rose" />
         <MetricCard label="当前筛选" value={quotes.length} caption={sentimentLabel(sentiment)} tone="amber" />
         <MetricCard label="本次已审" value={Object.keys(reviewed).length} caption="前端临时状态" tone="green" />
         <MetricCard label="使用类型" value="1" caption="简报引用" tone="muted" />
@@ -2061,6 +2069,10 @@ function QuoteLibraryPage() {
               <span>
                 <small>document_id</small>
                 <strong>{quote.documentId}</strong>
+              </span>
+              <span>
+                <small>source_date</small>
+                <strong>{quote.sourceDate || "未推导"}</strong>
               </span>
               <span>
                 <small>occurrence_id</small>
@@ -2102,6 +2114,9 @@ function QuoteLibraryPage() {
             </div>
           </article>
         ))}
+        {!quotes.length && (
+          <div className="empty-state">当前时间范围内没有可推导源日期的用户原话；切回全量或选择 1-2 月样本期。</div>
+        )}
       </section>
     </div>
   );
@@ -3479,13 +3494,13 @@ function DataQualityPage() {
 }
 
 function AppBody({ activeView, category, setCategory, actionCreated, setActionCreated, setActiveView, dateRange }) {
-  if (activeView === "search") return <SearchQualityPage />;
+  if (activeView === "search") return <SearchQualityPage dateRange={dateRange} />;
   if (activeView === "pain") return <PainRadarPage category={category} setCategory={setCategory} actionCreated={actionCreated} setActionCreated={setActionCreated} />;
   if (activeView === "actions") return <ActionLoopPage />;
   if (activeView === "quality") return <DataQualityPage />;
   if (activeView === "competitor") return <CompetitorPage />;
   if (activeView === "content") return <ContentOpportunityPage setActiveView={setActiveView} />;
-  if (activeView === "quotes") return <QuoteLibraryPage />;
+  if (activeView === "quotes") return <QuoteLibraryPage dateRange={dateRange} />;
   if (activeView === "concept") return <ConceptCandidatePage />;
   if (activeView === "crisis") return <CrisisWatchPage dateRange={dateRange} />;
   if (activeView === "regions") return <RegionLanguagePage />;

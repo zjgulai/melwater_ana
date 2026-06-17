@@ -25,12 +25,15 @@ def test_date_filter_helpers_apply_ranges_to_temporal_marts():
           DATE_RANGE_OPTIONS,
           filterDailyRowsByDateRange,
           filterMonthlyRowsByDateRange,
+          filterSourceRowsByDateRange,
         } from "./src/dateRangeFilters.js";
 
         const data = JSON.parse(fs.readFileSync("./src/data/vocData.json", "utf8"));
         const all = DATE_RANGE_OPTIONS.find((item) => item.key === "all");
         const last30 = DATE_RANGE_OPTIONS.find((item) => item.key === "last30");
+        const sampleWindow = DATE_RANGE_OPTIONS.find((item) => item.key === "janFebSamples");
         if (!all || !last30) throw new Error("missing expected date ranges");
+        if (!sampleWindow) throw new Error("missing sample-window date range");
 
         const allDaily = filterDailyRowsByDateRange(data.crisisWatch, all, "day");
         if (allDaily.length !== data.crisisWatch.length) throw new Error("all range should keep all crisis rows");
@@ -47,7 +50,16 @@ def test_date_filter_helpers_apply_ranges_to_temporal_marts():
           throw new Error("last30 should only include May monthly rows for current snapshot");
         }
 
-        console.log(JSON.stringify({ allDaily: allDaily.length, recentDaily: recentDaily.length, recentMonthly: recentMonthly.length }));
+        const sampleRows = filterSourceRowsByDateRange(data.querySamples, sampleWindow, "sourceDate");
+        if (!sampleRows.length) throw new Error("sample window should keep source-dated query samples");
+        if (sampleRows.some((row) => row.sourceDate < sampleWindow.start || row.sourceDate > sampleWindow.end)) {
+          throw new Error("sample window returned out-of-range query samples");
+        }
+
+        const emptyRecentSamples = filterSourceRowsByDateRange(data.querySamples, last30, "sourceDate");
+        if (emptyRecentSamples.length !== 0) throw new Error("last30 should not include Jan/Feb query samples");
+
+        console.log(JSON.stringify({ allDaily: allDaily.length, recentDaily: recentDaily.length, recentMonthly: recentMonthly.length, sampleRows: sampleRows.length }));
         """
     )
 
@@ -61,6 +73,7 @@ def test_header_exposes_interactive_date_menu():
     assert 'aria-haspopup="menu"' in source
     assert "setDateRangeKey" in source
     assert "DATE_RANGE_OPTIONS" in source
+    assert "janFebSamples" in (APP_DIR / "src" / "dateRangeFilters.js").read_text()
 
 
 def test_date_range_persistence_prefers_url_then_storage():
@@ -99,3 +112,12 @@ def test_app_persists_date_range_selection():
     assert "resolveInitialDateRangeKey" in source
     assert "persistDateRangeKey" in source
     assert "handleDateRangeKeyChange" in source
+
+
+def test_app_extends_date_range_filter_to_sample_and_quote_pages():
+    source = (APP_DIR / "src" / "App.jsx").read_text()
+
+    assert "function SearchQualityPage({ dateRange })" in source
+    assert "function QuoteLibraryPage({ dateRange })" in source
+    assert "filterSourceRowsByDateRange(vocData.querySamples" in source
+    assert "filterSourceRowsByDateRange(vocData.quoteLibrary" in source

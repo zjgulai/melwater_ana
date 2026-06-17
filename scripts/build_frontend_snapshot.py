@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+from datetime import UTC, datetime
 import json
 import re
 from pathlib import Path
@@ -35,6 +36,22 @@ def as_int(value: str, default: int = 0) -> int:
 
 def as_percent(value: str, default: float = 0.0) -> float:
     return as_float(str(value or "").rstrip("%"), default * 100) / 100
+
+
+def infer_source_date(*values: str) -> str:
+    for value in values:
+        raw = str(value or "")
+        if re.match(r"^\d{4}-\d{2}-\d{2}", raw):
+            return raw[:10]
+        match = re.match(r"^(1[6-9]\d{11})(?:[_-]|$)", raw)
+        if not match:
+            continue
+        try:
+            parsed = datetime.fromtimestamp(int(match.group(1)) / 1000, tz=UTC)
+        except (OSError, ValueError):
+            continue
+        return parsed.date().isoformat()
+    return ""
 
 
 def parse_search_precision(path: Path) -> list[dict[str, Any]]:
@@ -148,7 +165,10 @@ def main() -> None:
 
     action_register = read_csv(MART_DIR / "action_register.csv")
     action_status = read_csv(MART_DIR / "action_status_summary.csv")
-    query_samples = read_csv(MART_DIR / "query_sample_review_queue.csv")
+    query_samples = []
+    for row in read_csv(MART_DIR / "query_sample_review_queue.csv"):
+        row["sourceDate"] = infer_source_date(row.get("document_id", ""), row.get("occurrence_id", ""), row.get("reviewed_at", ""))
+        query_samples.append(row)
     insights = read_csv(MART_DIR / "insight_register.csv")
     search_quality = parse_search_precision(MART_DIR / "search_precision_report.md")
     competitor_battlecards = [
@@ -256,6 +276,7 @@ def main() -> None:
             "sentiment": row["sentiment"],
             "occurrenceId": row["occurrence_id"],
             "documentId": row["document_id"],
+            "sourceDate": infer_source_date(row["document_id"], row["occurrence_id"]),
             "quoteText": row["quote_text"],
             "url": row["url"],
             "usageType": row["usage_type"],

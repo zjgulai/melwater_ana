@@ -2886,7 +2886,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": ""
     },
     {
       "sample_id": "query-sample-c1f6d1f7d64e1e74",
@@ -2902,7 +2903,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": ""
     },
     {
       "sample_id": "query-sample-bac99c59d968bf2a",
@@ -2918,7 +2920,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": ""
     },
     {
       "sample_id": "query-sample-4c538ee100819012",
@@ -2934,7 +2937,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-02-08"
     },
     {
       "sample_id": "query-sample-a37cbb51be302a33",
@@ -2950,7 +2954,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-e10afc30043032d8",
@@ -2966,7 +2971,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-de66f7b851b4bcbf",
@@ -2982,7 +2988,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-884d829049aac0f3",
@@ -2998,7 +3005,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-08171f4b52e17417",
@@ -3014,7 +3022,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-5ffdf4138a15f0e3",
@@ -3030,7 +3039,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-a1850c68f89eb4d8",
@@ -3046,7 +3056,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-6356f1b6ebeb2c82",
@@ -3062,7 +3073,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-a7fb27b0abdda650",
@@ -3078,7 +3090,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-94eaf7fef6c7b701",
@@ -3094,7 +3107,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-2a6149979a534c9b",
@@ -3110,7 +3124,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-02-08"
     },
     {
       "sample_id": "query-sample-d0d717b0f144951a",
@@ -3126,7 +3141,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-33cab1bfcd5967ca",
@@ -3142,7 +3158,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-c6893ed50b741273",
@@ -3158,7 +3175,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-7600d5ac49d58b7a",
@@ -3174,7 +3192,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-48453fb468503107",
@@ -3190,7 +3209,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-276be5baad7a490b",
@@ -3206,7 +3226,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-accc9c0c0f54b38d",
@@ -3222,7 +3243,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-592391f76a9a82dd",
@@ -3238,7 +3260,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-0971bf81059e2b73",
@@ -3254,7 +3277,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-b76004bc83cb5de1",
@@ -3270,7 +3294,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-39bd84c43121e7ed",
@@ -3286,7 +3311,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-147b0024f4101579",
@@ -3302,7 +3328,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-eba521570ec09ca8",
@@ -3318,7 +3345,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-c9cdb4bca7b7239c",
@@ -3334,7 +3362,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-78fa6bc63437e47e",
@@ -3350,7 +3379,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-c4f424a2d8e456ba",
@@ -3366,7 +3396,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-58279ef1655ed6e4",
@@ -3382,7 +3413,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-1282a5bea8ed7479",
@@ -3398,7 +3430,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-560fbc7dbed895f5",
@@ -3414,7 +3447,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-251fcecafd87dc68",
@@ -3430,7 +3464,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-86c20e0fe15abaeb",
@@ -3446,7 +3481,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-c2b0c05904060612",
@@ -3462,7 +3498,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-e347d8d629d2b325",
@@ -3478,7 +3515,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-6a3b048e67b34e55",
@@ -3494,7 +3532,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     },
     {
       "sample_id": "query-sample-eed1e5ada011df02",
@@ -3510,7 +3549,8 @@
       "sample_verdict": "",
       "noise_reason": "",
       "reviewer": "",
-      "reviewed_at": ""
+      "reviewed_at": "",
+      "sourceDate": "2026-01-16"
     }
   ],
   "insights": [
@@ -7266,6 +7306,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:0",
       "documentId": "5DMif7cpFZ8F_bk0W1hBTC_wx6A",
+      "sourceDate": "",
       "quoteText": "— Amazon Customer Price: $171.48 (originally $229.99) 12. A Momcozy baby carrier for 27% off (which reflects its best price) that ...",
       "url": "https://www.buzzfeed.com/cierracowan/useful-things-on-sale-amazon-this-week-not-gatekeeping",
       "usageType": "content_brief_quote"
@@ -7280,6 +7321,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:12286",
       "documentId": "ig_18075178637107965",
+      "sourceDate": "",
       "quoteText": "The battery life lasts through my errands. A practical feature I rely on. #momcozy#momcozylife",
       "url": "https://www.instagram.com/reel/DU7BoBYCf6Z/",
       "usageType": "content_brief_quote"
@@ -7294,6 +7336,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11766",
       "documentId": "-5mhr1dYqtPFTtlSZhlPw8QqpV8",
+      "sourceDate": "",
       "quoteText": "... shut eye. White noise machines are usually associated with helping babies to nod off, but they can also help older children and adults too.",
       "url": "https://www.manchestereveningnews.co.uk/news/health/20-gadget-hailed-must-anybody-33146893",
       "usageType": "content_brief_quote"
@@ -7308,6 +7351,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:120",
       "documentId": "w0U9OrjsGteh4IeubR_EE2v-U2U",
+      "sourceDate": "",
       "quoteText": "... or exploding. The Aysy Tang Intelligent Milk Warmer has been recalled in the UK over a safety risk. It has been “rejected” at the UK ...",
       "url": "https://www.birminghammail.co.uk/whats-on/shopping/popular-milk-warmers-recalled-uk-33453350",
       "usageType": "content_brief_quote"
@@ -7322,6 +7366,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10377",
       "documentId": "ig_18185434624317837",
+      "sourceDate": "",
       "quoteText": "Momcozy M5 has been a huge improvement in my pumping journey! It has made pumping breastmilk easy as 1-2-3. Literally slap them in your bra and push power (change settings if desired). I love that there is an app where I can monitor my pumping sesh, control the pumps, and track",
       "url": "https://www.instagram.com/p/DUJZdFTAWNm/",
       "usageType": "content_brief_quote"
@@ -7336,6 +7381,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1033",
       "documentId": "1771449180000_D8xjv_kxhYxuT-rNyfV36usocpAA",
+      "sourceDate": "2026-02-18",
       "quoteText": "https://www.reddit.com/r/ExclusivelyPumping/comments/1r8f3p3/comment/o64kbjm/",
       "url": "https://www.reddit.com/r/ExclusivelyPumping/comments/1r8f3p3/comment/o64kbjm/",
       "usageType": "content_brief_quote"
@@ -7350,6 +7396,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:16482",
       "documentId": "cyk3ucuWRW4LW74DIAiK2fwMwD8",
+      "sourceDate": "",
       "quoteText": "Led by the flagship Momcozy Air 1 Ultra-Slim Breast Pump the Momcozy product ecosystem is complemented by the popular M Series, including ...",
       "url": "https://seadaily.biz/?p=38975",
       "usageType": "content_brief_quote"
@@ -7364,6 +7411,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11145",
       "documentId": "r7sA32bkGOYgdpJdBbB96XL820g",
+      "sourceDate": "",
       "quoteText": "Pump anywhere you need with this Momcozy M9 Wearable Breast Pump with App.Pump anywhere you need with this Momcozy M9 Wearable Breast Pump with App. Click this MATERNITY & NURSING GUIDE to find the perfect fit and more!FEATURES Seamless APP connectivity and control Quieter design",
       "url": "https://ie.pinterest.com/pin/591308626120437385/",
       "usageType": "content_brief_quote"
@@ -7378,6 +7426,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10953",
       "documentId": "kAfaLbiNC3pmVyelQbwYISrfGEQ",
+      "sourceDate": "",
       "quoteText": "... so easy to just use that pump, instead of putting on a pumping bra, connecting yourself to a pump.. not to mention. lugging all that around ...",
       "url": "https://www.whattoexpect.com/baby-products/nursing-feeding/best-breast-pumps/",
       "usageType": "content_brief_quote"
@@ -7392,6 +7441,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11363",
       "documentId": "ig_17941216137106885",
+      "sourceDate": "",
       "quoteText": "The battery life lasts through my errands. A practical feature I rely on. #momcozy#momcozylife",
       "url": "https://www.instagram.com/reel/DTbvhqxERkS/",
       "usageType": "content_brief_quote"
@@ -7406,6 +7456,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:16471",
       "documentId": "wcNtNb3fpzHQTj0w9r8tH-_uaYE",
+      "sourceDate": "",
       "quoteText": "Led by the flagship Momcozy Air 1 Ultra-Slim Breast Pump the Momcozy product ecosystem is complemented by the popular M Series, including ...",
       "url": "https://kakacomputer.com/momcozy-debuts-invisible-power-showcasing-the-momcozy-air-1-ultra-slim-breast-pump-for-modern-mothers/",
       "usageType": "content_brief_quote"
@@ -7420,6 +7471,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:16470",
       "documentId": "vm0e6jEBXpmhtLKLRCdL_nHKAl0",
+      "sourceDate": "",
       "quoteText": "Led by the flagship Momcozy Air 1 Ultra-Slim Breast Pump the Momcozy product ecosystem is complemented by the popular M Series, including ...",
       "url": "https://sundalandstar.com/?p=39349",
       "usageType": "content_brief_quote"
@@ -7434,6 +7486,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10956",
       "documentId": "FyD8d5seBuy_g4dF8cz9XXfn5g0",
+      "sourceDate": "",
       "quoteText": "... ’s recommended to pump around 4 ounces Why We Love It Voted Best Wearable Breast Pump in the 2026 What to Expect Feeding Awards (and in ...",
       "url": "https://www.whattoexpect.com/baby-products/nursing-feeding/wireless-breast-pumps/",
       "usageType": "content_brief_quote"
@@ -7448,6 +7501,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11323",
       "documentId": "tiktok_7594962291276156174",
+      "sourceDate": "",
       "quoteText": "Don’t skip out on the power of good underwear during pregnancy! @Momcozy Official",
       "url": "https://www.tiktok.com/@sunshine.shine336/video/7594962291276156174?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -7462,6 +7516,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:16469",
       "documentId": "jQ5YdBs6sO9gv5FfWTpaxoGgv8k",
+      "sourceDate": "",
       "quoteText": "Led by the flagship Momcozy Air 1 Ultra-Slim Breast Pump the Momcozy product ecosystem is complemented by the popular M Series, including ...",
       "url": "https://orientpresswire.com/?p=39182",
       "usageType": "content_brief_quote"
@@ -7476,6 +7531,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:14433",
       "documentId": "QKEJG6qDN3fsRZTcJN9kTUTD10E",
+      "sourceDate": "",
       "quoteText": "Price Elvie Stride Hospital-Grade App-Controlled Breast Pump Elvie Stride Hospital-Grade, App-Controlled Breast Pump - Hands-Free, Wearable, Ultra-Quiet & Electric with 2-Modes, 10-Settings & 5oz Capacity per Cup Amazon The Elvie Stride Hospital-Grade App-Controlled Breast Pump",
       "url": "https://strongmocha.com/vetted/best-breast-pumps/",
       "usageType": "content_brief_quote"
@@ -7490,6 +7546,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:16483",
       "documentId": "-Fr3b8UeLXasSEcsreWovo7pn4U",
+      "sourceDate": "",
       "quoteText": "Led by the flagship Momcozy Air 1 Ultra-Slim Breast Pump the Momcozy product ecosystem is complemented by the popular M Series, including ...",
       "url": "https://apacvision.com/?p=39039",
       "usageType": "content_brief_quote"
@@ -7504,6 +7561,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10791",
       "documentId": "tiktok_7600976077321735479",
+      "sourceDate": "",
       "quoteText": "If you’re a pumping mama, you NEED a reliable pump 🐮🍼 The Momcozy V1 Pro gives hospital-grade power without chaining me to a wall. Comfortable, efficient, and worth every drop 🤍 @momcozy @Momcozy Official ✨ #pumpingmom #exclusivelypumping #tts #tiktokshopfinds #tiktokshop",
       "url": "https://www.tiktok.com/@melablanxo1/video/7600976077321735479?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -7518,6 +7576,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10260",
       "documentId": "ig_17970927602989880",
+      "sourceDate": "",
       "quoteText": "you’re a pumping mama, you NEED a reliable pump 🐮🍼 The Momcozy V1 Pro gives hospital-grade power without chaining me to a wall. Comfortable, efficient, and worth every drop 🤍 momcozy momcozyofficial ✨ Comment LINK to get the info in your DM 📨 #pumpingmom #exclusivelypumping #",
       "url": "https://www.instagram.com/reel/DUHj4jjjjLF/",
       "usageType": "content_brief_quote"
@@ -7532,6 +7591,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11821",
       "documentId": "tiktok_7608661052858944799",
+      "sourceDate": "",
       "quoteText": "’t have that many parts and they hold 6 ounces. I can pump 3x a day for 2 days on one full charge. Powerful and comfortable! And they’re on sale NOW🚨✨ don’t miss out like I did. #momcozy #wearablepumps #breastfeeding #pumpingmom #workingmom @Momcozy Official @momcozy @Momcozy US",
       "url": "https://www.tiktok.com/@laurencsp/video/7608661052858944799?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -7546,6 +7606,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:5216",
       "documentId": "-apzqmHL27-1FpoiLBRIVXkbmgQ",
+      "sourceDate": "",
       "quoteText": "CES 2026: Keep Baby Gear Clean, Safe and Organized For parents aiming to stay organized and maintain top hygiene for their little ones, eufy’s new Bottle Washer S1 Pro is an ideal solution. Priced at PHP 24,995, this large-capacity tabletop unit offers fully automated 360-degree",
       "url": "http://www.reylencastro.com/2026/01/anker-launches-innovative-new-tech.html",
       "usageType": "content_brief_quote"
@@ -7560,6 +7621,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11963",
       "documentId": "ig_18054832760437261",
+      "sourceDate": "",
       "quoteText": "Just in! Popular! Willow 3.0 Double Electric Wearable Breastpump w/ shields, accessories, charger, bags, reusable containers, retail: $550, our price: $179 #lilposhresale",
       "url": "https://www.instagram.com/p/DU9K_x8EswX/",
       "usageType": "content_brief_quote"
@@ -7574,6 +7636,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:22048",
       "documentId": "ig_18120645268572227",
+      "sourceDate": "",
       "quoteText": "cool for hours ✨ Perfect for breastmilk & formula ✨ Travel-friendly & leak-proof design ✨ Compact and easy to carry ✨ Ideal for work, errands & trips Available in Green and Purple Colour ☺️ #Momcozy #BottleCooler #BreastmilkStorage #PumpingMom #OnTheGoMom #BabyTravelEssentials #",
       "url": "https://www.instagram.com/p/DUU6u_GjRgh/",
       "usageType": "content_brief_quote"
@@ -7588,6 +7651,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:192",
       "documentId": "ig_17936114808171353",
+      "sourceDate": "",
       "quoteText": "Rascal + Friends Premium Diapers are made with seriously good features for up to 12 hours of leak protection, day + night! To prove just how absorbent they are, check out how many cups of water fit inside one of our diapers✅ #rascals #skiphop #momcozy #bübchen #nuk",
       "url": "https://www.instagram.com/p/DUfwQlCiPT7/",
       "usageType": "content_brief_quote"
@@ -7602,6 +7666,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_secondary_new:224",
       "documentId": "5LVqBRc2swlxT4hYFFCNfL9GgLc",
+      "sourceDate": "",
       "quoteText": "... nursing. The Lizzy fits many popular breast pumps, such as the Medela Pump in Style, Medela Freestyle, Spectra S1 and S2, and more. ...",
       "url": "https://www.whattoexpect.com/baby-products/nursing-and-feeding/best-breast-pump-bags",
       "usageType": "content_brief_quote"
@@ -7616,6 +7681,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1698",
       "documentId": "ig_18047063042709100",
+      "sourceDate": "",
       "quoteText": "Momcozy S12 Pro Wearable Breast Pump 🍼✨ Ksh. 15000 A true game-changer for busy breastfeeding mums. Pump comfortably while you work, move, or rest — no wires, no wall sockets. ✔ Fully hands-free & wearable ✔ 3 modes with 9 suction levels ✔ Gentle, efficient milk expression ✔",
       "url": "https://www.instagram.com/p/DT-dSDHiuAg/",
       "usageType": "content_brief_quote"
@@ -7630,6 +7696,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_secondary_old:515",
       "documentId": "g3OZscRcsVwVR3HZ_0yIpmetEkk",
+      "sourceDate": "",
       "quoteText": "... SAVE TIME - Pump directly into the bags using your Lansinoh breast pump or most major breast pump brands using our pump-into-bag ...",
       "url": "https://kitchensty.com/breastmilk-storage-bags/",
       "usageType": "content_brief_quote"
@@ -7644,6 +7711,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:21876",
       "documentId": "ig_18120341218573492",
+      "sourceDate": "",
       "quoteText": "My Favorite Colour 🤩🤩 Momcozy Bottle Cooler 🧊🍼 Keep breastmilk and bottles cold, fresh, and safe, wherever you go. The Momcozy Bottle Cooler is designed for busy parents who need reliable temperature control for outings, travel, and long days out. ✨ Keeps bottles cool for",
       "url": "https://www.instagram.com/p/DUVp0-FjY6o/",
       "usageType": "content_brief_quote"
@@ -7658,6 +7726,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:13848",
       "documentId": "ig_18068481581195325",
+      "sourceDate": "",
       "quoteText": "Breast Milk Storage Bags Available 🍼❄️ Store your precious milk safely with trusted, leak-proof options for fridge & freezer use 🤍 Available options & prices: • Lansinoh Breastmilk Storage Bags ▫️ 25pcs – Ksh 1,800 ▫️ 50pcs – Ksh 3,000 • Momcozy Temp-Sensing Storage Bags (",
       "url": "https://www.instagram.com/p/DUEGDWYCoQM/",
       "usageType": "content_brief_quote"
@@ -7672,6 +7741,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_secondary_new:222",
       "documentId": "sS6TbdGru04CI-Q8OgQEJ7zEJaw",
+      "sourceDate": "",
       "quoteText": "... easy on my back and shoulders!” wrote one What to Expect mom. A Breast Pump Medela Pump in Style with Max Flow Breast Pump Buying ...",
       "url": "https://www.whattoexpect.com/baby-products/nursing-feeding/breastfeeding-essentials-new-moms/",
       "usageType": "content_brief_quote"
@@ -7686,6 +7756,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:86258",
       "documentId": "EG8_pCwXNJSv63-1_5ho6PXGw0A",
+      "sourceDate": "",
       "quoteText": "Great for moving or shipping. 👉 See this item on Craigslist Momcozy Auto Bottle Washer Condition: Used – Good Location: Longfellow, ...",
       "url": "https://www.newsbreak.com/oakland-ca-daily-brief-373155753/4584692650452-freebies-up-for-grabs-in-oakland-furniture-appliances-more",
       "usageType": "content_brief_quote"
@@ -7700,6 +7771,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:18907",
       "documentId": "1768701780000_ZECFFaJrsdQWjbrlutjjCAkXsuQA",
+      "sourceDate": "2026-01-18",
       "quoteText": "https://www.reddit.com/r/ExclusivelyPumping/comments/1qfuctr/comment/o07uatq/",
       "url": "https://www.reddit.com/r/ExclusivelyPumping/comments/1qfuctr/comment/o07uatq/",
       "usageType": "content_brief_quote"
@@ -7714,6 +7786,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_secondary_new:114",
       "documentId": "ba3e2c020db6e0e44fc8e8290f80484d31d972bc",
+      "sourceDate": "",
       "quoteText": "[This review was collected as part of a promotion.] This Medela Harmony manual breast pump was a game changer. Lightweight and easy to use. Instructions included and well made. Hols just the amount needed for my pump breaks at work. Great fit and no leaks. I recommend this for",
       "url": "https://www.walgreens.com/store/c/medela-harmony-manual-breast-pump-with-personalfit-flex/ID=300417553-product",
       "usageType": "content_brief_quote"
@@ -7728,6 +7801,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:44015",
       "documentId": "FexvS7GosWBaD8aaFpo_kRzipoU",
+      "sourceDate": "",
       "quoteText": "Matters Breastfeeding is demanding. Traditional pumps limit movement. Wearable pumps like the Momcozy S9 Pro restore mobility. Instead of ...",
       "url": "https://tasneemvlhb417131.digiblogbox.com/65597624/best-hands-free-breast-pump-for-working-moms",
       "usageType": "content_brief_quote"
@@ -7742,6 +7816,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:58077",
       "documentId": "pME3J_gornb-GXGx-JwsR-NsO94",
+      "sourceDate": "",
       "quoteText": "Premium pick: App-connected pumps (e.g., Elvie) — more features but higher cost Best value: Momcozy S9 Pro — affordable with strong core ...",
       "url": "https://sachinzoio733137.digiblogbox.com/65664216/avoid-buying-the-wrong-breast-pump-read-this-first",
       "usageType": "content_brief_quote"
@@ -7756,6 +7831,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:74649",
       "documentId": "ioLVRhKE4DLhewjADSp4flAGDpU",
+      "sourceDate": "",
       "quoteText": "... to say goodbye to bra frustration! Top Nursing And Pumping Bra Recommendations Hands Free Pumping Bra (Patent Protected Design) – Momcozy ...",
       "url": "https://fishersline.com/nursing-and-pumping-bra/",
       "usageType": "content_brief_quote"
@@ -7770,6 +7846,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:13416",
       "documentId": "ig_18120820309510413",
+      "sourceDate": "",
       "quoteText": "✨ Momcozy Breast Milk Storage Bags Available Safe, convenient, and perfect for storing breast milk with confidence 💛 Designed to be leak-proof, easy to store, and freezer-safe — a must-have for breastfeeding moms! 📞 929-453-3355 Precious Baby Shop #Momcozy #BreastMilkBags #",
       "url": "https://www.instagram.com/p/DUoJtAvkcWI/",
       "usageType": "content_brief_quote"
@@ -7784,6 +7861,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:19766",
       "documentId": "1769187335000_oLAvGGzokgU6WYfGx9UoCKdxtzMA",
+      "sourceDate": "2026-01-23",
       "quoteText": "",
       "url": "",
       "usageType": "content_brief_quote"
@@ -7798,6 +7876,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:62512",
       "documentId": "g3OZscRcsVwVR3HZ_0yIpmetEkk",
+      "sourceDate": "",
       "quoteText": "... ultimate protection SAVE TIME - Pump directly into the bags using your Lansinoh breast pump or most major breast pump brands using our pump ...",
       "url": "https://kitchensty.com/breastmilk-storage-bags/",
       "usageType": "content_brief_quote"
@@ -7812,6 +7891,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:22042",
       "documentId": "ig_18118938352578256",
+      "sourceDate": "",
       "quoteText": "for hours ✨ Perfect for breastmilk & formula ✨ Travel-friendly & leak-proof design ✨ Compact and easy to carry ✨ Ideal for work, errands & trips Available in Green and Purple Colour ☺️ Video Credit- majeedah_amog #Momcozy #BottleCooler #BreastmilkStorage #PumpingMom #OnTheGoMom",
       "url": "https://www.instagram.com/reel/DUVRXdhDctD/",
       "usageType": "content_brief_quote"
@@ -7826,6 +7906,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:62449",
       "documentId": "-iNwwmNIAa7bhA-q_pFMKS41cao",
+      "sourceDate": "",
       "quoteText": "... nipple protection Amazon Momcozy Milk Collectors Momcozy Up to 3 oz / 90 ml Thickened silicone, comfortable fit Amazon Elvie Catch Milk ...",
       "url": "https://mypreciousfurbabies.com/best-milk-collection-shells/",
       "usageType": "content_brief_quote"
@@ -7840,6 +7921,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:27039",
       "documentId": "tiktok_7607213628688796942",
+      "sourceDate": "",
       "quoteText": "The MomCozy Portable Breastmilk Cooler keeps your milk fresh for hours, is leak-proof, compact, and easy to carry — perfect for moms on the go.#momcozy #breastmilk #exclusivelypumping #fyp @Momcozy Official",
       "url": "https://www.tiktok.com/@elleceeee123/video/7607213628688796942?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -7854,6 +7936,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:39117",
       "documentId": "F8035DZgL54cQbRxpGfmsqYLkeA",
+      "sourceDate": "",
       "quoteText": "... selecting a wearable breast pump, consider: Mobility needs: How often you pump on the go Suction strength: Higher suction = better output ...",
       "url": "https://maekfei944329.digiblogbox.com/65506757/7-best-wearable-breast-pumps-under-150",
       "usageType": "content_brief_quote"
@@ -7868,6 +7951,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_secondary_new:3",
       "documentId": "9c4f157bf7af06988ca12e813d0b8bdff5db19d5",
+      "sourceDate": "",
       "quoteText": "[This review was collected as part of a promotion.] The Medela Harmony Manual Breast Pump is small but mighty! It’s super easy to use, gentle, and perfect for quick pumping sessions without the noise or hassle. I love how lightweight and portable it is — it fits right into my bag",
       "url": "https://www.walgreens.com/store/c/medela-harmony-manual-breast-pump-with-personalfit-flex/ID=300417553-product",
       "usageType": "content_brief_quote"
@@ -7882,6 +7966,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:17",
       "documentId": "Peq2wbpGeooQYnf9-ceeMl1RDOc",
+      "sourceDate": "",
       "quoteText": "... received? Yes. Is it the only one I now use? Also yes. 6. Breastpump - MomCozy The MomCozy M9 Breastpump has become part of my daily ...",
       "url": "https://www.theparentedit.co.uk/parenting-lifestyle/ten-newborn-products-our-editor-swears-by",
       "usageType": "content_brief_quote"
@@ -7896,6 +7981,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10924",
       "documentId": "4mIOBwDq48ppR-qNZ-2Ordnh6Rs",
+      "sourceDate": "",
       "quoteText": "... 't your bag here, you can always switch to red, fuchsia, yellow, green or blue. Also jam-packed among its features are a dimmable light and ...",
       "url": "https://health.yahoo.com/wellness/sleep/sleep-products/article/best-sunrise-alarm-clock-181935106.html",
       "usageType": "content_brief_quote"
@@ -7910,6 +7996,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10647",
       "documentId": "tiktok_7601249490112171286",
+      "sourceDate": "",
       "quoteText": "If your looking for a nightlight and noise machine then this is definitely the one you need…. Momcozy, @MomcozyUK this has been a game changer for us on those night feeds when you need a light but nothing too bright because this has it all and phoenix loves the multiple",
       "url": "https://www.tiktok.com/@therosesisters_x/video/7601249490112171286?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -7924,6 +8011,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10953",
       "documentId": "kAfaLbiNC3pmVyelQbwYISrfGEQ",
+      "sourceDate": "",
       "quoteText": "... so easy to just use that pump, instead of putting on a pumping bra, connecting yourself to a pump.. not to mention. lugging all that around ...",
       "url": "https://www.whattoexpect.com/baby-products/nursing-feeding/best-breast-pumps/",
       "usageType": "content_brief_quote"
@@ -7938,6 +8026,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1145",
       "documentId": "1767709560000_UUg25HFgChQtLBx8Oe1BbTfM5DIA",
+      "sourceDate": "2026-01-06",
       "quoteText": "https://www.reddit.com/r/ExclusivelyPumping/comments/1q5f0ik/comment/ny0fddf/",
       "url": "https://www.reddit.com/r/ExclusivelyPumping/comments/1q5f0ik/comment/ny0fddf/",
       "usageType": "content_brief_quote"
@@ -7952,6 +8041,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1175",
       "documentId": "1767736680000_C2Xzr4yPhf2Ue6xONmpfi8iLfgoA",
+      "sourceDate": "2026-01-06",
       "quoteText": "https://www.reddit.com/r/ExclusivelyPumping/comments/1q5f0ik/comment/ny357ho/",
       "url": "https://www.reddit.com/r/ExclusivelyPumping/comments/1q5f0ik/comment/ny357ho/",
       "usageType": "content_brief_quote"
@@ -7966,6 +8056,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11548",
       "documentId": "ig_17955338016047992",
+      "sourceDate": "",
       "quoteText": "Quiet nights. Heavy emotions. Real motherhood. Night pumping is hard but you don’t have to gi through it alone. #momprila #momcozy #momnightroutine #nightpumping #momcozym9",
       "url": "https://www.instagram.com/reel/DTb0JylDPFD/",
       "usageType": "content_brief_quote"
@@ -7980,6 +8071,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11147",
       "documentId": "tu80ByXhCqPpBQS8XCFXY8wj-Rw",
+      "sourceDate": "",
       "quoteText": "Elvie Stride Hands Free Electric Breast Pump is one of the most popular hands-free electric double pumps thanks to it's lightweight, portable, and quiet design. If you're a brestfeeding mom looking for an ultra silent, discreet breast pump with high-end technology (like pumping",
       "url": "https://ie.pinterest.com/pin/267049452942530086/",
       "usageType": "content_brief_quote"
@@ -7994,6 +8086,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11766",
       "documentId": "-5mhr1dYqtPFTtlSZhlPw8QqpV8",
+      "sourceDate": "",
       "quoteText": "... shut eye. White noise machines are usually associated with helping babies to nod off, but they can also help older children and adults too.",
       "url": "https://www.manchestereveningnews.co.uk/news/health/20-gadget-hailed-must-anybody-33146893",
       "usageType": "content_brief_quote"
@@ -8008,6 +8101,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10872",
       "documentId": "tiktok_7601203894659648790",
+      "sourceDate": "",
       "quoteText": "this white noise machine. It gets my baby to sleep every single time and I’m convinced it’s what keeps her sleeping through the night. So many calming sounds, different colours, and such a cosy bedtime vibe. I couldn’t recommend it enough 💤@MomcozyUK @Momcozy Official #momcozy",
       "url": "https://www.tiktok.com/@babyrubysmum/video/7601203894659648790?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8022,6 +8116,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:35235",
       "documentId": "Zeb-6gOEANUj8VUJPrjuvAYcVh0",
+      "sourceDate": "",
       "quoteText": "... 1 device that’s both a power bank and a portable fan is a super-handy thing to have for travelers. Portable fans have been around for a ...",
       "url": "https://explodingtopics.com/blog/tiktok-product-trend-tracker",
       "usageType": "content_brief_quote"
@@ -8036,6 +8131,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:23163",
       "documentId": "-S_5itQnA7QbHytb5TSOL4oRDJw",
+      "sourceDate": "",
       "quoteText": "... , mesh panels allow airflow while your sleeping baby is wrapped up, and it's designed to keep babies' arms free. Parents will appreciate ...",
       "url": "https://shopping.yahoo.com/toys-games/articles/amazons-little-known-baby-sale-225500098.html",
       "usageType": "content_brief_quote"
@@ -8050,6 +8146,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:30337",
       "documentId": "YXAQm0HcuE6qLVQoivsrRJAZAwI",
+      "sourceDate": "",
       "quoteText": "... on-screen menu. Amazon Jartoo 2K Video Baby Monitor See Clearly, All Around In a world where our TVs, computers and phones deliver ...",
       "url": "https://www.forbes.com/sites/forbes-personal-shopper/article/best-non-wifi-baby-monitor/",
       "usageType": "content_brief_quote"
@@ -8064,6 +8161,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:23164",
       "documentId": "Y02841TDJBnqj4LIqJSnAd-u9is",
+      "sourceDate": "",
       "quoteText": "... two-way zipper, making diaper changes easier. 10 Eufy Security E20 Baby Monitor Now 30% Off $200 $140 Amazon The E20 baby monitor provides ...",
       "url": "https://www.goodhousekeeping.com/life/money/g70302995/amazon-baby-sale-february-2026/",
       "usageType": "content_brief_quote"
@@ -8078,6 +8176,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11770",
       "documentId": "j4lsG1y2_PyFPxobeVwR64hm0B8",
+      "sourceDate": "",
       "quoteText": "... of the nursing pillow that made our Strategist Baby Registry 100. Buy at Amazon Boon Trove Silicone Manual Breast Pump Set $22 $27 now ...",
       "url": "https://nymag.com/strategist/article/amazon-baby-products-on-sale.html",
       "usageType": "content_brief_quote"
@@ -8092,6 +8191,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10388",
       "documentId": "tiktok_7601073514614902023",
+      "sourceDate": "",
       "quoteText": "Momcozy Portable Sound Machine with Night Light — compact, travel friendly, with 20 white noise sounds, and you can also connect your phone via bluetooth! 💙 #momcozy #soundmachine #momlife #fyppppppppppppppppppppppp #viral @Momcozy-PH @Momcozy Official",
       "url": "https://www.tiktok.com/@_zkjavellana/video/7601073514614902023?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8106,6 +8206,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11561",
       "documentId": "tiktok_7594682799337082119",
+      "sourceDate": "",
       "quoteText": "Don't mind my vacuum robot noise in the background 🤣 @Momcozy Official i recommended when your on the go 10/10 for breastfeeding journey #familycookingtime #breastfeedingmom #momcozycooler #fyppppppppppppppppppppppp",
       "url": "https://www.tiktok.com/@christina.candelo4/video/7594682799337082119?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8120,6 +8221,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:31511",
       "documentId": "83c1b7eedce9377b78888e4d93d052c0230a6474",
+      "sourceDate": "",
       "quoteText": "... a girlie who wants a more minimal stroller!) I’m not sure why I think strollers and packing styles are connected, but I feel that they are ...",
       "url": "https://jesskeys.substack.com/p/wait-why-doesnt-everyone-do-their",
       "usageType": "content_brief_quote"
@@ -8134,6 +8236,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11573",
       "documentId": "ig_18092926715491302",
+      "sourceDate": "",
       "quoteText": "A quiet pump means I don’t have to hide during meetings or family time. #momcozy#momcozylife",
       "url": "https://www.instagram.com/reel/DTbwR50EZrm/",
       "usageType": "content_brief_quote"
@@ -8148,6 +8251,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10372",
       "documentId": "tiktok_7601212439232777494",
+      "sourceDate": "",
       "quoteText": "This white noise machine gets my baby to sleep every single time and it keeps her sleeping through the night. So many calming sounds, different colours, and I can control it via my phone. I couldn’t recommend it enough @MomcozyUK@@Momcozy Official##momcozy##whitenoisemachine##",
       "url": "https://www.tiktok.com/@babyrubysmum/video/7601212439232777494?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8162,6 +8266,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:13793",
       "documentId": "ig_18110215195649271",
+      "sourceDate": "",
       "quoteText": "giving you 20% off the belly band/pregnancy belt to use on their website and Amazon 😮 Extra note: This week, when purchasing on Amazon, you can enjoy an additional 20% OFF, for a total of 40% OFF 🎉 Questions? Please drop them below!👇 #Momcozy #MomcozyBellyband #Bellyband #ad",
       "url": "https://www.instagram.com/reel/DUCUBUzDQE8/",
       "usageType": "content_brief_quote"
@@ -8176,6 +8281,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1394",
       "documentId": "1767919380000_AlOjeLY0mcILOWgYYxrvYWw_zfEA",
+      "sourceDate": "2026-01-09",
       "quoteText": "https://www.reddit.com/r/BabyBumps/comments/1q7sswi/comment/nyi9pkb/",
       "url": "https://www.reddit.com/r/BabyBumps/comments/1q7sswi/comment/nyi9pkb/",
       "usageType": "content_brief_quote"
@@ -8190,6 +8296,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:54688",
       "documentId": "23_6MnaWDP-w99twqVwfpA_2Fys",
+      "sourceDate": "",
       "quoteText": "Experience the comfort and support of our Momcozy Ergonest Maternity Belly Band . Designed to cater to the evolving needs of your body ...",
       "url": "https://www.nappaawards.com/product/momcozy-ergonest-maternity-belly-band/",
       "usageType": "content_brief_quote"
@@ -8204,6 +8311,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:15435",
       "documentId": "tiktok_7608352183171468557",
+      "sourceDate": "",
       "quoteText": "pregnancy must haves for third trimester support and right now it has a huge discount. I linked this Momcozy maternity support belt in the orange cart below. #creatorsearchinsights #pregnancybellyband #pregnancyhippain #pregnancypelvicpain @Momcozy Official @rosiemomcozy @momcozy",
       "url": "https://www.tiktok.com/@briemurillo88/video/7608352183171468557?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8218,6 +8326,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:24507",
       "documentId": "XcGH8iltKDGY1v1S4AzeW0JKjtM",
+      "sourceDate": "",
       "quoteText": "Design – Introducing Momcozy Momcozy focuses on practical, parent-first innovation that is committed to providing designs for real family ...",
       "url": "https://www.diaryofthedad.co.uk/modern-parenting-how-dads-support-mothers-with-momcozy-air-1/",
       "usageType": "content_brief_quote"
@@ -8232,6 +8341,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:38328",
       "documentId": "X3stxZUfOA3MPXK8Z_TKE42yoY4",
+      "sourceDate": "",
       "quoteText": "Ergonomic Supportive Pillow - Momcozy full body pillow designs to replace the needs of multiple bed pillows, it hugs your entire body and ...",
       "url": "https://fishersline.com/gifts-for-pregnant-mom/",
       "usageType": "content_brief_quote"
@@ -8246,6 +8356,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:12835",
       "documentId": "tiktok_7605489644762909965",
+      "sourceDate": "",
       "quoteText": "The back pain is getting real this week - highly recommend the MomVozy belly band for all pregnant mamas! @Momcozy Official",
       "url": "https://www.tiktok.com/@ariwunder/video/7605489644762909965?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8260,6 +8371,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_secondary_new:118",
       "documentId": "3408c8bd20418b6da87f9230ada0fda5c693ca53",
+      "sourceDate": "",
       "quoteText": "[This review was collected as part of a promotion.] The Medela Harmony manual breast pump is a great choice for moms who want comfort and simplicity. It’s lightweight, easy to hold, and the ergonomic handle makes pumping feel natural and effortless. The suction is gentle but",
       "url": "https://www.walgreens.com/store/c/medela-harmony-manual-breast-pump-with-personalfit-flex/ID=300417553-product",
       "usageType": "content_brief_quote"
@@ -8274,6 +8386,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:47888",
       "documentId": "vIdV1q9aJ6tfZWxxdFstUi6hnfQ",
+      "sourceDate": "",
       "quoteText": "... recommend this practice of using a yoga ball to substitute a normal chair for a few moments as a way of letting the individual feel more at ...",
       "url": "https://aboutmanchester.co.uk/does-a-yoga-ball-help-with-pregnancy/",
       "usageType": "content_brief_quote"
@@ -8288,6 +8401,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10590",
       "documentId": "ig_17986634978930242",
+      "sourceDate": "",
       "quoteText": "Say no to pumping pain and make breastfeeding more enjoyable! 💖 #momcozy#momcozylife#momcozysg#baby#momlife#Singapore",
       "url": "https://www.instagram.com/reel/DUJaFX9E9tj/",
       "usageType": "content_brief_quote"
@@ -8302,6 +8416,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:2804",
       "documentId": "NS4RXgLXAy0LP2aYNi2pjQ3iD2k",
+      "sourceDate": "",
       "quoteText": "This May, Momcozy Maternova Belly Band is being embraced by thousands of expecting moms—and their loved ones—as the “Perfect Mom Shower ...",
       "url": "https://english.saigonbiz.com/vn/perfect-gift-for-pregnant-moms-momcozy-maternova-belly-band/",
       "usageType": "content_brief_quote"
@@ -8316,6 +8431,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:13925",
       "documentId": "ig_17982793844952544",
+      "sourceDate": "",
       "quoteText": "Say goodbye to pumping pain and embrace the joy of breastfeeding! 💖 #momcozy#momcozylife#momcozysg#baby#momlife#Singapore",
       "url": "https://www.instagram.com/reel/DUEYG2Yk6_2/",
       "usageType": "content_brief_quote"
@@ -8330,6 +8446,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:9995",
       "documentId": "gaMqHMLon9syafWIvzU2qUzcvRc",
+      "sourceDate": "",
       "quoteText": "... a mom-to-be experiences each daily moment. Such as Momcozy pregancy belt , it provides a range of belly band models designed for each stage ...",
       "url": "https://london-post.co.uk/pregnancy-back-support-belt-how-it-works-and-when-to-start-using-one/",
       "usageType": "content_brief_quote"
@@ -8344,6 +8461,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:35178",
       "documentId": "L0P3OpAWk14FKWt4DMKRdpcEwlc",
+      "sourceDate": "",
       "quoteText": "For Back Pain Support From Above And Below Your Baby momcozy Momcozy Bumpease Ergonest Maternity Belly Band Best for: Wearing under ...",
       "url": "https://www.forbes.com/sites/forbes-personal-shopper/article/best-pregnancy-belly-band/",
       "usageType": "content_brief_quote"
@@ -8358,6 +8476,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1322",
       "documentId": "1770821160000_DT0It0Bp3yp_1i03jR25BwZMYMUA",
+      "sourceDate": "2026-02-11",
       "quoteText": "https://www.reddit.com/r/PregnancyUK/comments/1r1gli4/comment/o4t1w2l/",
       "url": "https://www.reddit.com/r/PregnancyUK/comments/1r1gli4/comment/o4t1w2l/",
       "usageType": "content_brief_quote"
@@ -8372,6 +8491,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:12922",
       "documentId": "tiktok_7605744187685817631",
+      "sourceDate": "",
       "quoteText": "10 minute pump and Pour from Monday using my @Momcozy Official S9 Pro. Thrush is getting better GSE took the pain away fast! 😅",
       "url": "https://www.tiktok.com/@stablemilkco/video/7605744187685817631?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8386,6 +8506,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:54690",
       "documentId": "g9WNEWXTtBrqgZjbHJP-Swob8-Y",
+      "sourceDate": "",
       "quoteText": "Momcozy Ergowrap Postpartum Belly Band",
       "url": "https://www.nappaawards.com/product/momcozy-ergowrap-postpartum-belly-band/",
       "usageType": "content_brief_quote"
@@ -8400,6 +8521,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:35237",
       "documentId": "hJm7OQBQQoCG2-xREhCL-9ZeUms",
+      "sourceDate": "",
       "quoteText": "chemicals. 10. Momcozy Breast Milk ...",
       "url": "https://third-news.com/article/b1710668-01e3-11f1-bd10-9ca3ba0a67df",
       "usageType": "content_brief_quote"
@@ -8414,6 +8536,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10660",
       "documentId": "tiktok_7601174691037973815",
+      "sourceDate": "",
       "quoteText": "This belly band supports my belly! Makes my b/belly ROUND! Helps alleviate pressure and back pain! #momcozy @Momcozy Official #bellyband #pregnant #pregnancy #pregnanttiktok",
       "url": "https://www.tiktok.com/@mamakendram/video/7601174691037973815?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8428,6 +8551,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:12918",
       "documentId": "tiktok_7605613039630421270",
+      "sourceDate": "",
       "quoteText": "Momcozy belly band is now a MUST have for me! The relief I felt once putting this on - the help it’s going to give me for my back & pelvic pain! I’ll link it below for you all to have a nosey & definetly try it out! @Momcozy Official @MomcozyUK 🙏🏻🤰 #moncozy #momcozybellybandb",
       "url": "https://www.tiktok.com/@amyelizabeth_x0/video/7605613039630421270?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8442,6 +8566,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_secondary_new:117",
       "documentId": "42f03f1e0b70b7dbf795bc479f283e95ae045d1f",
+      "sourceDate": "",
       "quoteText": "a promotion.] I think a manual breast pump is something every woman should have during her breastfeeding journey. Even if you already have an electric breast pump, a manual one can be very handy in many situations. I like the Medela Harmony Manual Breast Pump because it’s easy to",
       "url": "https://www.walgreens.com/store/c/medela-harmony-manual-breast-pump-with-personalfit-flex/ID=300417553-product",
       "usageType": "content_brief_quote"
@@ -8456,6 +8581,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:18590",
       "documentId": "y8KYg6PfH43ZuycjXyGQA78RwiA",
+      "sourceDate": "",
       "quoteText": "Content from this publisher requires a premium add-on. Please reach out to your Meltwater contact for details.",
       "url": "https://www.lithgowmercury.com.au/",
       "usageType": "content_brief_quote"
@@ -8470,6 +8596,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_old:74819",
       "documentId": "uPK1Q5s4oy7P0i3C9dOCm100e9c",
+      "sourceDate": "",
       "quoteText": "Birth Flower Bouquet COACH Teri Shoulder Bag Momcozy Shower Steamers Fitbit Charge 6 Fitness Tracker Watch Lululemon Everywhere Belt Bag ...",
       "url": "https://shopping.yahoo.com/gift-ideas/articles/35-gifts-mom-almost-good-213000081.html",
       "usageType": "content_brief_quote"
@@ -8484,6 +8611,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:18943",
       "documentId": "1768773720000_j3Fp4tXGFLAD8uXWbkXjzhT_jLoA",
+      "sourceDate": "2026-01-18",
       "quoteText": "https://www.reddit.com/r/workingmoms/comments/1qgku25/comment/o0d763i/",
       "url": "https://www.reddit.com/r/workingmoms/comments/1qgku25/comment/o0d763i/",
       "usageType": "content_brief_quote"
@@ -8498,6 +8626,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:22449",
       "documentId": "tiktok_7602878586198035730",
+      "sourceDate": "",
       "quoteText": "Another day another full egg using Momcozy M6. Session always at work during my lactation break 😍 @Momcozy-PH @momcozy @Momcozy Official #Momcozy #MomcozyM6 #MomcozyShop #MomcozyLife #PumpingMama",
       "url": "https://www.tiktok.com/@kaitepoop/video/7602878586198035730?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8512,6 +8641,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:35916",
       "documentId": "DoSLO9nSeY0Y9uy0dQXFo-WFNG8",
+      "sourceDate": "",
       "quoteText": "... shot you, Drew...and she is PROUD! All Drew can do is listen to Willow go off | Image: ABC And we are proud. High five, Willow! And ...",
       "url": "https://www.soapcentral.com/general-hospital/misery-loves-company-and-in-sanity-general-hospital-two-scoops-week-february-2-2026",
       "usageType": "content_brief_quote"
@@ -8526,6 +8656,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:24892",
       "documentId": "tiktok_7604706568633945358",
+      "sourceDate": "",
       "quoteText": "I’m broke as them glasses, but ima stil count my change for that iced coffee! @Starbucks @Momcozy Official #icedcoffee #starbucks #drivethrucomedy #vlog #momcozy",
       "url": "https://www.tiktok.com/@glitterdirtmama2both/video/7604706568633945358?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8540,6 +8671,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:19401",
       "documentId": "tiktok_7609032396092083487",
+      "sourceDate": "",
       "quoteText": "So thankful for my wearable @Momcozy Official pumps! My Nespresso broke 🥲 so I treated myself to my favorite local coffee stand! Happy Friday! #momlife ##pumpingmom",
       "url": "https://www.tiktok.com/@laurakvlogs/video/7609032396092083487?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8554,6 +8686,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:17163",
       "documentId": "tiktok_7603171375234305311",
+      "sourceDate": "",
       "quoteText": ". So if you’re debating sharing your life to connect with others, but don’t have the courage to start, this is your sign to go for it 🥰 #pumpandpour #icunurse #asmr #momsoftiktok #creatorsearchinsights @Momcozy Official @Ceres Chill @Coca-Cola @littmannstethoscopes @aerie",
       "url": "https://www.tiktok.com/@jamiecalimente/video/7603171375234305311?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8568,6 +8701,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:26455",
       "documentId": "tiktok_7603590676709674247",
+      "sourceDate": "",
       "quoteText": "Good morning talaga using Momcozy S12 Pro. Winner talaga for my first lactation break. Super love this pump, nakaka drained ng boobies 😍 @Momcozy-PH @momcozy @Momcozy Official #MomcozyS12Pro #MomcozyShop #MomcozyPh #MomcozyPump #fypシ゚viral",
       "url": "https://www.tiktok.com/@kaitepoop/video/7603590676709674247?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8582,6 +8716,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:18372",
       "documentId": "tiktok_7593402914857635085",
+      "sourceDate": "",
       "quoteText": "Moms of TikTok..give yourself a break from washing bottles with this @Momcozy Official auto bottle washer #bottlewasher #newyearnewme #tiktokshopcreatorpicks #newarrivalssurge #momsoftiktok",
       "url": "https://www.tiktok.com/@digitaldadventures/video/7593402914857635085?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8596,6 +8731,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:26488",
       "documentId": "tiktok_7603645132575277854",
+      "sourceDate": "",
       "quoteText": "LOVE the @Momcozy Official bottle washer. I traveled with it after only having it for 3 months (I love it that much for pump parts) and broke it and they replaced it free of charge! Got here within 2 days and I told them it was my fault but they still replaced it. Great customer",
       "url": "https://www.tiktok.com/@/video/7600151257076092191",
       "usageType": "content_brief_quote"
@@ -8610,6 +8746,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:14481",
       "documentId": "1767380520000_LaN9M_BoxfCkbUAn4YY1JcOUuc0A",
+      "sourceDate": "2026-01-02",
       "quoteText": "Deleted on Reddit",
       "url": "https://www.reddit.com/r/ExclusivelyPumping/comments/1q266qp/comment/nxavpc4/",
       "usageType": "content_brief_quote"
@@ -8624,6 +8761,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11423",
       "documentId": "tiktok_7594857251404401933",
+      "sourceDate": "",
       "quoteText": "break :) who’s the lucky winner!!!! Just 1 amazing brand to send me PR so my husband will realize social media could work for me lmao @Owala @SALT & STONE @Nespresso @MERIT Beauty @rhode skin @HigherDOSE Shop @Willow Pump @Momcozy Official @ILIA Beauty @Garmin Connects @ATHLETA",
       "url": "https://www.tiktok.com/@chandlerwalker14/video/7594857251404401933?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8638,6 +8776,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:18955",
       "documentId": "1768732740000_XrclEDbOHhHhR5oRYdPh8dtDcn0A",
+      "sourceDate": "2026-01-18",
       "quoteText": "https://www.reddit.com/r/ExclusivelyPumping/comments/1qapma8/comment/o09rdfs/",
       "url": "https://www.reddit.com/r/ExclusivelyPumping/comments/1qapma8/comment/o09rdfs/",
       "usageType": "content_brief_quote"
@@ -8652,6 +8791,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:15432",
       "documentId": "tiktok_7608276565322911007",
+      "sourceDate": "",
       "quoteText": "Can’t wait to wear them out and see how they hold up these next few days🤞🏼 @Momcozy Official Oh btw what’s a good timeframe wise to know if they really worked? 2 weeks sounds good enough or how long help?! #pumpingmom #wearablepumps #pumpingjourney #momcozy #momcozybreastpump",
       "url": "https://www.tiktok.com/@tinyol.vlogs/video/7608276565322911007?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8666,6 +8806,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1488",
       "documentId": "1768000440000__KLPQ4fqnoDREl-KNmsEOpHLi70A",
+      "sourceDate": "2026-01-09",
       "quoteText": "https://www.reddit.com/r/parentsofmultiples/comments/1q8j9j7/comment/nyota20/",
       "url": "https://www.reddit.com/r/parentsofmultiples/comments/1q8j9j7/comment/nyota20/",
       "usageType": "content_brief_quote"
@@ -8680,6 +8821,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:12265",
       "documentId": "0bkQ6wMoi5AUCZC7Gxdd3Goqt-U",
+      "sourceDate": "",
       "quoteText": "My lovely sister traded me her W1 since I’m still waiting for my replacement from Momcozy 😊 literally only pumped for 15 mins on the milk boosting mode, Level 6-7 @Momcozy Official #MOMCOZYWELLNESS1 #PUMPANDPOUR #LIQUIDGOLD #PUMPINGISBREASTFEEDING #NURSINGMOM",
       "url": "https://www.tiktok.com/@pumpingisbreastfeeding/video/7608518298401099021?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8694,6 +8836,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:35916",
       "documentId": "DoSLO9nSeY0Y9uy0dQXFo-WFNG8",
+      "sourceDate": "",
       "quoteText": "... shot you, Drew...and she is PROUD! All Drew can do is listen to Willow go off | Image: ABC And we are proud. High five, Willow! And ...",
       "url": "https://www.soapcentral.com/general-hospital/misery-loves-company-and-in-sanity-general-hospital-two-scoops-week-february-2-2026",
       "usageType": "content_brief_quote"
@@ -8708,6 +8851,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1144",
       "documentId": "1767709680000_LdjG_AT8BAGrTAvnPPe29osBegoA",
+      "sourceDate": "2026-01-06",
       "quoteText": "https://www.reddit.com/r/ExclusivelyPumping/comments/1q5f0ik/comment/ny0fo1f/",
       "url": "https://www.reddit.com/r/ExclusivelyPumping/comments/1q5f0ik/comment/ny0fo1f/",
       "usageType": "content_brief_quote"
@@ -8722,6 +8866,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:12536",
       "documentId": "1769109480000_PXsoobwJza1sTowWIxVb4vjCCIMA",
+      "sourceDate": "2026-01-22",
       "quoteText": "https://www.reddit.com/r/ExclusivelyPumping/comments/1qk1wxt/comment/o13mwxd/",
       "url": "https://www.reddit.com/r/ExclusivelyPumping/comments/1qk1wxt/comment/o13mwxd/",
       "usageType": "content_brief_quote"
@@ -8736,6 +8881,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1808",
       "documentId": "ig_18111865288649966",
+      "sourceDate": "",
       "quoteText": "Look What is Finally in Egypt . Now MomCozy in Egypt with Official Warranty for One year . #momcozy #breastfedbaby #babyproducts #mommasboy #mommyblogger #egyptian",
       "url": "https://www.instagram.com/p/DT-c64riF8H/",
       "usageType": "content_brief_quote"
@@ -8750,6 +8896,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:35933",
       "documentId": "ufmJFrTsrKX4_pNu2t2mu-OC5Cc",
+      "sourceDate": "",
       "quoteText": "... item for those who prefer to travel light and avoid checking bags at the airport. 12 Willow Pump Willow Wave Manual Breast Pump $35 ...",
       "url": "https://www.oprahdaily.com/style/g70176440/best-baby-travel-essentials/",
       "usageType": "content_brief_quote"
@@ -8764,6 +8911,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:19251",
       "documentId": "ig_18059130251370198",
+      "sourceDate": "",
       "quoteText": "Good news for all Moms! 🤍 Choose our official authorized store for authentic Momcozy products, backed by a Malaysia local warranty. Because your assurance — and your journey — matter to us. #momcozy #momcozymalaysia #warranty #warrantyavailable #shoplocal",
       "url": "https://www.instagram.com/p/DU9hOHdk38e/",
       "usageType": "content_brief_quote"
@@ -8778,6 +8926,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:14491",
       "documentId": "1767378660000_kicFSQy22NDpitHvi0tPyhoilLwA",
+      "sourceDate": "2026-01-02",
       "quoteText": "https://www.reddit.com/r/daddit/comments/1q25qz2/comment/nxaovl9/",
       "url": "https://www.reddit.com/r/daddit/comments/1q25qz2/comment/nxaovl9/",
       "usageType": "content_brief_quote"
@@ -8792,6 +8941,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11999",
       "documentId": "tiktok_7608518298401099021",
+      "sourceDate": "",
       "quoteText": "Quick 15min pump! My lovely sister traded me her W1 since I’m still waiting for my replacement from Momcozy 😊 literally only pumped for 15 mins on the milk boosting mode, Level 6-7 @Momcozy Official #MOMCOZYWELLNESS1 #PUMPANDPOUR #LIQUIDGOLD #PUMPINGISBREASTFEEDING #NURSINGMOM",
       "url": "https://www.tiktok.com/@pumpingisbreastfeeding/video/7608518298401099021?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8806,6 +8956,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:16470",
       "documentId": "vm0e6jEBXpmhtLKLRCdL_nHKAl0",
+      "sourceDate": "",
       "quoteText": "Led by the flagship Momcozy Air 1 Ultra-Slim Breast Pump the Momcozy product ecosystem is complemented by the popular M Series, including ...",
       "url": "https://sundalandstar.com/?p=39349",
       "usageType": "content_brief_quote"
@@ -8820,6 +8971,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:16482",
       "documentId": "cyk3ucuWRW4LW74DIAiK2fwMwD8",
+      "sourceDate": "",
       "quoteText": "Led by the flagship Momcozy Air 1 Ultra-Slim Breast Pump the Momcozy product ecosystem is complemented by the popular M Series, including ...",
       "url": "https://seadaily.biz/?p=38975",
       "usageType": "content_brief_quote"
@@ -8834,6 +8986,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:13590",
       "documentId": "tiktok_7600551048993983775",
+      "sourceDate": "",
       "quoteText": "No one talks about this.. Stress usually affects milk letdown, not production. Once your body relaxes, milk flow often improves. *ON SALE + FREE SHIPPING* #breastfeeding #pumpingmom #momcozy #liquidgold #tiktokshopjumpstartsale @Momcozy Official",
       "url": "https://www.tiktok.com/@x0candice/video/7600551048993983775?utm_campaign=tt4d_open_api&utm_source=mapi",
       "usageType": "content_brief_quote"
@@ -8848,6 +9001,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:14433",
       "documentId": "QKEJG6qDN3fsRZTcJN9kTUTD10E",
+      "sourceDate": "",
       "quoteText": "Price Elvie Stride Hospital-Grade App-Controlled Breast Pump Elvie Stride Hospital-Grade, App-Controlled Breast Pump - Hands-Free, Wearable, Ultra-Quiet & Electric with 2-Modes, 10-Settings & 5oz Capacity per Cup Amazon The Elvie Stride Hospital-Grade App-Controlled Breast Pump",
       "url": "https://strongmocha.com/vetted/best-breast-pumps/",
       "usageType": "content_brief_quote"
@@ -8862,6 +9016,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:11145",
       "documentId": "r7sA32bkGOYgdpJdBbB96XL820g",
+      "sourceDate": "",
       "quoteText": "Pump anywhere you need with this Momcozy M9 Wearable Breast Pump with App.Pump anywhere you need with this Momcozy M9 Wearable Breast Pump with App. Click this MATERNITY & NURSING GUIDE to find the perfect fit and more!FEATURES Seamless APP connectivity and control Quieter design",
       "url": "https://ie.pinterest.com/pin/591308626120437385/",
       "usageType": "content_brief_quote"
@@ -8876,6 +9031,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10682",
       "documentId": "ig_18310678282265400",
+      "sourceDate": "",
       "quoteText": "Your sign to buy that Momcozy-PH Momcozy Official V2 Pro ✨💫 a pump that is portable, small but with strong suction. Also comes with a pair of 3-part collection cups! #tiktok1212 #momcozy #v2pro #pumpingmom",
       "url": "https://www.instagram.com/reel/DUHXjWuDN5s/",
       "usageType": "content_brief_quote"
@@ -8890,6 +9046,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:13976",
       "documentId": "ig_17869410876447034",
+      "sourceDate": "",
       "quoteText": "No one talks about this.. Stress usually affects milk letdown, not production. Once your body relaxes, milk flow often improves. Use code xcandicee to save (Momcozy + Amazon)! #breastfeeding #pumpingmom #momcozy #liquidgold #momcozym9 momcozy momcozyofficial",
       "url": "https://www.instagram.com/reel/DUEpl7ogIb1/",
       "usageType": "content_brief_quote"
@@ -8904,6 +9061,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:1385",
       "documentId": "vv8hMRZ8URL8mV3nXSuVCyTEaLY",
+      "sourceDate": "",
       "quoteText": "Pump smarter and more discreetly with the Momcozy M5 Smart Breast Pump. This ultra-light, hands-free wearable breast pump features smart app control, customizable modes, micro-vibration technology, and “Baby Mouth” suction for comfortable, efficient milk flow. Designed to fit",
       "url": "https://ie.pinterest.com/pin/39617671719428366/",
       "usageType": "content_brief_quote"
@@ -8918,6 +9076,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_core_new:10968",
       "documentId": "ULZfwQHAg3fgOAo_wAlmCYuEgD0",
+      "sourceDate": "",
       "quoteText": "... and effective pumping session, often with less suction needed. Rather than purely increasing suction strength, applying warmth allows milk ...",
       "url": "https://womenfitnessmag.com/the-science-of-warmth-why-heat-is-the-secret-to-faster-pumping/",
       "usageType": "content_brief_quote"
@@ -8932,6 +9091,7 @@
       "sentiment": "positive",
       "occurrenceId": "pump_secondary_new:116",
       "documentId": "f3415df34b5b19c138642a9bca7b60649532a13b",
+      "sourceDate": "",
       "quoteText": "[This review was collected as part of a promotion.] Medela Harmony Manual Breast Pump is very easy to use and dissemble and wash! The suction is amazing, literally takes the most milk out. Helps clogged milk ducts. Super easy instructions and quick to assemble parts.",
       "url": "https://www.walgreens.com/store/c/medela-harmony-manual-breast-pump-with-personalfit-flex/ID=300417553-product",
       "usageType": "content_brief_quote"

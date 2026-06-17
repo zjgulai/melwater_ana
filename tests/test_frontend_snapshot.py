@@ -32,3 +32,18 @@ def test_frontend_snapshot_exposes_action_conversion_funnel(project_root: Path):
     ]
     assert funnel[0]["actionCount"] == len(snapshot["actions"])
     assert snapshot["summaries"]["storylineP0Actions"] >= 5
+
+
+def test_frontend_snapshot_exposes_source_dates_for_sample_and_quote_filters(project_root: Path):
+    snapshot_path = project_root / "outputs" / "prototypes" / "playbook-pain-radar-lab" / "src" / "data" / "vocData.json"
+    snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+
+    query_sample_dates = [row.get("sourceDate") for row in snapshot["querySamples"] if row.get("sourceDate")]
+    quote_dates = [row.get("sourceDate") for row in snapshot["quoteLibrary"] if row.get("sourceDate")]
+
+    assert len(query_sample_dates) >= 30
+    assert min(query_sample_dates) >= "2026-01-01"
+    assert max(query_sample_dates) <= "2026-02-28"
+    assert len(quote_dates) >= 10
+    assert min(quote_dates) >= "2026-01-01"
+    assert max(quote_dates) <= "2026-02-28"

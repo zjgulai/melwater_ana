@@ -24,6 +24,14 @@ export const DATE_RANGE_OPTIONS = [
     description: "用于查看最近一个月仍在变化的风险和管理层指标。",
   },
   {
+    key: "janFebSamples",
+    title: "1-2 月样本期",
+    label: "2026/01/01 - 2026/02/28",
+    start: "2026-01-01",
+    end: "2026-02-28",
+    description: "用于查看可推导源日期的样本复核和用户原话。",
+  },
+  {
     key: "may",
     title: "2026 年 5 月",
     label: "2026/05/01 - 2026/05/31",
@@ -54,6 +62,10 @@ export function filterMonthlyRowsByDateRange(rows, range, field) {
     const [start, end] = monthBounds(String(value));
     return start <= range.end && end >= range.start;
   });
+}
+
+export function filterSourceRowsByDateRange(rows, range, field) {
+  return filterDailyRowsByDateRange(rows, range, field);
 }
 
 export function isTemporalRangeActive(range) {
